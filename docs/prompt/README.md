@@ -46,3 +46,4 @@
 - [2026-10-15](2026-10-15-42-guard-no-hide-untracked.md) — 가드 우회로 파일 숨기기 금지
 - [2026-10-15](2026-10-15-43-issue-close-with-work.md) — 이슈는 작업과 함께 닫기
 - [2026-10-15](2026-10-15-44-adr-tdd-bdd-layers.md) — TDD·BDD와 4레이어 도입 ADR
+- [2026-10-15](2026-10-15-45-adr-layer-feature-direction.md) — 레이어 아래 도메인/피처 방향 정정
