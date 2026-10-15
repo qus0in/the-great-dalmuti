@@ -1,0 +1,54 @@
+/* Stack, Cluster, Flex, Accessibility and Text Utilities for The Great Dalmuti */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stack--xs { gap: var(--space-0-5); }
+.stack--sm { gap: var(--space-1); }
+.stack--md { gap: var(--space-2); }
+.stack--lg { gap: var(--space-3); }
+.stack--xl { gap: var(--space-4); }
+.stack--2xl { gap: var(--space-6); }
+.stack--3xl { gap: var(--space-8); }
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cluster--xs { gap: var(--space-0-5); }
+.cluster--sm { gap: var(--space-1); }
+.cluster--md { gap: var(--space-2); }
+.cluster--lg { gap: var(--space-3); }
+
+.items-center     { align-items: center; }
+.items-start      { align-items: flex-start; }
+.items-end        { align-items: flex-end; }
+.justify-center   { justify-content: center; }
+.justify-between  { justify-content: space-between; }
+.justify-end      { justify-content: flex-end; }
+.text-center      { text-align: center; }
+.text-right       { text-align: right; }
+.text-muted       { color: var(--color-ink-muted); }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-0-5);
+  border-radius: var(--radius-1);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: var(--space-neg-px);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,29 @@
+/* ==========================================================================
+   9. Reduced motion (mirrors reset.css; keeps content visible instantly)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up {
+    animation: none !important;
+  }
+
+  .hall__delay-1,
+  .hall__delay-2,
+  .hall__delay-3,
+  .hall__delay-4 {
+    animation-delay: 0s !important;
+  }
+
+  .hall__seat--ready .seat__avatar {
+    animation: none !important;
+  }
+
+  .hall__seat,
+  .hall__rank {
+    transition: none !important;
+  }
+
+  .hall__seat:hover,
+  .hall__rank:hover {
+    transform: none;
+  }
+}

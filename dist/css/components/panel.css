@@ -1,0 +1,25 @@
+/* Panels & Surface Containers for The Great Dalmuti */
+.panel {
+  background-color: var(--color-surface-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-1);
+}
+
+.panel--table {
+  background-color: var(--color-surface-table-felt);
+  border: 2px solid var(--color-line-strong);
+  color: var(--color-cream);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-table-felt), var(--shadow-2);
+  position: relative;
+}
+
+.panel--table h1,
+.panel--table h2,
+.panel--table h3,
+.panel--table h4,
+.panel--table p {
+  color: var(--color-cream);
+}

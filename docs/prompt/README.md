@@ -37,3 +37,8 @@
 - [2026-10-15](2026-10-15-33-manifest-no-autoinstall.md) — 매니페스트 작성과 자동설치 방지
 - [2026-10-15](2026-10-15-34-plan-0-3-ssr-express-supabase.md) — 0.3 마일스톤 계획 이슈 작성
 - [2026-10-15](2026-10-15-35-readme-user-owned.md) — 루트 README는 사용자 소유
+- [2026-10-15](2026-10-15-36-code-module-100-lines-limit.md) — 모든 비문서·비바이너리 프로그래밍 모듈 100줄 이하 제한 규칙 반영
+- [2026-10-15](2026-10-15-37-unify-code-line-limit-to-100.md) — 코드 모듈 줄 수 제한 100줄로 통일
+- [2026-10-15](2026-10-15-38-script-owned-verification.md) — 반복 검사를 스크립트에 맡기고 과잉 검토 제한
+- [2026-10-15](2026-10-15-39-excessive-verification-retrospective.md) — 과잉 검증 회고와 규칙·스킬·문서·실행기 수정
+- [2026-10-15](2026-10-15-40-css-module-split-final-review.md) — CSS 모듈 분리와 최종 리뷰 수정 완료

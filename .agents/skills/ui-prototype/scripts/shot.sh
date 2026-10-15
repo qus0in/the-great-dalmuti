@@ -1,6 +1,8 @@
 #!/bin/sh
 # Usage: shot.sh [out-dir] [pages...]   (defaults: a fresh mktemp -d dir (printed), pages <repo>/dist/*.html)
-# Headless Chrome screenshots each page at 390x844, 820x1180, 1180x820 and 1440x900; prints PNG paths.
+# Headless Chrome screenshots each page at 390x844, 360x780, 820x1180, 1180x820 and 1440x900; prints PNG paths.
+# Widths below 500px go through an iframe harness (Chrome clamps layout width): the harness is
+# screenshotted at 500px wide with the iframe centered, then center-cropped to the exact size.
 # Exit 0 ok; 1 Chrome/missing page/screenshot failure; 2 usage.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
@@ -37,13 +39,38 @@ for p in $PAGES; do
   if [ ! -f "$p" ]; then echo "page not found: $p" >&2; rc=1; continue; fi
   abs=$(cd "$(dirname "$p")" && pwd)/$(basename "$p")
   name=$(basename "$p" .html)
-  for size in 390,844 820,1180 1180,820 1440,900; do
+  for size in 390,844 360,780 820,1180 1180,820 1440,900; do
     w=${size%,*}; h=${size#*,}
     out="$OUT/$name-${w}x${h}.png"
     errf=$(mktemp) || exit 1
     rm -f "$out"
-    "$CHROME" --headless=new --hide-scrollbars --window-size="$size" \
-      --virtual-time-budget=3000 --screenshot="$out" "file://$abs" >/dev/null 2>"$errf" || true
+    target="file://$abs"; winsize="$size"; crop=0; harness=""; raw="$out"
+    if [ "$w" -lt 500 ]; then
+      # Chrome clamps layout width: render through a centered exact-size iframe instead
+      left=$(( (500 - w) / 2 ))
+      harness="$OUT/.harness-$name-${w}x${h}.html"
+      {
+        printf '%s\n' '<!doctype html><html><head><meta charset="utf-8"><style>'
+        printf 'html,body{margin:0;padding:0;background:#fff}iframe{display:block;position:absolute;left:%spx;top:0;width:%spx;height:%spx;border:0}\n' "$left" "$w" "$h"
+        printf '%s\n' '</style></head><body>'
+        printf '<iframe src="file://%s"></iframe></body></html>\n' "$abs"
+      } > "$harness"
+      target="file://$harness"; winsize="500,$h"; crop=1
+      harness_abs=$(cd "$(dirname "$harness")" && pwd)/$(basename "$harness")
+      target="file://$harness_abs"
+      raw="$OUT/.raw-$name-${w}x${h}.png"
+      rm -f "$raw"
+    fi
+    "$CHROME" --headless=new --hide-scrollbars --window-size="$winsize" \
+      --virtual-time-budget=3000 --screenshot="$raw" "$target" >/dev/null 2>"$errf" || true
+    if [ "$crop" -eq 1 ] && [ -s "$raw" ]; then
+      if sips -c "$h" "$w" "$raw" --out "$out" >/dev/null 2>&1; then
+        rm -f "$raw" "$harness"
+      else
+        echo "crop failed: $p ($size)" >&2
+        rm -f "$out"
+      fi
+    fi
     if [ -s "$out" ]; then
       printf '%s\n' "$out"
     else

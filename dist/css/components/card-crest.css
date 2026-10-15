@@ -1,0 +1,39 @@
+/* Card Center Emblem and Dynamic Seal Crest Sizing */
+.card__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-0-5);
+  pointer-events: none;
+}
+
+.card__crest {
+  min-inline-size: 56px;
+  min-block-size: 56px;
+  width: auto;
+  height: 56px;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-line);
+  background: var(--color-surface-bg);
+  box-shadow: var(--shadow-1);
+  position: relative;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.card__crest-inner {
+  font-family: var(--font-title);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

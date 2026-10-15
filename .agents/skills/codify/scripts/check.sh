@@ -1,5 +1,5 @@
 #!/bin/sh
-# Validate layout, skills, scripts, index. Prints "ok" or problems; exit 1 on problems.
+# Validate layout, skills, scripts, index, and the 100-line gate. Prints "ok" or problems; exit 1 on problems.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd); cd "$ROOT"
 E=0; err(){ echo "ERR $*"; E=1; }
@@ -28,6 +28,14 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
   [ -z "$t" ] || err "tracked files in tmp/: $t"
   r=$(grep -rln --exclude-dir=prompt 'tmp/[A-Za-z0-9_-]' docs .agents/skills 2>/dev/null | grep -v '/codify/' || true)
   [ -z "$r" ] || err "references to tmp/ paths: $r"
+fi
+if ! lo=$("$HERE/lines.sh" 2>&1); then
+  while IFS= read -r l; do
+    [ -n "$l" ] || continue
+    err "line limit: $l"
+  done <<EOF
+$lo
+EOF
 fi
 [ $E -eq 0 ] && echo ok
 exit $E

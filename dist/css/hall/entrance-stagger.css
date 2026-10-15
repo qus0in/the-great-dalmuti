@@ -1,0 +1,7 @@
+/* ==========================================================================
+   6. Entrance stagger (applied with .anim-fade-up)
+   ========================================================================== */
+.hall__delay-1 { animation-delay: var(--dur-base); }
+.hall__delay-2 { animation-delay: calc(var(--dur-base) * 2); }
+.hall__delay-3 { animation-delay: calc(var(--dur-base) * 3); }
+.hall__delay-4 { animation-delay: calc(var(--dur-base) * 4); }

@@ -1,0 +1,27 @@
+/* Card Interactive States and Selection Behavior for The Great Dalmuti */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(calc(var(--space-1) * -1));
+    box-shadow: var(--shadow-card-hover);
+    cursor: pointer;
+    border-color: var(--color-line-strong);
+  }
+}
+
+.card.is-selected {
+  transform: translateY(calc(var(--space-2) * -1));
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover), 0 0 0 1px var(--color-accent);
+}
+
+.card.is-playable {
+  border-color: var(--color-accent-sky);
+  box-shadow: var(--shadow-1), 0 0 8px color-mix(in srgb, var(--color-sky) 50%, transparent);
+}
+
+.card.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-1);
+}

@@ -1,0 +1,38 @@
+/* Card Room Arena Grid and Seat Placement (Desktop & Shared) */
+.play-arena {
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "top-seat top-seat top-seat"
+    "left-seat center-table right-seat";
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.play-arena__seat--north {
+  grid-area: top-seat;
+  justify-self: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.play-arena__seat--west {
+  grid-area: left-seat;
+  justify-self: start;
+  width: 100%;
+  max-width: 240px;
+}
+
+.play-arena__seat--east {
+  grid-area: right-seat;
+  justify-self: end;
+  width: 100%;
+  max-width: 240px;
+}
+
+.play-arena__table {
+  grid-area: center-table;
+  width: 100%;
+  min-height: 180px;
+}

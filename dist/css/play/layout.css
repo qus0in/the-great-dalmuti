@@ -1,0 +1,30 @@
+/* Page Shell & Container Layout for Play Screen */
+.play-page {
+  min-height: 100vh;
+  background-color: var(--color-surface-bg);
+  color: var(--color-ink);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1) var(--space-3);
+}
+
+.play-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+  flex: 1;
+}
+
+@media (max-width: 599px) {
+  .play-page {
+    padding: var(--space-1);
+  }
+
+  .play-container {
+    gap: var(--space-1);
+  }
+}

@@ -1,8 +1,4 @@
-/* Design Tokens for The Great Dalmuti */
-
-/* ==========================================================================
-   Typography Imports (CDN Fonts per Contract)
-   ========================================================================== */
+/* Design Tokens for The Great Dalmuti (100% Palette-Derived, Modular Foundation) */
 @font-face {
   font-family: 'LevelUp';
   font-weight: 400;
@@ -10,7 +6,6 @@
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-Regular.woff2') format('woff2');
   font-display: swap;
 }
-
 @font-face {
   font-family: 'LevelUp';
   font-weight: 600;
@@ -18,7 +13,6 @@
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-SemiBold.woff2') format('woff2');
   font-display: swap;
 }
-
 @font-face {
   font-family: 'LevelUp';
   font-weight: 700;
@@ -26,7 +20,6 @@
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-Bold.woff2') format('woff2');
   font-display: swap;
 }
-
 @font-face {
   font-family: 'KotraGothic';
   font-weight: 400 700;
@@ -35,158 +28,54 @@
   font-display: swap;
 }
 
-/* ==========================================================================
-   Root Variables
-   ========================================================================== */
 :root {
-  /* ------------------------------------------------------------------------
-     1. Raw Color Palette (ColorHunt: fdf4d2b0cde6a290b7946d6d)
-     ------------------------------------------------------------------------ */
+  /* 1. Raw Color Palette (ColorHunt: fdf4d2b0cde6a290b7946d6d + Neutrals) */
   --color-cream: #FDF4D2;
   --color-sky: #B0CDE6;
   --color-lavender: #A290B7;
   --color-rose: #946D6D;
-
-  /* Absolute Neutrals for color-mix & accessibility */
   --color-raw-dark: #191211;
   --color-raw-white: #FFFFFF;
 
-  /* ------------------------------------------------------------------------
-     2. Derived Semantic Colors (via color-mix for WCAG AA/AAA compliance)
-     ------------------------------------------------------------------------ */
-  /* Text & Ink (Contrast on Cream: > 13:1, AAA) */
+  /* 2. Derived Semantic Colors (100% strict ColorHunt derivation) */
   --color-ink: color-mix(in srgb, var(--color-rose) 20%, var(--color-raw-dark));
-  --color-ink-muted: color-mix(in srgb, var(--color-rose) 40%, #3D302E);
-  --color-ink-inverse: #FFFFFF;
+  --color-ink-muted: color-mix(in srgb, var(--color-rose) 45%, var(--color-raw-dark));
+  --color-ink-inverse: var(--color-raw-white);
 
-  /* Surfaces & Backgrounds */
   --color-surface-bg: var(--color-cream);
-  --color-surface-card: #FFFEF9;
-  --color-surface-panel: color-mix(in srgb, var(--color-cream) 92%, #FFFFFF);
+  --color-surface-card: color-mix(in srgb, var(--color-cream) 12%, var(--color-raw-white));
+  --color-surface-panel: color-mix(in srgb, var(--color-cream) 92%, var(--color-raw-white));
   --color-surface-panel-alt: color-mix(in srgb, var(--color-cream) 80%, var(--color-sky));
-  --color-surface-table: color-mix(in srgb, var(--color-sky) 22%, #182835);
-  --color-surface-table-felt: color-mix(in srgb, var(--color-sky) 18%, #14212C);
-  --color-surface-overlay: rgba(25, 18, 17, 0.72);
-  --color-surface-table-badge: rgba(20, 33, 44, 0.75);
+  --color-surface-table: color-mix(in srgb, var(--color-sky) 20%, var(--color-raw-dark));
+  --color-surface-table-felt: color-mix(in srgb, var(--color-sky) 15%, var(--color-raw-dark));
+  --color-surface-overlay: color-mix(in srgb, var(--color-raw-dark) 72%, transparent);
+  --color-surface-table-badge: color-mix(in srgb, var(--color-surface-table-felt) 75%, transparent);
 
-  /* Lines & Borders */
   --color-line: color-mix(in srgb, var(--color-rose) 36%, var(--color-cream));
-  --color-line-strong: color-mix(in srgb, var(--color-rose) 65%, #342424);
+  --color-line-strong: color-mix(in srgb, var(--color-rose) 50%, var(--color-raw-dark));
   --color-line-subtle: color-mix(in srgb, var(--color-rose) 16%, var(--color-cream));
   --color-line-gold: color-mix(in srgb, var(--color-rose) 45%, var(--color-cream));
 
-  /* Accent & Interactive States (WCAG AAA contrast > 5.2:1) */
-  --color-accent: color-mix(in srgb, var(--color-rose) 35%, #4A2020);
-  --color-accent-hover: color-mix(in srgb, var(--color-rose) 20%, #2B1010);
+  --color-accent: color-mix(in srgb, var(--color-rose) 65%, var(--color-raw-dark));
+  --color-accent-hover: color-mix(in srgb, var(--color-rose) 45%, var(--color-raw-dark));
   --color-accent-soft: color-mix(in srgb, var(--color-rose) 18%, var(--color-cream));
-  --color-accent-sky: color-mix(in srgb, var(--color-sky) 30%, #183C60);
-  --color-accent-lavender: color-mix(in srgb, var(--color-lavender) 30%, #3A2650);
+  --color-accent-sky: color-mix(in srgb, var(--color-sky) 50%, var(--color-raw-dark));
+  --color-accent-lavender: color-mix(in srgb, var(--color-lavender) 50%, var(--color-raw-dark));
 
-  /* Status & Role Colors (100% palette-derived) */
   --color-gold: color-mix(in srgb, var(--color-rose) 55%, var(--color-cream));
   --color-gold-glow: color-mix(in srgb, var(--color-rose) 35%, var(--color-cream));
   --color-pass: color-mix(in srgb, var(--color-ink) 75%, var(--color-cream));
   --color-pass-soft: color-mix(in srgb, var(--color-ink) 12%, var(--color-cream));
 
-  /* Card Rank Color Bands (WCAG AAA contrast > 6:1 on white and cream) */
   --color-rank-ruling: color-mix(in srgb, var(--color-rose) 45%, var(--color-ink));
   --color-rank-noble: color-mix(in srgb, var(--color-lavender) 40%, var(--color-raw-dark));
   --color-rank-guild: color-mix(in srgb, var(--color-sky) 40%, var(--color-raw-dark));
   --color-rank-labor: color-mix(in srgb, var(--color-rose) 50%, var(--color-raw-dark));
   --color-rank-jester: color-mix(in srgb, var(--color-lavender) 30%, var(--color-ink));
 
-  /* Emblem / Badge surface tints */
   --color-tint-ruling: color-mix(in srgb, var(--color-rose) 20%, var(--color-surface-card));
   --color-tint-noble: color-mix(in srgb, var(--color-lavender) 24%, var(--color-surface-card));
-  --color-tint-guild: color-mix(in srgb, var(--color-sky) 26%, var(--color-surface-card));
-  --color-tint-labor: color-mix(in srgb, var(--color-rose) 20%, var(--color-surface-card));
-  --color-tint-jester: color-mix(in srgb, var(--color-lavender) 20%, var(--color-surface-card));
-
-  /* ------------------------------------------------------------------------
-     3. Typography Tokens
-     ------------------------------------------------------------------------ */
-  --font-title: 'LevelUp', system-ui, -apple-system, sans-serif;
-  --font-body: 'KotraGothic', system-ui, -apple-system, sans-serif;
-
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-md: 18px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
-  --font-size-2xl: 32px;
-  --font-size-3xl: 40px;
-  --font-size-card-rank: 48px;
-
-  /* Line Height / Leading Tokens (Korean-first typography rhythm) */
-  --leading-tight: 1.25;
-  --leading-snug: 1.4;
-  --leading-body: 1.7;
-
-  /* Aliases for backwards compatibility */
-  --line-height-tight: var(--leading-tight);
-  --line-height-normal: var(--leading-snug);
-  --line-height-relaxed: var(--leading-body);
-
-  /* Letter Spacing / Tracking Tokens (Hangul: 0; Caps: slight positive) */
-  --tracking-normal: 0;
-  --tracking-tight: 0;
-  --tracking-caps: 0.05em;
-
-  /* ------------------------------------------------------------------------
-     4. Spacing Scale (Strict 8px Unit System)
-     ------------------------------------------------------------------------ */
-  --space-neg-px: -1px;
-  --space-px: 1px;
-  --space-0-25: 2px;
-  --space-0-5: 4px;
-  --space-1: 8px;
-  --space-1-5: 12px;
-  --space-2: 16px;
-  --space-3: 24px;
-  --space-4: 32px;
-  --space-5: 40px;
-  --space-6: 48px;
-  --space-8: 64px;
-  --space-10: 80px;
-  --space-12: 96px;
-
-  /* ------------------------------------------------------------------------
-     5. Shape & Elevation Tokens
-     ------------------------------------------------------------------------ */
-  --radius-1: 8px;
-  --radius-2: 16px;
-  --radius-full: 9999px;
-
-  --shadow-1: 0 2px 6px rgba(25, 18, 17, 0.08);
-  --shadow-2: 0 8px 24px rgba(25, 18, 17, 0.14);
-  --shadow-card: 0 4px 12px rgba(25, 18, 17, 0.12);
-  --shadow-card-hover: 0 12px 28px rgba(25, 18, 17, 0.22);
-  --shadow-turn-glow: 0 0 18px rgba(212, 175, 55, 0.55);
-  --shadow-table-felt: inset 0 0 40px rgba(0, 0, 0, 0.45);
-  --shadow-stack-item: 1px 1px 3px rgba(25, 18, 17, 0.35);
-  --shadow-selected-high: 0 16px 32px rgba(25, 18, 17, 0.28);
-
-  /* ------------------------------------------------------------------------
-     6. Motion Tokens (Subtle & Restrained)
-     ------------------------------------------------------------------------ */
-  --dur-fast: 120ms;
-  --dur-base: 200ms;
-  --dur-slow: 320ms;
-
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-
-  /* ------------------------------------------------------------------------
-     7. Layout & Layering
-     ------------------------------------------------------------------------ */
-  --container-max: 1200px;
-  --container-narrow: 800px;
-  --grid-columns: 12;
-
-  --z-base: 1;
-  --z-card: 10;
-  --z-card-hover: 30;
-  --z-dropdown: 50;
-  --z-modal: 100;
+  --color-tint-guild: color-mix(in srgb, var(--color-sky) 24%, var(--color-surface-card));
+  --color-tint-labor: color-mix(in srgb, var(--color-rose) 18%, var(--color-surface-card));
+  --color-tint-jester: color-mix(in srgb, var(--color-lavender) 18%, var(--color-surface-card));
 }

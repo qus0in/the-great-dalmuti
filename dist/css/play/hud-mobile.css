@@ -1,0 +1,34 @@
+/* Mobile (Phone) Responsive Overrides for Play HUD */
+@media (max-width: 599px) {
+  .play-hud {
+    padding: var(--space-0-5) var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .play-hud__left {
+    gap: var(--space-1);
+  }
+
+  .play-hud__brand {
+    font-size: var(--font-size-base);
+  }
+
+  .play-hud__round {
+    gap: var(--space-0-5);
+  }
+
+  .play-hud__round-number {
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+  }
+
+  .play-hud__tribute,
+  .play-hud__deck-stat {
+    display: none;
+  }
+
+  .play-hud__exit-link {
+    font-size: var(--font-size-xs);
+    padding: var(--space-0-5) var(--space-1);
+  }
+}

@@ -26,6 +26,14 @@ Ambiguous -> skill `codify`.
 - User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
 - Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
 - Missing/empty Herdr caller IDs -> skill `handoff`: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
+- Non-doc, non-binary code files <= 100 lines (split by responsibility; dist/*.html exempt until 0.3 SSR); verify via skill codify lines.sh.
+
+## Verification
+- Deterministic checks (lint, tests, lines, scripts) run through their owners (scripts); do not hand-read or repeat an unchanged green suite.
+- Review for judgment only, scoped to changed/failing/unresolved inputs or explicit risk.
+- Reuse passed evidence unchanged; rerun only affected checks after a relevant edit or failure.
+- No unsolicited scope expansion: stay inside the assigned unit and acceptance criteria.
+- Status and report reads are event-driven (completion, failure, or next decision needed), not pane polling.
 
 ## Orchestration
 - Non-trivial task -> invoke skill `orchestrate` and delegate via Herdr by default; no separate user request required; orchestrator only dispatches briefs and does final review.

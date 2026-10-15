@@ -28,9 +28,37 @@
   <meta name="twitter:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/play.css">
+  <link rel="stylesheet" href="css/tokens/typography.css">
+  <link rel="stylesheet" href="css/tokens/spacing.css">
+  <link rel="stylesheet" href="css/tokens/elevation.css">
+  <link rel="stylesheet" href="css/base/typography.css">
+  <link rel="stylesheet" href="css/base/layout.css">
+  <link rel="stylesheet" href="css/base/utilities.css">
+  <link rel="stylesheet" href="css/base/animations.css">
+  <link rel="stylesheet" href="css/components/card.css">
+  <link rel="stylesheet" href="css/components/card-crest.css">
+  <link rel="stylesheet" href="css/components/card-ranks.css">
+  <link rel="stylesheet" href="css/components/card-back.css">
+  <link rel="stylesheet" href="css/components/card-states.css">
+  <link rel="stylesheet" href="css/components/seat.css">
+  <link rel="stylesheet" href="css/components/badge.css">
+  <link rel="stylesheet" href="css/components/button.css">
+  <link rel="stylesheet" href="css/components/panel.css">
+  <link rel="stylesheet" href="css/play/layout.css">
+  <link rel="stylesheet" href="css/play/hud.css">
+  <link rel="stylesheet" href="css/play/hud-mobile.css">
+  <link rel="stylesheet" href="css/play/banner.css">
+  <link rel="stylesheet" href="css/play/arena.css">
+  <link rel="stylesheet" href="css/play/arena-mobile.css">
+  <link rel="stylesheet" href="css/play/card-stack.css">
+  <link rel="stylesheet" href="css/play/table-felt-details.css">
+  <link rel="stylesheet" href="css/play/table-felt.css">
+  <link rel="stylesheet" href="css/play/hand.css">
+  <link rel="stylesheet" href="css/play/hand-fan-deal.css">
+  <link rel="stylesheet" href="css/play/hand-mobile.css">
+  <link rel="stylesheet" href="css/play/hand-fan.css">
+  <link rel="stylesheet" href="css/play/animations.css">
+  <link rel="stylesheet" href="css/play/responsive-tablet.css">
 </head>
 <body class="play-page">
   <div class="play-container">
@@ -80,7 +108,7 @@
         <h3 class="sr-only">북쪽 좌석 - 대달무티</h3>
         <div class="seat">
           <div class="seat__avatar">민</div>
-          <div class="seat__meta">
+          <div class="seat__content">
             <div class="seat__name-row">
               <span class="seat__name">민우</span>
               <span class="badge badge--gold">1위 대달무티</span>
@@ -105,7 +133,7 @@
         <h3 class="sr-only">서쪽 좌석 - 대농노</h3>
         <div class="seat is-passed">
           <div class="seat__avatar">철</div>
-          <div class="seat__meta">
+          <div class="seat__content">
             <div class="seat__name-row">
               <span class="seat__name">철수</span>
               <span class="badge badge--rose">4위 대농노</span>
@@ -198,7 +226,7 @@
         <h3 class="sr-only">동쪽 좌석 - 소달무티</h3>
         <div class="seat is-turn">
           <div class="seat__avatar">지</div>
-          <div class="seat__meta">
+          <div class="seat__content">
             <div class="seat__name-row">
               <span class="seat__name">지은</span>
               <span class="badge badge--lavender">2위 소달무티</span>
@@ -227,7 +255,7 @@
           <div class="seat seat--me">
             <h3 class="sr-only">내 정보 및 상태</h3>
             <div class="seat__avatar">나</div>
-            <div class="seat__meta">
+            <div class="seat__content">
               <div class="seat__name-row">
                 <span class="play-hand-header__title">플레이어 (나)</span>
                 <span class="badge badge--rose">3위 소농노</span>

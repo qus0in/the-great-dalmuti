@@ -4,30 +4,10 @@ set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../.." && pwd); cd "$ROOT" || exit 1
 . "$HERE/quote.sh"
+. "$HERE/milestone-args.sh"
 
 TITLE=""; DESC=""; DESC_SET=0; DRY=0
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --dry-run)
-      DRY=1; shift;;
-    --)
-      shift
-      while [ $# -gt 0 ]; do
-        if [ -z "$TITLE" ]; then TITLE=$1
-        elif [ "$DESC_SET" -eq 0 ]; then DESC=$1; DESC_SET=1
-        else echo "unexpected arg: $1" >&2; exit 2; fi
-        shift
-      done
-      break;;
-    --*)
-      echo "unknown option: $1" >&2; exit 2;;
-    *)
-      if [ -z "$TITLE" ]; then TITLE=$1
-      elif [ "$DESC_SET" -eq 0 ]; then DESC=$1; DESC_SET=1
-      else echo "unexpected arg: $1" >&2; exit 2; fi
-      shift;;
-  esac
-done
+milestone_parse_args "$@"
 [ -n "$TITLE" ] && [ "$DESC_SET" -eq 1 ] || { echo "usage: $0 <title> <description> [--dry-run]" >&2; exit 2; }
 
 origin=$(git remote get-url origin 2>/dev/null) || { echo "no origin" >&2; exit 1; }

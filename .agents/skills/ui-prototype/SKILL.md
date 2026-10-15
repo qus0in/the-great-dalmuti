@@ -16,10 +16,11 @@ Paths relative to repo root. DESIGN.md is the source of truth for file structure
 - Korean text: word-break keep-all (+ overflow-wrap anywhere for long tokens); counts stay with numbers.
 - Breakpoints phone 360-599 / tablet 600-1023 / desktop 1024+; hover effects only under (hover:hover) and (pointer:fine); touch targets >=48px.
 - Box model: border-box everywhere; padding inside components, gap between siblings; no negative margins; no clipping heights; min-width:0 where text overflows.
-- Head essentials: concise meta, Kakao-first OG + Twitter tags, absolute https og:image 1200x630; asset exception is favicon.svg + og.png only.
-- Workers run headless/lighthouse verification, never the orchestrator.
+- Head essentials: concise meta, Kakao-first OG + Twitter tags, absolute https og:image 1200x630; only images are the icon set (favicon.ico, favicon.svg, apple-touch-icon.png, icon-192.png, icon-512.png, icon-512-maskable.png) + og.png; head must include manifest link; manifest display "browser" (no install prompt).
+- Workers run headless/lighthouse verification, never the orchestrator; only for UI behavior/layout/accessibility changes (mechanical changes reuse valid evidence).
 
 ## Scripts
 - `scripts/check.sh [dist-dir]` — contract lint; prints `ok` and exits 0 when clean, lists `file:line` and exits 1 on violations, exits 2 on usage. Also prints `warn` review hints (clipping containers, negative Hangul tracking, buttons w/o min-height); warnings never fail.
-- `scripts/shot.sh [out-dir] [pages...]` — headless Chrome screenshots each page (default dist/*.html) at 390x844, 820x1180, 1180x820, 1440x900 (default out-dir a fresh mktemp -d outside the repo); prints the out-dir; look at the PNGs and fix visual problems before review/report.
-- `scripts/a11y.sh [--min N] [pages...]` — serve dist/ over http, run Lighthouse accessibility mobile + desktop per page; prints `<page> <form-factor> <score>` with failing audits; exits 1 below min (default 100).
+- `scripts/shot.sh [out-dir] [pages...]` — headless Chrome screenshots each page (default dist/*.html) at 390x844, 360x780, 820x1180, 1180x820, 1440x900 (default out-dir a fresh mktemp -d outside the repo); widths below 500px render through a centered exact-size iframe harness (Chrome clamps layout width) and are center-cropped; prints PNG paths; look at the PNGs and fix visual problems before review/report.
+- `scripts/a11y.sh [--min N] [pages...]` — serve each page's directory over http, run Lighthouse accessibility mobile + desktop per page; prints `<page> <form-factor> <score>` with failing audits; exits 1 below min (default 100).
+- Checkpoint: `orchestrate/scripts/verify.sh <task> ui` runs `check.sh` once per checkpoint and logs under `tmp/<task>/` (reuse valid passed evidence by policy; never failures).

@@ -1,0 +1,47 @@
+/* ==========================================================================
+   4. Rule summary
+   ========================================================================== */
+.hall__rules-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hall__rules-section > * {
+  margin: 0;
+}
+
+.hall__rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.hall__rule {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: var(--radius-1);
+}
+
+.hall__rule-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  line-height: var(--leading-snug);
+}
+
+.hall__rule-text strong {
+  font-size: var(--font-size-md);
+  color: var(--color-ink);
+}
+
+.hall__rule-text span {
+  font-size: var(--font-size-sm);
+  color: var(--color-ink-muted);
+}
