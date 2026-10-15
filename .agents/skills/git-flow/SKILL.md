@@ -9,8 +9,8 @@ After bootstrap: all work on dev; main changes only via PR dev -> main. main pro
 
 Workers never commit/push; orchestrator commits on dev after final review, then ships via PR and merges. Avoids concurrent git index use.
 
-Scripts (POSIX sh; --dry-run prints outward-facing commands):
-- protect.sh: apply main protection (idempotent).
-- ship.sh "<title>" ["<body>"] [--merge] [--dry-run]: require dev + clean tree; push dev; reuse/create PR; print URL; --merge merges and ff main.
-- sync.sh [--dry-run]: fetch; ff dev to origin/main, fallback merge commit; no force push or push.
-- start.sh [--dry-run]: ensure dev tracking origin/dev (create from main and push if missing), checkout dev.
+Scripts (POSIX sh; --dry-run prints quoted mutations, runs read-only queries only, never mutates; unknown flag exits 2 first; guards enforced in dry-run too):
+- protect.sh [--dry-run]: apply main protection (idempotent).
+- ship.sh "<title>" ["<body>"] [--body-file FILE] [--merge] [--dry-run]: require dev + clean tree; push dev; lookup failure aborts (never creates duplicate); reuse/create PR (URL printed only when run); --merge merges, ff main to origin/main, returns to dev and ff's dev.
+- sync.sh [--dry-run]: fetch; ff dev to origin/main with runtime fallback to merge commit (dry-run prints ff attempt + note, never invents fallback); no force push or push.
+- start.sh [--dry-run]: resolve local/remote dev, print/run taken branch only (create from main and push if missing); ends on dev.

@@ -28,6 +28,8 @@ Split mixed knowledge across targets; link by path, never duplicate.
 ## 4. Scriptify
 - Candidate: step run >=2x, or output fully determined by inputs/files.
 - scripts/<verb>.sh: POSIX sh, executable, idempotent, non-interactive, exit!=0 on fail, terse stdout.
+- Outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run) — never a second code path.
+- Real path is what reviewers verify (validate payload bytes, e.g. `jq`), not dry-run text.
 - Resolve root from script path, not cwd.
 - Generated file owned by a skill -> scripts/index.sh with `--check` (exit 1 if stale); check.sh runs it.
 - SKILL.md references the script with a 1-line usage; no restating its logic.

@@ -7,3 +7,4 @@ Re-tier from observed results (failed briefs, review findings). Durable findings
 - Provider fragility: free/preview endpoints can vanish mid-task (retry loops). If a worker emits provider/endpoint errors for ~5 min, reassign its unit; do not wait indefinitely.
 - high/max reasoning effort: review, debugging. low effort: mechanical work.
 - reviewer should differ in model family from author when possible.
+- free/preview models: dry-run-only tests missed a broken real code path; reviewers must verify the real path's inputs (payload bytes) not only dry-run output.

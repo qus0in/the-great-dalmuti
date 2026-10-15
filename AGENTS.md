@@ -20,6 +20,8 @@ Ambiguous -> skill `codify`.
 - New durable knowledge, repeated work, or request to record rules/skills/docs -> run skill `codify`.
 - After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
 - User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
+- Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
+- Missing/empty Herdr caller IDs -> skill `orchestrate` references/handoff.md: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
 
 ## Orchestration
 - Non-trivial task -> skill `orchestrate`: orchestrator only dispatches briefs and does final review.
