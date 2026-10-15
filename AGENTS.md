@@ -22,7 +22,7 @@ Ambiguous -> skill `codify`.
 - After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
 - User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
 - Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
-- Missing/empty Herdr caller IDs -> skill `orchestrate` references/handoff.md: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
+- Missing/empty Herdr caller IDs -> skill `handoff`: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
 
 ## Orchestration
 - Non-trivial task -> invoke skill `orchestrate` and delegate via Herdr by default; no separate user request required; orchestrator only dispatches briefs and does final review.
@@ -49,6 +49,7 @@ Ambiguous -> skill `codify`.
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
 - gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
+- handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
 <!-- skills:end -->

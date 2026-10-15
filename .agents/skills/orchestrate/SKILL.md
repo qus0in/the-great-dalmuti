@@ -14,7 +14,7 @@ Plan: split into units with disjoint file ownership; orchestrator does shared sc
 Briefs: `tmp/<task>/brief-<worker>.md` (goal, owned, forbidden, acceptance, report path `tmp/<task>/report-<worker>.md`).
 Dispatch non-blocking: `scripts/dispatch.sh [--workspace <ID> --self-pane <ID>] <target> <brief-path>` (no --wait).
 Loop is event-driven: dispatch -> `scripts/wait.sh [--any] [--timeout MS] [--workspace <ID> --self-pane <ID>] <target>...` run in background (harness background or `&`); on first worker settling, read its report and dispatch the next unit (task/review/fix) to it. Never foreground-wait; keep conversation responsive.
-Missing/empty Herdr caller IDs, handoff, identity: references/handoff.md (never identify caller from focus/cwd; revalidate live state on takeover; handoff record must verify backend=Herdr).
+Missing/empty Herdr caller IDs, handoff, identity: skill handoff (scripts/snapshot.sh, scripts/takeover.sh; never identify caller from focus/cwd; verify backend=Herdr).
 Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<reviewer>.md` (blocking/non-blocking). Author fixes; max 2 rounds.
 Final review: read reports/reviews, diff, run codify `check.sh`; accept or new brief. Never fix. Commit/push via skill `git-flow` after acceptance.
 Blocked worker: read it, never auto-approve; escalate. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.

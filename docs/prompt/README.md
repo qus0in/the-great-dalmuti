@@ -17,3 +17,4 @@
 - [2026-10-15](2026-10-15-13-korean-emphasis.md) — 한국어 조사 인접 강조 표기 회고
 - [2026-10-15](2026-10-15-14-herdr-delegation-user-correction.md) — Herdr 위임 정정
 - [2026-10-15](2026-10-15-15-herdr-delegation-retrospective-and-policy.md) — 서브에이전트 위탁 원인 보고 및 인계 규칙 갱신
+- [2026-10-15](2026-10-15-16-orchestrator-handoff-skill.md) — 오케스트레이터 인수 인계를 위한 스킬/스크립트 추가
