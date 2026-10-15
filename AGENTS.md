@@ -11,6 +11,7 @@ CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills: symlinks. Edit targets
 Ambiguous -> skill `codify`.
 
 ## Using skills
+- Korean particle/suffix directly after emphasis -> inline code, or `<strong>` only with supported HTML rendering; avoid adjacent closing `**` in replies/docs.
 - Read index below; open a SKILL.md only when its trigger matches.
 - Script exists -> run it; don't re-derive or read its source unless it fails.
 - Don't paste skill/doc content into replies or other files; cite path.
@@ -24,9 +25,11 @@ Ambiguous -> skill `codify`.
 - Missing/empty Herdr caller IDs -> skill `orchestrate` references/handoff.md: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
 
 ## Orchestration
-- Non-trivial task -> invoke skill `orchestrate` and delegate by default; no separate user request required; orchestrator only dispatches briefs and does final review.
+- Non-trivial task -> invoke skill `orchestrate` and delegate via Herdr by default; no separate user request required; orchestrator only dispatches briefs and does final review.
+- Delegation transport strictly means existing Herdr worker panes dispatched via `orchestrate/scripts`; never built-in collaboration spawn/followup/subagent APIs. Tool availability is not authorization to substitute backend.
+- Before dispatch, resolve live workspace/self and verify intended worker; if Herdr is unavailable, context missing, or no worker ready, follow safe discovery/escalation; never silently replace with native subagents or self-implement worker units.
 - Dispatch + waits run in background; orchestrator never blocks on a worker; redistribute as each worker settles.
-- Workers implement; reviewer != author; each worker owns a disjoint file set.
+- Herdr workers implement; reviewer != author; each worker owns a disjoint file set.
 - Assign units by each worker's model tier (see skill `orchestrate`); reviewer differs from author in model family when possible.
 - Trivial single-step answer: answer directly, no orchestration.
 
@@ -46,6 +49,6 @@ Ambiguous -> skill `codify`.
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
 - gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
-- orchestrate: Automatically delegate non-trivial tasks without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
+- orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
 <!-- skills:end -->

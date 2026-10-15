@@ -11,14 +11,15 @@ Safe handoff/takeover when Herdr caller IDs (`HERDR_WORKSPACE_ID` / `HERDR_PANE_
 
 ## Handoff record
 On takeover, before acting, write `tmp/<task>/handoff.md`:
+- backend: verify and record `backend=Herdr` explicitly (never built-in/native child agents)
 - workspace/self IDs + evidence (which live command/output produced them)
 - current branch and pre-existing changes (git status/diff summary)
-- per worker: identity, model, status, and live confirmation timestamp (when `workers.sh --model` output was captured)
+- per worker: identity, pane ID, name, model, status, and live confirmation timestamp (when `workers.sh --model` output was captured)
 - owned files (from briefs)
 - active tasks (dispatched briefs, in-flight reviews)
 - brief/report/review paths per task
 - pending findings and next actions
 
 ## Takeover behavior
-- Revalidate live state (branch, workers, reports, reviews) on takeover: artifacts and status history are evidence, not current truth.
+- Revalidate live state (backend, branch, workers, reports, reviews) on takeover: artifacts and status history are evidence, not current truth. Verify `backend=Herdr`; do not assume backend from 'worker' label alone.
 - Do not interrupt or resend to busy/blocked workers; inspect its artifacts/status first, reassign via a new brief only if warranted.
