@@ -44,3 +44,4 @@
 - [2026-10-15](2026-10-15-40-css-module-split-final-review.md) — CSS 모듈 분리와 최종 리뷰 수정 완료
 - [2026-10-15](2026-10-15-41-pages-actions-configuration-push.md) — Pages Actions 배포 구성·안내 작성과 푸시
 - [2026-10-15](2026-10-15-42-guard-no-hide-untracked.md) — 가드 우회로 파일 숨기기 금지
+- [2026-10-15](2026-10-15-43-issue-close-with-work.md) — 이슈는 작업과 함께 닫기

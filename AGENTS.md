@@ -49,11 +49,13 @@ Ambiguous -> skill `codify`.
 - Work on `dev`; main only via PR dev->main (skill `git-flow`).
 - `main` protected; never push/force-push it.
 - Workers don't commit/push; orchestrator commits after final review.
+- Never hide repo state to pass a guard: no `.git/info/exclude`, no stash/force. A content rule is not a tracking rule; untracked file blocking a check -> commit verbatim or ask.
 
 ## Issues
 - Skill `gh-issues`. FIT framework: focus = milestone core work; instant = small, finish right away; tuck = deferred/parked. Domain labels: frontend, design.
 - Milestones: semver + Korean stage description. Current: 0.2.0 = HTML·CSS 프로토타입 화면 구성.
 - Every issue: exactly 1 milestone + exactly 1 FIT label + optional domain labels.
+- Issues close with their work: `Closes #N` in the shipping PR body, or verify acceptance against main right after merge and close citing that evidence.
 
 ## UI prototype (0.2)
 - UI work under dist/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
