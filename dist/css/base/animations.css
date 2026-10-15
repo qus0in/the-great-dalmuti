@@ -1,0 +1,65 @@
+/* Shared Keyframe Animations and Utility Classes for The Great Dalmuti */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes deal-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-4) * -1)) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(var(--space-0-5) * -1));
+  }
+}
+
+@keyframes turn-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--color-gold-glow);
+  }
+  50% {
+    box-shadow: 0 0 22px var(--color-gold);
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+
+.anim-deal-in {
+  animation: deal-in var(--dur-base) var(--ease-out) both;
+}
+
+.anim-pulse {
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+.anim-turn-glow {
+  animation: turn-glow 1.8s var(--ease-in-out) infinite;
+}

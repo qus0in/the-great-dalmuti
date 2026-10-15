@@ -1,0 +1,72 @@
+/* Mobile (Phone) Responsive Overrides for Hand Area (Compact fold framing) */
+@media (max-width: 599px) {
+  .play-hand-area {
+    padding: var(--space-1) var(--space-1-5);
+    gap: var(--space-0-5);
+    margin-top: 0;
+  }
+
+  .play-hand-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-0-5);
+    padding-bottom: 0;
+  }
+
+  .play-hand-header__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1);
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .play-hand-header .seat--me {
+    padding: var(--space-0-5) var(--space-1);
+    gap: var(--space-1);
+  }
+
+  .play-hand-header .seat__avatar {
+    min-width: 24px;
+    min-height: 24px;
+    width: auto;
+    height: 24px;
+    padding-inline: var(--space-0-25);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    overflow: visible;
+  }
+
+  .play-hand-header__selection-hint {
+    display: none;
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-snug);
+    padding: var(--space-0-5) var(--space-1);
+  }
+
+  .play-hand-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-1);
+    width: 100%;
+  }
+
+  .play-hand-controls .btn {
+    width: 100%;
+    min-height: var(--space-6);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-snug);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .hand-tray {
+    min-height: var(--space-12);
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-0-5);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
+}

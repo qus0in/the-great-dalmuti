@@ -1,0 +1,23 @@
+/* ==========================================================================
+   5. Entry CTA + footer
+   ========================================================================== */
+.hall__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hall__cta > * {
+  margin: 0;
+}
+
+/* Keep copy full-width (text-center) while the button shrink-wraps. */
+.hall__cta > h2,
+.hall__cta > p {
+  width: 100%;
+}
+
+.hall__footer {
+  padding-bottom: var(--space-4);
+}

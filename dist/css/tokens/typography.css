@@ -1,0 +1,27 @@
+/* Typography Scale, Rhythm, and Tracking Tokens for The Great Dalmuti */
+:root {
+  /* Font Family Stacks */
+  --font-title: 'LevelUp', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'KotraGothic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Type Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  --font-size-card-rank: 3rem;
+
+  /* Line Heights (Rhythm Tokens) */
+  --leading-tight: 1.25;
+  --leading-snug: 1.4;
+  --leading-body: 1.7;
+
+  /* Letter Spacing (Tracking Tokens) */
+  --tracking-normal: 0;
+  --tracking-tight: 0;
+  --tracking-caps: 0.05em;
+}

@@ -2,6 +2,7 @@
 # Usage: wait.sh [--any] [--timeout MS] [--workspace ID --self-pane ID] <target>...
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
+. "$HERE/wait-lib.sh"
 ANY=0; TIMEOUT=; TIMEOUT_SET=0
 WS=; SELF=; WS_SET=0; SELF_SET=0
 total=$#
@@ -41,23 +42,6 @@ if [ "$TIMEOUT_SET" -eq 1 ]; then
 fi
 
 [ $# -gt 0 ] || { echo "usage: $0 [--any] [--timeout MS] [--workspace ID --self-pane ID] <target>..." >&2; exit 2; }
-
-# Validate context and scope all targets within workspace without unquoted expansion
-build_and_run_context() {
-  ws_val=$1; self_val=$2; ws_set=$3; self_set=$4; shift 4
-  count=$#; k=0
-  while [ "$k" -lt "$count" ]; do
-    t=$1; shift
-    set -- "$@" --target "$t"
-    k=$((k + 1))
-  done
-  if [ "$ws_set" -eq 1 ] || [ "$self_set" -eq 1 ]; then
-    [ "$ws_set" -eq 1 ] && set -- --workspace "$ws_val" "$@"
-    [ "$self_set" -eq 1 ] && set -- --self-pane "$self_val" "$@"
-  fi
-  "$HERE/context.sh" "$@"
-}
-
 ctx=$(build_and_run_context "$WS" "$SELF" "$WS_SET" "$SELF_SET" "$@") || exit $?
 
 FAIL=0

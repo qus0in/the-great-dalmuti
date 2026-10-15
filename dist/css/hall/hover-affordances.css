@@ -1,0 +1,19 @@
+/* ==========================================================================
+   7. Hover affordances — real pointers only (touch must not stick)
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .hall__seat:hover {
+    position: relative;
+    z-index: var(--z-card-hover);
+    transform: translateY(calc(var(--space-0-5) * -1));
+    box-shadow: var(--shadow-2);
+  }
+
+  .hall__rank:hover {
+    position: relative;
+    z-index: var(--z-card-hover);
+    transform: translateY(calc(var(--space-0-5) * -1));
+    box-shadow: var(--shadow-2);
+    border-color: var(--color-line-strong);
+  }
+}

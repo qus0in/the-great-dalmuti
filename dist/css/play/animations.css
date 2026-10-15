@@ -1,0 +1,41 @@
+/* Play Screen Specific Animations and Reduced Motion Rules */
+@keyframes trick-drop {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes deal-stagger {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to { opacity: 1; }
+}
+
+@keyframes selection-pulse {
+  0%, 100% {
+    box-shadow: var(--shadow-card);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--color-gold-glow), 0 0 0 1px var(--color-gold);
+  }
+}
+
+.trick-drop {
+  animation: trick-drop var(--dur-slow) var(--ease-out) both;
+}
+
+.deal-stagger {
+  animation: deal-stagger var(--dur-base) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

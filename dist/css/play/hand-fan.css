@@ -1,0 +1,98 @@
+/* Fan interactions and playable-card label */
+@media (hover: hover) and (pointer: fine) {
+  .hand-fan .card:hover {
+    transform: translateY(-24px) scale(1.05) !important;
+    z-index: var(--z-card-hover) !important;
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.hand-fan .card.is-selected {
+  transform: translateY(-32px) scale(1.06) !important;
+  z-index: calc(var(--z-card-hover) + 5) !important;
+  border-color: var(--color-rank-ruling);
+  box-shadow: var(--shadow-selected-high), 0 0 0 2px var(--color-gold);
+}
+
+.card.is-playable {
+  border-color: var(--color-gold);
+}
+
+.card.is-playable::after {
+  content: "낼 수 있음";
+  position: absolute;
+  top: calc(var(--space-1) * -1);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-gold);
+  color: var(--color-raw-dark);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  padding: var(--space-px) var(--space-0-5);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-1);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (max-width: 599px) {
+  .hand-fan {
+    grid-auto-columns: 30px;
+    justify-content: flex-start;
+    padding-left: var(--space-2);
+    padding-right: var(--space-10);
+  }
+
+  .hand-fan .card {
+    width: 90px;
+    height: 130px;
+    scroll-snap-align: start;
+  }
+
+  .hand-fan .card .card__crest {
+    min-inline-size: 28px;
+    min-block-size: 28px;
+    width: auto;
+    height: 28px;
+    padding-inline: var(--space-0-5);
+    border-width: 1px;
+  }
+
+  .hand-fan .card .card__crest-inner {
+    font-size: var(--font-size-md);
+  }
+
+  .hand-fan .card.card--rank-10 .card__crest-inner,
+  .hand-fan .card.card--rank-11 .card__crest-inner,
+  .hand-fan .card.card--rank-12 .card__crest-inner {
+    font-size: calc(var(--font-size-xs) - 1px);
+    letter-spacing: -0.04em;
+  }
+
+  .hand-fan .card .card__rank {
+    font-size: var(--font-size-sm);
+  }
+
+  .hand-fan .card .card__title {
+    font-size: 10px;
+    line-height: 1.1;
+    margin-top: 0;
+  }
+
+  .hand-fan .card .card__name-subtle {
+    display: none;
+  }
+
+  .hand-fan .card::before {
+    inset: var(--space-0-25);
+  }
+
+  .hand-fan .card {
+    transform: none !important;
+  }
+
+  .hand-fan .card.is-selected {
+    transform: translateY(-16px) !important;
+  }
+}

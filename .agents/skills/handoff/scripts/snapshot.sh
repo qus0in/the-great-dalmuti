@@ -7,7 +7,10 @@ set -u
 die() { rc=$1; shift; echo "snapshot.sh: $*" >&2; exit "$rc"; }
 usage() { echo "usage: $0 <task> [--repo PATH]... [--dry-run] [--workspace ID --self-pane ID]" >&2; exit 2; }
 
-ROOT=$(cd "$(dirname "$0")/../../../.." && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd)
+ROOT=$(cd "$HERE/../../../.." && pwd)
+. "$HERE/snapshot-render.sh"
+. "$HERE/snapshot-write.sh"
 TASK=""
 DRY_RUN=0
 WS=""
@@ -66,109 +69,11 @@ WORKERS=$("$ROOT/.agents/skills/orchestrate/scripts/workers.sh" --model --worksp
 BLOCK_FILE=$(mktemp) || die 1 "mktemp failed"
 trap 'rm -f "$REPOS_FILE" "$BLOCK_FILE"' EXIT INT TERM
 
-{
-  echo "<!-- handoff:begin -->"
-  echo "## Live snapshot ($UTC_TS)"
-  echo "- backend: Herdr"
-  echo "- context: $CTX"
-  echo "- self: pane=$SELF agent=${SELF_AGENT:-unknown} session=${SELF_SESSION:-none}"
-  echo "- timestamp: $UTC_TS"
-  echo ""
-  echo "### Workers"
-  if [ -n "$WORKERS" ]; then
-    echo "$WORKERS"
-  else
-    echo "(none)"
-  fi
-  echo ""
-  echo "### Repositories"
-  M_BRANCH=$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
-  M_HEAD=$(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo "unknown")
-  M_STATUS=$(git -C "$ROOT" status --short 2>/dev/null || true)
-  if [ -n "$M_STATUS" ]; then M_DIRTY="dirty"; else M_DIRTY="clean"; fi
-  echo "- main: branch=$M_BRANCH head=$M_HEAD status=$M_DIRTY"
-
-  if [ -s "$REPOS_FILE" ]; then
-    while IFS= read -r r; do
-      [ -n "$r" ] || continue
-      RP="$r"
-      [ -d "$RP" ] || RP="$ROOT/$r"
-      if [ -d "$RP" ]; then
-        R_BRANCH=$(git -C "$RP" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
-        R_HEAD=$(git -C "$RP" rev-parse --short HEAD 2>/dev/null || echo "unknown")
-        R_STATUS=$(git -C "$RP" status --short 2>/dev/null || true)
-        if [ -n "$R_STATUS" ]; then R_DIRTY="dirty"; else R_DIRTY="clean"; fi
-        echo "- repo: path=$r branch=$R_BRANCH head=$R_HEAD status=$R_DIRTY"
-      else
-        echo "- repo: path=$r (not found)"
-      fi
-    done < "$REPOS_FILE"
-  fi
-
-  echo ""
-  echo "### Tasks (tmp/$TASK)"
-  TASK_DIR="$ROOT/tmp/$TASK"
-  found_briefs=0
-  if [ -d "$TASK_DIR" ]; then
-    for b in "$TASK_DIR"/brief-*.md; do
-      [ -f "$b" ] || continue
-      found_briefs=1
-      bname=$(basename "$b")
-      target=${bname#brief-}
-      target=${target%.md}
-      has_report=no
-      has_review=no
-      [ -f "$TASK_DIR/report-$target.md" ] && has_report=yes
-      if [ -f "$TASK_DIR/review-$target.md" ] || [ -f "$TASK_DIR/review-${target%-review}.md" ]; then
-        has_review=yes
-      elif ls "$TASK_DIR"/review-*"$target"*.md >/dev/null 2>&1; then
-        has_review=yes
-      fi
-      echo "- $bname: report=$has_report review=$has_review"
-    done
-  fi
-  if [ "$found_briefs" -eq 0 ]; then
-    echo "(no briefs found in tmp/$TASK)"
-  fi
-  echo "<!-- handoff:end -->"
-} > "$BLOCK_FILE"
+snapshot_render
 
 if [ "$DRY_RUN" -eq 1 ]; then
   cat "$BLOCK_FILE"
   exit 0
 fi
 
-TARGET_MD="$ROOT/tmp/$TASK/handoff.md"
-mkdir -p "$(dirname "$TARGET_MD")"
-
-if [ -f "$TARGET_MD" ]; then
-  if grep -q '<!-- handoff:begin -->' "$TARGET_MD" && grep -q '<!-- handoff:end -->' "$TARGET_MD"; then
-    TMP_OUT=$(mktemp) || die 1 "mktemp failed"
-    awk -v bfile="$BLOCK_FILE" '
-      /<!-- handoff:begin -->/ {
-        while ((getline line < bfile) > 0) print line
-        close(bfile)
-        skip = 1
-        next
-      }
-      /<!-- handoff:end -->/ {
-        skip = 0
-        next
-      }
-      !skip { print }
-    ' "$TARGET_MD" > "$TMP_OUT" && mv "$TMP_OUT" "$TARGET_MD"
-  else
-    {
-      echo ""
-      cat "$BLOCK_FILE"
-    } >> "$TARGET_MD"
-  fi
-else
-  {
-    echo "# $TASK handoff"
-    echo ""
-    cat "$BLOCK_FILE"
-  } > "$TARGET_MD"
-fi
-
-echo "tmp/$TASK/handoff.md"
+snapshot_write

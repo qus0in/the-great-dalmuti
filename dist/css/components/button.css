@@ -1,0 +1,91 @@
+/* Button Component for The Great Dalmuti */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  min-height: var(--space-6);
+  min-width: var(--space-6);
+  padding: var(--space-1) var(--space-3);
+  gap: var(--space-1);
+  border-radius: var(--radius-1);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-ink-inverse);
+  box-shadow: var(--shadow-1);
+}
+
+.btn--secondary {
+  background-color: var(--color-surface-panel);
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+
+.btn--outline {
+  background-color: transparent;
+  border-color: var(--color-line-strong);
+  color: var(--color-ink);
+}
+
+.btn--gold {
+  background-color: var(--color-gold);
+  color: var(--color-raw-dark);
+  box-shadow: var(--shadow-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--shadow-2);
+  }
+
+  .btn--secondary:hover {
+    background-color: var(--color-surface-panel-alt);
+    border-color: var(--color-line-strong);
+  }
+
+  .btn--outline:hover {
+    background-color: var(--color-accent-soft);
+    border-color: var(--color-accent);
+  }
+
+  .btn--gold:hover {
+    background-color: var(--color-gold-glow);
+    box-shadow: var(--shadow-turn-glow);
+  }
+}
+
+.btn--sm {
+  font-size: var(--font-size-sm);
+  padding: var(--space-0-5) var(--space-2);
+}
+
+.btn--lg {
+  font-size: var(--font-size-lg);
+  padding: var(--space-2) var(--space-4);
+}
+
+.btn:disabled,
+.btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

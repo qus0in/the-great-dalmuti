@@ -12,10 +12,13 @@ Find workers: `scripts/context.sh [--workspace ID --self-pane ID]` -> workspace/
 Assign by capability: identify model (kind + status line), map to tier (references/models.md), assign by tier; reviewer should differ in family from author.
 Plan: split into units with disjoint file ownership; orchestrator does shared scaffolding that would conflict (e.g. indexes) before dispatch.
 Briefs: `tmp/<task>/brief-<worker>.md` (ordered why -> what -> how; goal, owned, forbidden, acceptance, report path `tmp/<task>/report-<worker>.md` (STAR)).
+Acceptance/stop criteria per unit before dispatch (owned paths, gate, report); no scope expansion past them without new evidence.
 Dispatch non-blocking: `scripts/dispatch.sh [--workspace <ID> --self-pane <ID>] <target> <brief-path>` (no --wait).
 Loop is event-driven: dispatch -> `scripts/wait.sh [--any] [--timeout MS] [--workspace <ID> --self-pane <ID>] <target>...` run in background (harness background or `&`); on first worker settling, read its report and dispatch the next unit (task/review/fix) to it. Never foreground-wait; keep conversation responsive.
 Missing/empty Herdr caller IDs, handoff, identity: skill handoff (scripts/snapshot.sh, scripts/takeover.sh; never identify caller from focus/cwd; verify backend=Herdr).
-Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<reviewer>.md` (STAR form; blocking/non-blocking). Author fixes; max 2 rounds.
-Final review: read reports/reviews, diff, run codify `check.sh`; accept or new brief. Never fix. Commit/push via skill `git-flow` after acceptance.
-Blocked worker: read it, never auto-approve; escalate. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
+Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<reviewer>.md` (STAR form; blocking/non-blocking); one scoped review of judgment/changed behavior per unit — do not reproduce automated gates. Author fixes; max 2 rounds.
+Final review: read machine gate output (`scripts/verify.sh <task> [rules|ui|all]`; logs `tmp/<task>/verify-<gate>.log`), reports/reviews, and the diff; accept or new brief. Never fix; never reproduce automated checks. Commit/push via skill `git-flow` after acceptance.
+Gates/reruns: `verify.sh <task> [rules|ui|all]` runs the applicable gates once per checkpoint (rules = codify check.sh, ui = ui-prototype check.sh) and logs under `tmp/<task>/`; reuse valid passed evidence by workflow policy — never reuse failures; rerun only on relevant input change, repair, or stated risk (AGENTS.md Verification).
+Blocked worker: read pane/report then escalate — pane reads only for blocked/errored/stalled work, not routine polling. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
 Provider errors: reassign a worker that errors for ~5 min (references/models.md).
+Orchestrator never runs headless/visual QA itself; assign visual/headless verification to a worker and read its report/PNGs.

@@ -1,0 +1,86 @@
+/* Card Rank Theming and 2-Digit Optimization for The Great Dalmuti */
+/* Ruling Ranks (Rank 1, 2) */
+.card--rank-1,
+.card--rank-2 {
+  border-color: var(--color-line-gold);
+}
+.card--rank-1 .card__crest,
+.card--rank-2 .card__crest {
+  border-color: var(--color-gold);
+  background: var(--color-tint-ruling);
+}
+.card--rank-1 .card__rank,
+.card--rank-1 .card__crest-inner {
+  color: var(--color-rank-ruling);
+}
+
+/* Noble Ranks (3, 4, 5) */
+.card--rank-3 .card__crest,
+.card--rank-4 .card__crest,
+.card--rank-5 .card__crest {
+  border-color: var(--color-lavender);
+  background: var(--color-tint-noble);
+}
+.card--rank-3 .card__rank,
+.card--rank-4 .card__rank,
+.card--rank-5 .card__rank {
+  color: var(--color-rank-noble);
+}
+
+/* Military & Guild Ranks (6, 7, 8) */
+.card--rank-6 .card__crest,
+.card--rank-7 .card__crest,
+.card--rank-8 .card__crest {
+  border-color: var(--color-sky);
+  background: var(--color-tint-guild);
+}
+.card--rank-6 .card__rank,
+.card--rank-7 .card__rank,
+.card--rank-8 .card__rank {
+  color: var(--color-rank-guild);
+}
+
+/* Labor & Peasant Ranks (9, 10, 11, 12) */
+.card--rank-9 .card__crest,
+.card--rank-10 .card__crest,
+.card--rank-11 .card__crest,
+.card--rank-12 .card__crest {
+  border-color: var(--color-rose);
+  background: var(--color-tint-labor);
+}
+.card--rank-9 .card__rank,
+.card--rank-10 .card__rank,
+.card--rank-11 .card__rank,
+.card--rank-12 .card__rank {
+  color: var(--color-rank-labor);
+}
+
+/* Jester (어릿광대 / 13) */
+.card--jester {
+  border-color: var(--color-gold);
+}
+.card--jester .card__crest {
+  border-color: var(--color-gold);
+  background: var(--color-tint-jester);
+}
+.card--jester .card__rank {
+  color: var(--color-rank-jester);
+}
+
+/* 2-Digit Rank Optimization (10, 11, 12) */
+.card--rank-10 .card__crest-inner,
+.card--rank-11 .card__crest-inner,
+.card--rank-12 .card__crest-inner {
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.card--rank-10 .card__rank,
+.card--rank-11 .card__rank,
+.card--rank-12 .card__rank {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}

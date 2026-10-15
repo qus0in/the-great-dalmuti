@@ -1,0 +1,81 @@
+/* Design Tokens for The Great Dalmuti (100% Palette-Derived, Modular Foundation) */
+@font-face {
+  font-family: 'LevelUp';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LevelUp';
+  font-weight: 600;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LevelUp';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610132210@levelup-regular/levelup-regular/LevelUp-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'KotraGothic';
+  font-weight: 400 700;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+  font-display: swap;
+}
+
+:root {
+  /* 1. Raw Color Palette (ColorHunt: fdf4d2b0cde6a290b7946d6d + Neutrals) */
+  --color-cream: #FDF4D2;
+  --color-sky: #B0CDE6;
+  --color-lavender: #A290B7;
+  --color-rose: #946D6D;
+  --color-raw-dark: #191211;
+  --color-raw-white: #FFFFFF;
+
+  /* 2. Derived Semantic Colors (100% strict ColorHunt derivation) */
+  --color-ink: color-mix(in srgb, var(--color-rose) 20%, var(--color-raw-dark));
+  --color-ink-muted: color-mix(in srgb, var(--color-rose) 45%, var(--color-raw-dark));
+  --color-ink-inverse: var(--color-raw-white);
+
+  --color-surface-bg: var(--color-cream);
+  --color-surface-card: color-mix(in srgb, var(--color-cream) 12%, var(--color-raw-white));
+  --color-surface-panel: color-mix(in srgb, var(--color-cream) 92%, var(--color-raw-white));
+  --color-surface-panel-alt: color-mix(in srgb, var(--color-cream) 80%, var(--color-sky));
+  --color-surface-table: color-mix(in srgb, var(--color-sky) 20%, var(--color-raw-dark));
+  --color-surface-table-felt: color-mix(in srgb, var(--color-sky) 15%, var(--color-raw-dark));
+  --color-surface-overlay: color-mix(in srgb, var(--color-raw-dark) 72%, transparent);
+  --color-surface-table-badge: color-mix(in srgb, var(--color-surface-table-felt) 75%, transparent);
+
+  --color-line: color-mix(in srgb, var(--color-rose) 36%, var(--color-cream));
+  --color-line-strong: color-mix(in srgb, var(--color-rose) 50%, var(--color-raw-dark));
+  --color-line-subtle: color-mix(in srgb, var(--color-rose) 16%, var(--color-cream));
+  --color-line-gold: color-mix(in srgb, var(--color-rose) 45%, var(--color-cream));
+
+  --color-accent: color-mix(in srgb, var(--color-rose) 65%, var(--color-raw-dark));
+  --color-accent-hover: color-mix(in srgb, var(--color-rose) 45%, var(--color-raw-dark));
+  --color-accent-soft: color-mix(in srgb, var(--color-rose) 18%, var(--color-cream));
+  --color-accent-sky: color-mix(in srgb, var(--color-sky) 50%, var(--color-raw-dark));
+  --color-accent-lavender: color-mix(in srgb, var(--color-lavender) 50%, var(--color-raw-dark));
+
+  --color-gold: color-mix(in srgb, var(--color-rose) 55%, var(--color-cream));
+  --color-gold-glow: color-mix(in srgb, var(--color-rose) 35%, var(--color-cream));
+  --color-pass: color-mix(in srgb, var(--color-ink) 75%, var(--color-cream));
+  --color-pass-soft: color-mix(in srgb, var(--color-ink) 12%, var(--color-cream));
+
+  --color-rank-ruling: color-mix(in srgb, var(--color-rose) 45%, var(--color-ink));
+  --color-rank-noble: color-mix(in srgb, var(--color-lavender) 40%, var(--color-raw-dark));
+  --color-rank-guild: color-mix(in srgb, var(--color-sky) 40%, var(--color-raw-dark));
+  --color-rank-labor: color-mix(in srgb, var(--color-rose) 50%, var(--color-raw-dark));
+  --color-rank-jester: color-mix(in srgb, var(--color-lavender) 30%, var(--color-ink));
+
+  --color-tint-ruling: color-mix(in srgb, var(--color-rose) 20%, var(--color-surface-card));
+  --color-tint-noble: color-mix(in srgb, var(--color-lavender) 24%, var(--color-surface-card));
+  --color-tint-guild: color-mix(in srgb, var(--color-sky) 24%, var(--color-surface-card));
+  --color-tint-labor: color-mix(in srgb, var(--color-rose) 18%, var(--color-surface-card));
+  --color-tint-jester: color-mix(in srgb, var(--color-lavender) 18%, var(--color-surface-card));
+}
