@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>달무티 · 대기실</title>
+  <meta name="description" content="리처드 가필드의 신분제 카드 게임 달무티, HTML·CSS 프로토타입">
+  <meta name="theme-color" content="#FDF4D2">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="달무티">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="달무티 · 대기실">
+  <meta property="og:description" content="리처드 가필드의 신분제 카드 게임 달무티, HTML·CSS 프로토타입">
+  <meta property="og:url" content="https://qus0in.github.io/the-great-dalmuti/">
+  <meta property="og:image" content="https://qus0in.github.io/the-great-dalmuti/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="달무티 · 대기실">
+  <meta name="twitter:description" content="리처드 가필드의 신분제 카드 게임 달무티, HTML·CSS 프로토타입">
+  <meta name="twitter:image" content="https://qus0in.github.io/the-great-dalmuti/og.png">
+  <meta name="twitter:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/hall.css">
+</head>
+<body>
+  <div class="container hall">
+    <header class="hall__hero anim-fade-up text-center">
+      <div class="cluster cluster--sm justify-center">
+        <span class="badge badge--lavender">1995</span>
+        <span class="badge badge--sky"><span class="nowrap">4–8인</span></span>
+        <span class="badge badge--primary">리처드 가필드</span>
+      </div>
+      <h1>달무티</h1>
+      <p class="hall__subtitle">The Great Dalmuti</p>
+      <p class="hall__intro">《더 그레이트 달무티》는 리처드 가필드가 1995년에 디자인한 카드 게임입니다. <span class="nowrap">4–8명</span>이 함께하고, 손에 든 카드를 가장 먼저 비우는 플레이어가 달무티가 됩니다. 대기실에서 자리와 계급을 확인한 뒤 게임에 입장하세요.</p>
+    </header>
+
+    <main class="grid hall__main">
+      <!-- 4-seat waiting room on the table felt -->
+      <section class="col-span-12 panel panel--table hall__room anim-fade-up hall__delay-1" aria-labelledby="room-title">
+        <div class="hall__room-head">
+          <h2 id="room-title">대기실</h2>
+          <div class="cluster cluster--sm">
+            <span class="badge">로열 펠트 방</span>
+            <span class="badge">4 / 4 착석</span>
+            <span class="badge badge--primary">준비 3 / 4</span>
+          </div>
+        </div>
+        <ul class="grid grid--tight">
+          <li class="col-span-6 col-span-md-6">
+            <div class="seat hall__seat hall__seat--ready">
+              <div class="seat__avatar">베</div>
+              <div class="seat__content">
+                <div class="seat__name-row">
+                  <span class="seat__name">베아트릭스</span>
+                  <span class="badge badge--primary">준비 완료</span>
+                </div>
+                <div class="seat__status-row">
+                  <span>1번 자리</span>
+                  <span>• 착석</span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="col-span-6 col-span-md-6">
+            <div class="seat hall__seat hall__seat--ready">
+              <div class="seat__avatar">로</div>
+              <div class="seat__content">
+                <div class="seat__name-row">
+                  <span class="seat__name">로렌스</span>
+                  <span class="badge badge--primary">준비 완료</span>
+                </div>
+                <div class="seat__status-row">
+                  <span>2번 자리</span>
+                  <span>• 착석</span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="col-span-6 col-span-md-6">
+            <div class="seat hall__seat">
+              <div class="seat__avatar">이</div>
+              <div class="seat__content">
+                <div class="seat__name-row">
+                  <span class="seat__name">이사도르</span>
+                  <span class="badge">준비 중</span>
+                </div>
+                <div class="seat__status-row">
+                  <span>3번 자리</span>
+                  <span>• 착석</span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="col-span-6 col-span-md-6">
+            <div class="seat seat--me hall__seat hall__seat--ready">
+              <div class="seat__avatar">나</div>
+              <div class="seat__content">
+                <div class="seat__name-row">
+                  <span class="seat__name">나</span>
+                  <span class="badge badge--primary">준비 완료</span>
+                  <span class="badge badge--sky">본인</span>
+                </div>
+                <div class="seat__status-row">
+                  <span>4번 자리</span>
+                  <span>• 착석</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Rank ladder: 1–12 + jester -->
+      <section class="col-span-12 panel hall__ladder-section anim-fade-up hall__delay-2" aria-labelledby="ladder-title">
+        <h2 id="ladder-title">계급 사다리</h2>
+        <p class="text-muted">숫자가 작을수록 강합니다. 80장은 1번 달무티 1장부터 12번 농노 12장까지 이어지고, 어릿광대 2장은 조커처럼 쓸 수 있습니다.</p>
+        <ol class="hall__ladder">
+          <li class="hall__rank hall__rank--ruling"><span class="badge">1</span><span class="hall__rank-name">달무티</span><span class="hall__rank-meta">1장</span></li>
+          <li class="hall__rank hall__rank--ruling"><span class="badge">2</span><span class="hall__rank-name">대주교</span><span class="hall__rank-meta">2장</span></li>
+          <li class="hall__rank hall__rank--noble"><span class="badge">3</span><span class="hall__rank-name">시종장</span><span class="hall__rank-meta">3장</span></li>
+          <li class="hall__rank hall__rank--noble"><span class="badge">4</span><span class="hall__rank-name">남작부인</span><span class="hall__rank-meta">4장</span></li>
+          <li class="hall__rank hall__rank--noble"><span class="badge">5</span><span class="hall__rank-name">수녀원장</span><span class="hall__rank-meta">5장</span></li>
+          <li class="hall__rank hall__rank--guild"><span class="badge">6</span><span class="hall__rank-name">기사</span><span class="hall__rank-meta">6장</span></li>
+          <li class="hall__rank hall__rank--guild"><span class="badge">7</span><span class="hall__rank-name">재봉사</span><span class="hall__rank-meta">7장</span></li>
+          <li class="hall__rank hall__rank--guild"><span class="badge">8</span><span class="hall__rank-name">석공</span><span class="hall__rank-meta">8장</span></li>
+          <li class="hall__rank hall__rank--labor"><span class="badge">9</span><span class="hall__rank-name">요리사</span><span class="hall__rank-meta">9장</span></li>
+          <li class="hall__rank hall__rank--labor"><span class="badge">10</span><span class="hall__rank-name">양치기</span><span class="hall__rank-meta">10장</span></li>
+          <li class="hall__rank hall__rank--labor"><span class="badge">11</span><span class="hall__rank-name">광부</span><span class="hall__rank-meta">11장</span></li>
+          <li class="hall__rank hall__rank--labor"><span class="badge">12</span><span class="hall__rank-name">농노</span><span class="hall__rank-meta">12장</span></li>
+          <li class="hall__rank hall__rank--jester"><span class="badge">★</span><span class="hall__rank-name">어릿광대</span><span class="hall__rank-meta">2장</span></li>
+        </ol>
+      </section>
+
+      <!-- Rule summary -->
+      <section class="col-span-12 panel hall__rules-section anim-fade-up hall__delay-3" aria-labelledby="rules-title">
+        <h2 id="rules-title">규칙 요약</h2>
+        <ol class="hall__rules">
+          <li class="hall__rule">
+            <span class="badge badge--primary">1</span>
+            <div class="hall__rule-text">
+              <strong>같은 장수</strong>
+              <span>바닥에 낸 카드와 장수가 같은 카드만 낼 수 있습니다.</span>
+            </div>
+          </li>
+          <li class="hall__rule">
+            <span class="badge badge--primary">2</span>
+            <div class="hall__rule-text">
+              <strong>낮은 숫자가 이긴다</strong>
+              <span>같은 장수 안에서는 더 낮은 숫자의 카드가 이깁니다.</span>
+            </div>
+          </li>
+          <li class="hall__rule">
+            <span class="badge badge--primary">3</span>
+            <div class="hall__rule-text">
+              <strong>패스</strong>
+              <span>낼 카드가 없으면 패스합니다. 모두 패스하면 승자가 새 바닥을 엽니다.</span>
+            </div>
+          </li>
+          <li class="hall__rule">
+            <span class="badge badge--primary">4</span>
+            <div class="hall__rule-text">
+              <strong>조공</strong>
+              <span>라운드가 끝나면 두 꼴찌는 두 승자에게 가장 높은 카드를 조공으로 바칩니다.</span>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Primary entry link -->
+      <section class="col-span-12 panel hall__cta text-center anim-fade-up hall__delay-4" aria-labelledby="cta-title">
+        <h2 id="cta-title">준비를 마치고 입장하세요</h2>
+        <p class="text-muted">네 자리가 모두 앉았습니다. 마지막 준비를 확인하고 게임 화면으로 들어갑니다.</p>
+        <a class="btn btn--gold btn--lg" href="play.html">입장</a>
+      </section>
+    </main>
+
+    <footer class="hall__footer text-center">
+      <small>달무티 0.2 프로토타입 — 이미지 없이 HTML·CSS만으로 구성한 대기실 화면입니다.</small>
+    </footer>
+  </div>
+</body>
+</html>

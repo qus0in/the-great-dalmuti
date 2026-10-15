@@ -19,3 +19,4 @@ Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<review
 Final review: read reports/reviews, diff, run codify `check.sh`; accept or new brief. Never fix. Commit/push via skill `git-flow` after acceptance.
 Blocked worker: read it, never auto-approve; escalate. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
 Provider errors: reassign a worker that errors for ~5 min (references/models.md).
+Orchestrator never runs headless/visual QA itself; assign visual/headless verification to a worker and read its report/PNGs.

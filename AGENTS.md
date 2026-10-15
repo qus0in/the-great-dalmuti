@@ -8,6 +8,7 @@ CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills: symlinks. Edit targets
 - .agents/skills/<name>/SKILL.md : general, reusable procedure. Agent-only.
 - .agents/skills/<name>/scripts/ : deterministic, token-saving steps of that skill.
 - AGENTS.md : principles for using skills + cross-skill policy. No procedures here.
+- README.md (root) : user-authored; never create/edit/delete/reformat it without an explicit user request. Generated docs/prompt/README.md stays script-owned (prompt-log).
 Ambiguous -> skill `codify`.
 
 ## Using skills
@@ -46,6 +47,10 @@ Ambiguous -> skill `codify`.
 - Milestones: semver + Korean stage description. Current: 0.2.0 = HTML·CSS 프로토타입 화면 구성.
 - Every issue: exactly 1 milestone + exactly 1 FIT label + optional domain labels.
 
+## UI prototype (0.2)
+- UI work under dist/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
+- Visual/headless verification is worker-only: never run headless Chrome as orchestrator; assign to a worker and read its report/PNGs.
+
 ## Skills
 <!-- skills:begin -->
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
@@ -55,4 +60,5 @@ Ambiguous -> skill `codify`.
 - handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
+- ui-prototype: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.
 <!-- skills:end -->

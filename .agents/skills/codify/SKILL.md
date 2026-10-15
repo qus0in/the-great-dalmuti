@@ -12,6 +12,7 @@ Paths relative to repo root. S=.agents/skills/codify/scripts
 4. principle for using skills / policy across skills -> AGENTS.md (1 line each)
 5. project-specific structure/system, not reusable -> docs/<topic>.md
 Split mixed knowledge across targets; link by path, never duplicate.
+Root README.md is user-authored and never a codify target: edit only on explicit user request. Generated docs/prompt/README.md stays prompt-log-owned.
 
 ## 2. Write
 - New skill: `$S/new-skill.sh <name> "<description>"` (name: [a-z0-9-]+).

@@ -9,6 +9,8 @@ After bootstrap: all work on dev; main changes only via PR dev -> main. main pro
 
 Workers never commit/push; orchestrator commits on dev after final review, then ships via PR and merges. Avoids concurrent git index use.
 
+README.md (root) is user-authored: never stage edits to it unless the user asked; commit user content verbatim, no reformatting.
+
 Scripts (POSIX sh; --dry-run prints quoted mutations, runs read-only queries only, never mutates; unknown flag exits 2 first; guards enforced in dry-run too):
 - protect.sh [--dry-run]: apply main protection (idempotent).
 - ship.sh "<title>" ["<body>"] [--body-file FILE] [--merge] [--dry-run]: require dev + clean tree; push dev; lookup failure aborts (never creates duplicate); reuse/create PR (URL printed only when run); --merge reads origin repo policy once, prefers allowed merge/squash/rebase (invalid/none aborts), ff's main, returns to dev and ff's with runtime merge-commit fallback preserving history (dry-run prints ff attempt + fallback note).

@@ -14,6 +14,7 @@
 ## 연결 구조
 
 - `CLAUDE.md`는 `AGENTS.md`를, `.claude/skills`는 `.agents/skills`를 가리키는 심볼릭 링크입니다. 실제 내용은 링크 대상 쪽만 수정합니다.
+- 루트 `README.md`는 사용자가 직접 작성한 문서이므로 명시적 요청 없이 만들거나 고치거나 재포맷하지 않습니다(`docs/prompt/README.md`는 `prompt-log` 스크립트가 생성하는 목록입니다).
 - `tmp/`는 `.gitkeep`을 빼고 git에서 제외됩니다. 문서, 스킬, 규칙에서는 `tmp/` 경로를 참조하지 않습니다.
 
 ## 작성 방식
@@ -52,6 +53,20 @@
 - 각 항목에는 원문, 결과 파일 경로, 의도를 적습니다.
 - 생성은 `add.sh`가 맡고, 목록(`docs/prompt/README.md`)은 `index.sh`가 자동으로 만듭니다.
 - 목록이 어긋나면 `codify`의 `check.sh`가 잡아냅니다.
+
+## 0.2 프로토타입 구조
+
+0.2 마일스톤은 HTML과 CSS만으로 만든 달무티 화면 프로토타입을 만들고, 설계 결정을 이후 작업으로 이어가는 단계입니다.
+
+- **왜 (why)**: 디자인 결정이 `DESIGN.md`와 스킬·문서에 남아야 이후 화면 작업이 일관된 기준 위에서 진행됩니다. 정적 프로토타입은 `/the-great-dalmuti/` 하위 경로의 GitHub Pages에서 누구든 브라우저만으로 확인할 수 있어야 합니다.
+- **무엇을 (what)**:
+  - 파일 배치: `dist/` (서버 구현 시 재정의 예정). `dist/index.html` = hall, `dist/play.html` = play. CSS는 `dist/css/reset.css`, `tokens.css`, `base.css`, `components.css`, `hall.css`, `play.css`로 분리. 상세 구조와 토큰 값, 카드 구성 등은 `DESIGN.md`가 단일 원천이며, 이 문서에서 재기술하지 않습니다.
+  - JavaScript는 아직 사용하지 않습니다. 화면 구성을 CSS로만 만듭니다.
+  - CSS는 HTML에 하드코딩하지 않습니다(`style` 속성·`<style>` 블록 금지). 색·폰트·간격의 원시 값을 담는 곳은 `dist/css/tokens.css`뿐입니다.
+- **어떻게 (how)**:
+  - 구현 시작 전 `DESIGN.md`와 `ui-prototype` 스킬(`.agents/skills/ui-prototype/SKILL.md`)을 읽습니다.
+  - 계약 위반(하드코딩, 하위 경로·8px 간격·토큰 정합성 등)은 `scripts/check.sh [dist-dir]`로 검사합니다. 깨끗하면 `ok`, 위반은 `file:line` 목록으로 출력합니다.
+  - 리뷰와 보고 전 데스크톱(1440×900)과 모바일(390×844) 스크린샷을 `scripts/shot.sh`로 남기고, 결과(PNG·보고)를 산출물로 검토합니다. 헤드리스 검증은 워커가 수행하고, 오케스트레이터는 결과를 확인합니다.
 
 ## 작업 분담 (orchestrate 스킬)
 

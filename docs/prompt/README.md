@@ -22,3 +22,18 @@
 - [2026-10-15](2026-10-15-18-fit-framework-writing-style.md) — FIT 프레임워크와 why-what-how 서술 및 SWOT/STAR 구조 반영
 - [2026-10-15](2026-10-15-19-close-011-milestone.md) — 0.1.1 마일스톤 마무리
 - [2026-10-15](2026-10-15-20-gh-actions-latest-lts-skill.md) — GitHub Actions 최신·LTS 버전 탐색 및 검증 스킬 도입
+- [2026-10-15](2026-10-15-21-ui-prototype-contract.md) — HTML/CSS 프로토타입 구성 요청 (0.2 마일스톤)
+- [2026-10-15](2026-10-15-22-dist-files-placement.md) — 프로토타입 산출물 dist 배치 결정
+- [2026-10-15](2026-10-15-23-no-js-prototype-start.md) — js 없이 화면 구성만 시작
+- [2026-10-15](2026-10-15-24-headless-worker-verification.md) — headless 촬영 워커 전용으로 함
+- [2026-10-15](2026-10-15-25-issue-first-request.md) — 큰 요청은 issue로 먼저 올림
+- [2026-10-15](2026-10-15-26-gh-actions-pages-deploy.md) — GitHub Actions를 통한 github.io 배포 추가
+- [2026-10-15](2026-10-15-27-gh-actions-dist-assets.md) — Actions 배포 대상을 dist 에셋으로 지정
+- [2026-10-15](2026-10-15-28-keep-all-lighthouse-responsive-meta-og.md) — keep-all·Lighthouse 접근성·반응형·favicon·meta·OG 적용
+- [2026-10-15](2026-10-15-29-box-model-proper-spacing.md) — UI 요소 박스 모델 정리
+- [2026-10-15](2026-10-15-30-text-spacing-density.md) — 텍스트 간격 개선
+- [2026-10-15](2026-10-15-31-crowded-ui-spacing.md) — 버튼·UI 요소 간격 확보
+- [2026-10-15](2026-10-15-32-favicon-multi-size.md) — favicon 다중 사이즈 대응 (PWA 설치 제외)
+- [2026-10-15](2026-10-15-33-manifest-no-autoinstall.md) — 매니페스트 작성과 자동설치 방지
+- [2026-10-15](2026-10-15-34-plan-0-3-ssr-express-supabase.md) — 0.3 마일스톤 계획 이슈 작성
+- [2026-10-15](2026-10-15-35-readme-user-owned.md) — 루트 README는 사용자 소유

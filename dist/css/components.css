@@ -1,0 +1,566 @@
+/* Components for The Great Dalmuti */
+
+/* ==========================================================================
+   1. Playing Card Component (Pure CSS, No Image Files)
+   ========================================================================== */
+.card {
+  position: relative;
+  width: 140px;
+  height: 200px;
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-1);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  user-select: none;
+  transition: transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
+}
+
+/* Inner decorative frame line */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: var(--space-0-5);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: calc(var(--radius-1) - var(--space-0-5));
+  pointer-events: none;
+}
+
+/* Rank corner indicators */
+.card__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-0-5);
+  line-height: 1;
+  z-index: var(--z-base);
+}
+
+.card__corner--tl {
+  align-self: flex-start;
+}
+
+.card__corner--br {
+  align-self: flex-end;
+  transform: rotate(180deg);
+}
+
+.card__rank {
+  font-family: var(--font-title);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.card__name-subtle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-ink-muted);
+}
+
+/* Center Emblem / Crest */
+.card__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-0-5);
+  pointer-events: none;
+}
+
+.card__crest {
+  min-inline-size: 56px;
+  min-block-size: 56px;
+  width: auto;
+  height: 56px;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-line);
+  background: var(--color-surface-bg);
+  box-shadow: var(--shadow-1);
+  position: relative;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.card__crest-inner {
+  font-family: var(--font-title);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.card__title {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+
+/* Card Interactive States */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(calc(var(--space-1) * -1));
+    box-shadow: var(--shadow-card-hover);
+    cursor: pointer;
+    border-color: var(--color-line-strong);
+  }
+}
+
+.card.is-selected {
+  transform: translateY(calc(var(--space-2) * -1));
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover), 0 0 0 1px var(--color-accent);
+}
+
+.card.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-1);
+}
+
+/* Card Rank Theming */
+/* Dalmuti / Ruling (Rank 1, 2) */
+.card--rank-1,
+.card--rank-2 {
+  border-color: var(--color-line-gold);
+}
+.card--rank-1 .card__crest,
+.card--rank-2 .card__crest {
+  border-color: var(--color-gold);
+  background: var(--color-tint-ruling);
+}
+.card--rank-1 .card__rank,
+.card--rank-1 .card__crest-inner {
+  color: var(--color-rank-ruling);
+}
+
+/* Noble Ranks (3, 4, 5) */
+.card--rank-3 .card__crest,
+.card--rank-4 .card__crest,
+.card--rank-5 .card__crest {
+  border-color: var(--color-lavender);
+  background: var(--color-tint-noble);
+}
+.card--rank-3 .card__rank,
+.card--rank-4 .card__rank,
+.card--rank-5 .card__rank {
+  color: var(--color-rank-noble);
+}
+
+/* Military & Guild Ranks (6, 7, 8) */
+.card--rank-6 .card__crest,
+.card--rank-7 .card__crest,
+.card--rank-8 .card__crest {
+  border-color: var(--color-sky);
+  background: var(--color-tint-guild);
+}
+.card--rank-6 .card__rank,
+.card--rank-7 .card__rank,
+.card--rank-8 .card__rank {
+  color: var(--color-rank-guild);
+}
+
+/* Labor & Peasant Ranks (9, 10, 11, 12) */
+.card--rank-9 .card__crest,
+.card--rank-10 .card__crest,
+.card--rank-11 .card__crest,
+.card--rank-12 .card__crest {
+  border-color: var(--color-rose);
+  background: var(--color-tint-labor);
+}
+.card--rank-9 .card__rank,
+.card--rank-10 .card__rank,
+.card--rank-11 .card__rank,
+.card--rank-12 .card__rank {
+  color: var(--color-rank-labor);
+}
+
+/* Jester (어릿광대 / 13) */
+.card--jester {
+  border-color: var(--color-gold);
+}
+.card--jester .card__crest {
+  border-color: var(--color-gold);
+  background: var(--color-tint-jester);
+}
+.card--jester .card__rank {
+  color: var(--color-rank-jester);
+}
+
+/* 2-Digit Rank Optimization (10, 11, 12) to prevent clipping in circular seals and corners */
+.card--rank-10 .card__crest-inner,
+.card--rank-11 .card__crest-inner,
+.card--rank-12 .card__crest-inner {
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.card--rank-10 .card__rank,
+.card--rank-11 .card__rank,
+.card--rank-12 .card__rank {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Card Back (Geometric Medieval Lattice)
+   -------------------------------------------------------------------------- */
+.card--back {
+  background-color: var(--color-rose);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 0,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 2px,
+      transparent 2px,
+      transparent var(--space-2)
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 0,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 2px,
+      transparent 2px,
+      transparent var(--space-2)
+    );
+  border: 2px solid var(--color-line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card--back::before {
+  inset: var(--space-1);
+  border: 1px solid var(--color-cream);
+  border-radius: calc(var(--radius-1) - var(--space-0-5));
+}
+
+.card--back::after {
+  content: 'DALMUTI';
+  font-family: var(--font-title);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.25em;
+  color: var(--color-cream);
+  padding: var(--space-0-5) var(--space-1);
+  border: 1px solid var(--color-cream);
+  border-radius: var(--radius-1);
+  background: color-mix(in srgb, var(--color-rose) 80%, var(--color-raw-dark));
+  z-index: var(--z-base);
+}
+
+/* --------------------------------------------------------------------------
+   Card Hand Fan Utilities
+   -------------------------------------------------------------------------- */
+.hand-fan {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--space-6);
+  justify-content: center;
+  align-items: flex-end;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-4);
+  overflow: visible;
+}
+
+@media (max-width: 768px) {
+  .hand-fan {
+    grid-auto-columns: var(--space-4);
+  }
+}
+
+/* ==========================================================================
+   2. Seat / Player Panel Component
+   ========================================================================== */
+.seat {
+  position: relative;
+  background-color: var(--color-surface-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-1);
+  transition: border-color var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              opacity var(--dur-base) var(--ease-out);
+}
+
+.seat__avatar {
+  min-width: 44px;
+  min-height: 44px;
+  width: auto;
+  height: 44px;
+  padding-inline: var(--space-0-5);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-panel-alt);
+  border: 2px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  color: var(--color-ink);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  overflow: visible;
+}
+
+.seat__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex-grow: 1;
+}
+
+.seat__name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.seat__name {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+}
+
+.seat__status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+}
+
+.seat__count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Seat States */
+.seat--me {
+  border-color: var(--color-accent-sky);
+  background-color: color-mix(in srgb, var(--color-sky) 12%, var(--color-surface-panel));
+}
+
+.seat.is-turn {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-turn-glow);
+  animation: turn-glow 2s var(--ease-in-out) infinite;
+}
+
+.seat.is-passed {
+  border-style: dashed;
+  border-color: var(--color-pass);
+  background-color: color-mix(in srgb, var(--color-pass-soft) 40%, var(--color-surface-panel));
+}
+
+.seat.is-passed .seat__avatar {
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   3. Badge Component
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  padding: var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-line);
+  background-color: var(--color-surface-panel);
+  color: var(--color-ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  overflow: visible;
+}
+
+.badge--primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-ink-inverse);
+}
+
+.badge--gold {
+  background-color: var(--color-surface-bg);
+  border-color: var(--color-gold);
+  color: var(--color-rank-ruling);
+}
+
+.badge--sky {
+  background-color: var(--color-surface-bg);
+  border-color: var(--color-sky);
+  color: var(--color-accent-sky);
+}
+
+.badge--lavender {
+  background-color: var(--color-surface-bg);
+  border-color: var(--color-lavender);
+  color: var(--color-accent-lavender);
+}
+
+.badge--pass {
+  background-color: var(--color-pass-soft);
+  border-color: var(--color-pass);
+  color: var(--color-pass);
+}
+
+.badge--turn {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-raw-dark);
+}
+
+/* ==========================================================================
+   4. Button Component
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  min-height: var(--space-6);
+  min-width: var(--space-6);
+  padding: var(--space-1) var(--space-3);
+  gap: var(--space-1);
+  border-radius: var(--radius-1);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-ink-inverse);
+  box-shadow: var(--shadow-1);
+}
+
+.btn--secondary {
+  background-color: var(--color-surface-panel);
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+
+.btn--outline {
+  background-color: transparent;
+  border-color: var(--color-line-strong);
+  color: var(--color-ink);
+}
+
+.btn--gold {
+  background-color: var(--color-gold);
+  color: var(--color-raw-dark);
+  box-shadow: var(--shadow-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--shadow-2);
+  }
+
+  .btn--secondary:hover {
+    background-color: var(--color-surface-panel-alt);
+    border-color: var(--color-line-strong);
+  }
+
+  .btn--outline:hover {
+    background-color: var(--color-accent-soft);
+    border-color: var(--color-accent);
+  }
+
+  .btn--gold:hover {
+    background-color: var(--color-gold-glow);
+    box-shadow: var(--shadow-turn-glow);
+  }
+}
+
+.btn--sm {
+  font-size: var(--font-size-sm);
+  padding: var(--space-0-5) var(--space-2);
+}
+
+.btn--lg {
+  font-size: var(--font-size-lg);
+  padding: var(--space-2) var(--space-4);
+}
+
+.btn:disabled,
+.btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   5. Panels & Surface Containers
+   ========================================================================== */
+.panel {
+  background-color: var(--color-surface-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-1);
+}
+
+.panel--table {
+  background-color: var(--color-surface-table-felt);
+  border: 2px solid var(--color-line-strong);
+  color: var(--color-cream);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-table-felt), var(--shadow-2);
+  position: relative;
+}
+
+.panel--table h1,
+.panel--table h2,
+.panel--table h3,
+.panel--table h4,
+.panel--table p {
+  color: var(--color-cream);
+}

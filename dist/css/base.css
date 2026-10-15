@@ -1,0 +1,271 @@
+/* Base Typography, Grid, Utilities, and Animations for The Great Dalmuti */
+
+/* ==========================================================================
+   1. Typography Base
+   ========================================================================== */
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-ink);
+  background-color: var(--color-surface-bg);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-title);
+  color: var(--color-ink);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+  letter-spacing: var(--tracking-normal);
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, var(--font-size-3xl));
+  margin-bottom: var(--space-2);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-2);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-1);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-1);
+}
+
+p {
+  margin-bottom: var(--space-2);
+  line-height: var(--leading-body);
+  max-width: 40em;
+}
+
+.text-measure {
+  max-width: 40em;
+}
+
+small {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   2. Container & Layout Grid (12 Columns, 8px Unit Gutter)
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  gap: var(--space-3);
+}
+
+.grid--tight {
+  gap: var(--space-2);
+}
+
+.col-span-1  { grid-column: span 1; }
+.col-span-2  { grid-column: span 2; }
+.col-span-3  { grid-column: span 3; }
+.col-span-4  { grid-column: span 4; }
+.col-span-5  { grid-column: span 5; }
+.col-span-6  { grid-column: span 6; }
+.col-span-7  { grid-column: span 7; }
+.col-span-8  { grid-column: span 8; }
+.col-span-9  { grid-column: span 9; }
+.col-span-10 { grid-column: span 10; }
+.col-span-11 { grid-column: span 11; }
+.col-span-12 { grid-column: span 12; }
+
+@media (max-width: 992px) {
+  .col-span-md-6 { grid-column: span 6; }
+  .col-span-md-12 { grid-column: span 12; }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+  .col-span-1,
+  .col-span-2,
+  .col-span-3,
+  .col-span-4,
+  .col-span-5,
+  .col-span-6,
+  .col-span-7,
+  .col-span-8,
+  .col-span-9,
+  .col-span-10,
+  .col-span-11,
+  .col-span-12 {
+    grid-column: span 1;
+  }
+}
+
+/* ==========================================================================
+   3. Stack & Cluster Utilities
+   ========================================================================== */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stack--xs { gap: var(--space-0-5); }
+.stack--sm { gap: var(--space-1); }
+.stack--md { gap: var(--space-2); }
+.stack--lg { gap: var(--space-3); }
+.stack--xl { gap: var(--space-4); }
+.stack--2xl { gap: var(--space-6); }
+.stack--3xl { gap: var(--space-8); }
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cluster--xs { gap: var(--space-0-5); }
+.cluster--sm { gap: var(--space-1); }
+.cluster--md { gap: var(--space-2); }
+.cluster--lg { gap: var(--space-3); }
+
+.items-center     { align-items: center; }
+.items-start      { align-items: flex-start; }
+.items-end        { align-items: flex-end; }
+.justify-center   { justify-content: center; }
+.justify-between  { justify-content: space-between; }
+.justify-end      { justify-content: flex-end; }
+.text-center      { text-align: center; }
+.text-right       { text-align: right; }
+.text-muted       { color: var(--color-ink-muted); }
+
+/* ==========================================================================
+   4. Accessibility & Focus States
+   ========================================================================== */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-0-5);
+  border-radius: var(--radius-1);
+}
+
+/* Screen-reader only text utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: var(--space-neg-px);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   5. Shared Keyframe Animations
+   ========================================================================== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes deal-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-4) * -1)) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(var(--space-0-5) * -1));
+  }
+}
+
+@keyframes turn-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--color-gold-glow);
+  }
+  50% {
+    box-shadow: 0 0 22px var(--color-gold);
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+
+.anim-deal-in {
+  animation: deal-in var(--dur-base) var(--ease-out) both;
+}
+
+.anim-pulse {
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+.anim-turn-glow {
+  animation: turn-glow 1.8s var(--ease-in-out) infinite;
+}
