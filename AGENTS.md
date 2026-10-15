@@ -1,0 +1,49 @@
+# AGENTS
+Agent-only rules. Shared by all agents (claude/codex/opencode/...). Terse by design.
+CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills: symlinks. Edit targets only.
+
+## Placement
+- tmp/<task>/ : ephemeral, mutable (scratch, logs, drafts, handoff). gitignored. Never referenced from docs/skills/AGENTS.md. Per-task subdir; no cross-agent overwrite.
+- docs/ : project-specific system/structure. Stable, not reusable elsewhere. Human-readable (ko).
+- .agents/skills/<name>/SKILL.md : general, reusable procedure. Agent-only.
+- .agents/skills/<name>/scripts/ : deterministic, token-saving steps of that skill.
+- AGENTS.md : principles for using skills + cross-skill policy. No procedures here.
+Ambiguous -> skill `codify`.
+
+## Using skills
+- Read index below; open a SKILL.md only when its trigger matches.
+- Script exists -> run it; don't re-derive or read its source unless it fails.
+- Don't paste skill/doc content into replies or other files; cite path.
+- Repeated manual step, or output reproducible by code -> scriptify (via `codify`).
+
+## Codify (meta rule)
+- New durable knowledge, repeated work, or request to record rules/skills/docs -> run skill `codify`.
+- After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
+- User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
+
+## Orchestration
+- Non-trivial task -> skill `orchestrate`: orchestrator only dispatches briefs and does final review.
+- Dispatch + waits run in background; orchestrator never blocks on a worker; redistribute as each worker settles.
+- Workers implement; reviewer != author; each worker owns a disjoint file set.
+- Assign units by each worker's model tier (see skill `orchestrate`); reviewer differs from author in model family when possible.
+- Trivial single-step answer: answer directly, no orchestration.
+
+## Git
+- Remote: github qus0in/the-great-dalmuti.
+- Work on `dev`; main only via PR dev->main (skill `git-flow`).
+- `main` protected; never push/force-push it.
+- Workers don't commit/push; orchestrator commits after final review.
+
+## Issues
+- Skill `gh-issues`. Labels only: focus, instant, tuck, frontend, design.
+- Milestones: semver + Korean stage description. Current: 0.1.0 = 개발 환경 세팅.
+- Every issue: exactly 1 milestone + >=1 label.
+
+## Skills
+<!-- skills:begin -->
+- codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
+- gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
+- git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
+- orchestrate: Split work across worker agents via herdr; orchestrator only dispatches and does final review, workers implement and peer-review each other. Use for any non-trivial task when worker agents are available.
+- prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
+<!-- skills:end -->
