@@ -5,7 +5,15 @@ description: Create and manage GitHub issues with canonical labels and milestone
 # gh-issues
 Canonical labels: focus, instant, tuck, frontend, design (colors fixed). No other labels.
 
-Milestones: semver titles with Korean stage description. Every issue gets one milestone and >=1 label.
+FIT framework:
+- focus: milestone core work
+- instant: small, finish right away
+- tuck: deferred/parked
+Domain labels: frontend, design.
+Every issue gets exactly one milestone, exactly one FIT label, and optional domain labels.
+Issue body explanation order: why -> what -> how.
+
+Milestones: semver titles with Korean stage description.
 
 Scripts (POSIX sh; --dry-run prints mutations):
 - labels.sh: sync labels to canonical set (create missing, delete extras).

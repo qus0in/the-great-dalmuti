@@ -16,7 +16,7 @@ Split mixed knowledge across targets; link by path, never duplicate.
 ## 2. Write
 - New skill: `$S/new-skill.sh <name> "<description>"` (name: [a-z0-9-]+).
 - Existing skill: edit in place; prefer replacing lines over appending.
-- docs: Korean prose for humans.
+- docs: Korean prose for humans. Explanation order: why -> what -> how. Structure: STAR for done work; SWOT for option/design evaluation. Pick one per doc.
 - Korean particle/suffix adjacent to closing `**` -> inline code (one backtick pair), or `<strong>` if HTML supported; preserve wording/spacing. Keep bounded bold, verbatim logs, and code examples intact. Review before sending/publishing.
 
 ## 3. Style (AGENTS.md, SKILL.md; agent-only)

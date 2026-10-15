@@ -41,8 +41,10 @@ owner=${slug%%/*}; repo=${slug#*/}
 repo_api="repos/$owner/$repo"
 
 canonical_names=" focus instant tuck frontend design "
+fit_names=" focus instant tuck "
 # Validate labels
 label_count=0
+fit_count=0
 OLDIFS=$IFS; IFS=,
 for l in $LABELS; do
   IFS=$OLDIFS
@@ -51,9 +53,13 @@ for l in $LABELS; do
     *" $l "*) label_count=$((label_count + 1));;
     *) echo "invalid label: $l" >&2; exit 1;;
   esac
+  case "$fit_names" in
+    *" $l "*) fit_count=$((fit_count + 1));;
+  esac
 done
 IFS=$OLDIFS
 [ "$label_count" -ge 1 ] || { echo "at least one valid label required" >&2; exit 1; }
+[ "$fit_count" -eq 1 ] || { echo "exactly one FIT label required (focus, instant, or tuck), got $fit_count" >&2; exit 1; }
 
 # Validate milestone exists across all paginated pages (read-only with state=all and pagination; propagate errors)
 ms_resp=$(gh api --paginate --slurp "$repo_api/milestones?state=all&per_page=100" 2>&1) || { echo "milestone lookup failed: $ms_resp" >&2; exit 1; }

@@ -11,6 +11,7 @@ CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills: symlinks. Edit targets
 Ambiguous -> skill `codify`.
 
 ## Using skills
+- Explanation order: why -> what -> how (issues, briefs, reports, PRs, docs). Structure: STAR for done work; SWOT for option/design evaluation. Pick one per doc.
 - Korean particle/suffix directly after emphasis -> inline code, or `<strong>` only with supported HTML rendering; avoid adjacent closing `**` in replies/docs.
 - Read index below; open a SKILL.md only when its trigger matches.
 - Script exists -> run it; don't re-derive or read its source unless it fails.
@@ -22,7 +23,7 @@ Ambiguous -> skill `codify`.
 - After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
 - User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
 - Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
-- Missing/empty Herdr caller IDs -> skill `orchestrate` references/handoff.md: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
+- Missing/empty Herdr caller IDs -> skill `handoff`: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
 
 ## Orchestration
 - Non-trivial task -> invoke skill `orchestrate` and delegate via Herdr by default; no separate user request required; orchestrator only dispatches briefs and does final review.
@@ -40,15 +41,16 @@ Ambiguous -> skill `codify`.
 - Workers don't commit/push; orchestrator commits after final review.
 
 ## Issues
-- Skill `gh-issues`. Labels only: focus, instant, tuck, frontend, design.
-- Milestones: semver + Korean stage description. Current: 0.1.1 = 학습 문서와 협업 운영 정비.
-- Every issue: exactly 1 milestone + >=1 label.
+- Skill `gh-issues`. FIT framework: focus = milestone core work; instant = small, finish right away; tuck = deferred/parked. Domain labels: frontend, design.
+- Milestones: semver + Korean stage description. Current: 0.2.0 = HTML·CSS 프로토타입 화면 구성.
+- Every issue: exactly 1 milestone + exactly 1 FIT label + optional domain labels.
 
 ## Skills
 <!-- skills:begin -->
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
 - gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
+- handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
 <!-- skills:end -->
