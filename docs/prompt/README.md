@@ -42,3 +42,4 @@
 - [2026-10-15](2026-10-15-38-script-owned-verification.md) — 반복 검사를 스크립트에 맡기고 과잉 검토 제한
 - [2026-10-15](2026-10-15-39-excessive-verification-retrospective.md) — 과잉 검증 회고와 규칙·스킬·문서·실행기 수정
 - [2026-10-15](2026-10-15-40-css-module-split-final-review.md) — CSS 모듈 분리와 최종 리뷰 수정 완료
+- [2026-10-15](2026-10-15-41-pages-actions-configuration-push.md) — Pages Actions 배포 구성·안내 작성과 푸시
