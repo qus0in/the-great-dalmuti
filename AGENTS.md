@@ -17,6 +17,7 @@ Ambiguous -> skill `codify`.
 - Script exists -> run it; don't re-derive or read its source unless it fails.
 - Don't paste skill/doc content into replies or other files; cite path.
 - Repeated manual step, or output reproducible by code -> scriptify (via `codify`).
+- Workflow actions -> skill `gh-actions`: look up latest stable major (@vN) via `scripts/latest.sh`; runtimes = LTS per skill; verify via `scripts/check.sh` before review.
 
 ## Codify (meta rule)
 - New durable knowledge, repeated work, or request to record rules/skills/docs -> run skill `codify`.
@@ -48,6 +49,7 @@ Ambiguous -> skill `codify`.
 ## Skills
 <!-- skills:begin -->
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
+- gh-actions: Discover and verify latest stable or LTS GitHub Actions and runtime versions. Use when creating or updating GitHub Actions workflow files.
 - gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
 - handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.

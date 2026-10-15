@@ -21,3 +21,4 @@
 - [2026-10-15](2026-10-15-17-issue-label-meaning.md) — 제공된 이슈 라벨 의미 파악 및 활용
 - [2026-10-15](2026-10-15-18-fit-framework-writing-style.md) — FIT 프레임워크와 why-what-how 서술 및 SWOT/STAR 구조 반영
 - [2026-10-15](2026-10-15-19-close-011-milestone.md) — 0.1.1 마일스톤 마무리
+- [2026-10-15](2026-10-15-20-gh-actions-latest-lts-skill.md) — GitHub Actions 최신·LTS 버전 탐색 및 검증 스킬 도입
