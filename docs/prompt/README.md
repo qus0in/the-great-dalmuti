@@ -18,3 +18,6 @@
 - [2026-10-15](2026-10-15-14-herdr-delegation-user-correction.md) — Herdr 위임 정정
 - [2026-10-15](2026-10-15-15-herdr-delegation-retrospective-and-policy.md) — 서브에이전트 위탁 원인 보고 및 인계 규칙 갱신
 - [2026-10-15](2026-10-15-16-orchestrator-handoff-skill.md) — 오케스트레이터 인수 인계를 위한 스킬/스크립트 추가
+- [2026-10-15](2026-10-15-17-issue-label-meaning.md) — 제공된 이슈 라벨 의미 파악 및 활용
+- [2026-10-15](2026-10-15-18-fit-framework-writing-style.md) — FIT 프레임워크와 why-what-how 서술 및 SWOT/STAR 구조 반영
+- [2026-10-15](2026-10-15-19-close-011-milestone.md) — 0.1.1 마일스톤 마무리

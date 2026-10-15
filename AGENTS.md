@@ -11,6 +11,7 @@ CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills: symlinks. Edit targets
 Ambiguous -> skill `codify`.
 
 ## Using skills
+- Explanation order: why -> what -> how (issues, briefs, reports, PRs, docs). Structure: STAR for done work; SWOT for option/design evaluation. Pick one per doc.
 - Korean particle/suffix directly after emphasis -> inline code, or `<strong>` only with supported HTML rendering; avoid adjacent closing `**` in replies/docs.
 - Read index below; open a SKILL.md only when its trigger matches.
 - Script exists -> run it; don't re-derive or read its source unless it fails.
@@ -40,9 +41,9 @@ Ambiguous -> skill `codify`.
 - Workers don't commit/push; orchestrator commits after final review.
 
 ## Issues
-- Skill `gh-issues`. Labels only: focus, instant, tuck, frontend, design.
-- Milestones: semver + Korean stage description. Current: 0.1.1 = 학습 문서와 협업 운영 정비.
-- Every issue: exactly 1 milestone + >=1 label.
+- Skill `gh-issues`. FIT framework: focus = milestone core work; instant = small, finish right away; tuck = deferred/parked. Domain labels: frontend, design.
+- Milestones: semver + Korean stage description. Current: 0.2.0 = HTML·CSS 프로토타입 화면 구성.
+- Every issue: exactly 1 milestone + exactly 1 FIT label + optional domain labels.
 
 ## Skills
 <!-- skills:begin -->

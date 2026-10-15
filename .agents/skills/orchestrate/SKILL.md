@@ -11,11 +11,11 @@ Before dispatch: resolve live workspace/self via scripts/context.sh and verify w
 Find workers: `scripts/context.sh [--workspace ID --self-pane ID]` -> workspace/self IDs (JSON, exit!=0 = unknown, not "no workers"); `scripts/workers.sh [--idle] [--model] [--workspace <ID> --self-pane <ID>]` (output: `<target> <agent> <status> [<model> <effort>]`; model may be multi-word, `?` if unknown).
 Assign by capability: identify model (kind + status line), map to tier (references/models.md), assign by tier; reviewer should differ in family from author.
 Plan: split into units with disjoint file ownership; orchestrator does shared scaffolding that would conflict (e.g. indexes) before dispatch.
-Briefs: `tmp/<task>/brief-<worker>.md` (goal, owned, forbidden, acceptance, report path `tmp/<task>/report-<worker>.md`).
+Briefs: `tmp/<task>/brief-<worker>.md` (ordered why -> what -> how; goal, owned, forbidden, acceptance, report path `tmp/<task>/report-<worker>.md` (STAR)).
 Dispatch non-blocking: `scripts/dispatch.sh [--workspace <ID> --self-pane <ID>] <target> <brief-path>` (no --wait).
 Loop is event-driven: dispatch -> `scripts/wait.sh [--any] [--timeout MS] [--workspace <ID> --self-pane <ID>] <target>...` run in background (harness background or `&`); on first worker settling, read its report and dispatch the next unit (task/review/fix) to it. Never foreground-wait; keep conversation responsive.
 Missing/empty Herdr caller IDs, handoff, identity: skill handoff (scripts/snapshot.sh, scripts/takeover.sh; never identify caller from focus/cwd; verify backend=Herdr).
-Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<reviewer>.md` (blocking/non-blocking). Author fixes; max 2 rounds.
+Peer review: reviewer != author on Herdr panes writes `tmp/<task>/review-<reviewer>.md` (STAR form; blocking/non-blocking). Author fixes; max 2 rounds.
 Final review: read reports/reviews, diff, run codify `check.sh`; accept or new brief. Never fix. Commit/push via skill `git-flow` after acceptance.
 Blocked worker: read it, never auto-approve; escalate. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
 Provider errors: reassign a worker that errors for ~5 min (references/models.md).
