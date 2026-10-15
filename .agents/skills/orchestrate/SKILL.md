@@ -1,11 +1,12 @@
 ---
 name: orchestrate
-description: Split work across worker agents via herdr; orchestrator only dispatches and does final review, workers implement and peer-review each other. Use for any non-trivial task when worker agents are available.
+description: Automatically delegate non-trivial tasks without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 ---
 # orchestrate
 Orchestrator never implements. Only (1) dispatches, (2) final review.
+Start automatically for non-trivial work; separate orchestration/delegation request not required. One-step trivial answer -> respond directly. Continue worker discovery below; unknown context is not an empty worker pool.
 
-Find workers: `scripts/context.sh [--workspace ID --self-pane ID]` -> workspace/self IDs (JSON, exit!=0 = unknown, not "no workers"); `scripts/workers.sh [--idle] [--model] [--workspace <ID> --self-pane <ID>] ` (output: `<target> <agent> <status> [<model> <effort>]`; model may be multi-word, `?` if unknown).
+Find workers: `scripts/context.sh [--workspace ID --self-pane ID]` -> workspace/self IDs (JSON, exit!=0 = unknown, not "no workers"); `scripts/workers.sh [--idle] [--model] [--workspace <ID> --self-pane <ID>]` (output: `<target> <agent> <status> [<model> <effort>]`; model may be multi-word, `?` if unknown).
 Assign by capability: identify model (kind + status line), map to tier (references/models.md), assign by tier; reviewer should differ in family from author.
 Plan: split into units with disjoint file ownership; orchestrator does shared scaffolding that would conflict (e.g. indexes) before dispatch.
 Briefs: `tmp/<task>/brief-<worker>.md` (goal, owned, forbidden, acceptance, report path `tmp/<task>/report-<worker>.md`).
