@@ -14,3 +14,6 @@
 - [2026-10-15](2026-10-15-10-wiki-learning-material.md) — 0.1.0 학습용 위키 작성
 - [2026-10-15](2026-10-15-11-wiki-title.md) — 위키 제목을 0.1로 지정
 - [2026-10-15](2026-10-15-12-default-delegation.md) — 비단순 작업의 자동 분담 기본값
+- [2026-10-15](2026-10-15-13-korean-emphasis.md) — 한국어 조사 인접 강조 표기 회고
+- [2026-10-15](2026-10-15-14-herdr-delegation-user-correction.md) — Herdr 위임 정정
+- [2026-10-15](2026-10-15-15-herdr-delegation-retrospective-and-policy.md) — 서브에이전트 위탁 원인 보고 및 인계 규칙 갱신
