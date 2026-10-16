@@ -1,5 +1,6 @@
 import express from 'express';
 import { fileURLToPath } from 'node:url';
+import { registerHealth } from './health.js';
 import { dirname, join } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,6 +9,7 @@ const PUBLIC_DIR = join(__dirname, 'public');
 
 export function createApp({ config } = {}) {
   const app = express();
+  registerHealth(app);
   app.use(express.static(PUBLIC_DIR));
 
   app.get('/api/config', (_req, res) => {
