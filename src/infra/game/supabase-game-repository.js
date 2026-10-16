@@ -8,6 +8,11 @@ import {
   handsToRows,
   rowsToHands,
 } from './mappers.js';
+import {
+  fetchCurrentTrick,
+  fetchLatestTrick,
+  saveTrickAndPlays,
+} from './trick-fetcher.js';
 
 export { SupabaseError };
 
@@ -43,6 +48,7 @@ function buildSaveMethods(client) {
       assertOk(res);
     },
     saveGameAndPublic: (params) => updateWithLock(client, params),
+    saveTrick: (gameId, trick) => saveTrickAndPlays(client, gameId, trick),
   };
 }
 
@@ -68,6 +74,8 @@ export function createSupabaseGameRepository({ client }) {
       assertOk(res);
       return res.data && res.data.length > 0 ? rowsToHands(res.data) : null;
     },
+    findCurrentTrick: (gameId) => fetchCurrentTrick(client, gameId),
+    findLatestTrick: (gameId) => fetchLatestTrick(client, gameId),
     ...buildSaveMethods(client),
   };
 }
