@@ -37,8 +37,10 @@ async function handleFinished(deps, code, { merged, agg }) {
   const rankings = resolveRankings(merged, agg);
   return rankings ? { ...merged, rankings } : merged;
 }
-function capReached(deps, code, merged) {
-  deps.onError(new Error('runtime step cap reached'), { code });
+function continueStep(deps, code, merged) {
+  setImmediate(() =>
+    deps.rooms.enqueue(code, () => runStep(deps, code, merged)),
+  );
   return merged;
 }
 async function step(deps, code, result) {
@@ -69,7 +71,7 @@ async function step(deps, code, result) {
     rooms.timerOf(code).cancel();
     return merged;
   }
-  return capReached(deps, code, merged);
+  return continueStep(deps, code, merged);
 }
 async function runStep(deps, code, result) {
   try {
