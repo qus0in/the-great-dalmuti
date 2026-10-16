@@ -3,7 +3,7 @@
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 . "$HERE/wait-lib.sh"
-ANY=0; TIMEOUT=; TIMEOUT_SET=0
+ANY=0; TIMEOUT=600000; TIMEOUT_SET=0
 WS=; SELF=; WS_SET=0; SELF_SET=0
 total=$#
 i=0
@@ -47,11 +47,7 @@ ctx=$(build_and_run_context "$WS" "$SELF" "$WS_SET" "$SELF_SET" "$@") || exit $?
 FAIL=0
 if [ "$ANY" -eq 0 ]; then
   for t in "$@"; do
-    if [ -n "$TIMEOUT" ]; then
-      out=$(herdr agent wait "$t" --timeout "$TIMEOUT" 2>&1); rc=$?
-    else
-      out=$(herdr agent wait "$t" 2>&1); rc=$?
-    fi
+    out=$(herdr agent wait "$t" --timeout "$TIMEOUT" 2>&1); rc=$?
     st=$(printf '%s\n' "$out" | jq -r '.result.agent.agent_status // empty' 2>/dev/null || true)
     [ -n "$st" ] || st=unknown
     printf '%s %s\n' "$t" "$st"
@@ -66,11 +62,7 @@ joblist=""; j=0
 for t in "$@"; do
   j=$((j+1))
   printf '%s\n' "$t" > "$TMPDIR/$j.target"
-  if [ -n "$TIMEOUT" ]; then
-    ( exec herdr agent wait "$t" --timeout "$TIMEOUT" >"$TMPDIR/$j.out" 2>&1 ) &
-  else
-    ( exec herdr agent wait "$t" >"$TMPDIR/$j.out" 2>&1 ) &
-  fi
+  ( exec herdr agent wait "$t" --timeout "$TIMEOUT" >"$TMPDIR/$j.out" 2>&1 ) &
   joblist="$joblist $j:$!"
 done
 

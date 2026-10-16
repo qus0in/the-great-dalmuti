@@ -60,4 +60,6 @@ esac
 
 msg="Read $BRIEF, follow AGENTS.md, write report to the path stated in the brief."
 herdr agent prompt "$TARGET" "$msg" >/dev/null || { echo "prompt failed: $TARGET" >&2; exit 1; }
-echo "dispatched $TARGET"
+TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+EPOCH=$(date +%s)
+echo "dispatched $TARGET at $TS ($EPOCH)"

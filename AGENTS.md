@@ -22,6 +22,7 @@ Ambiguous -> skill `codify`.
 
 ## Codify (meta rule)
 - New durable knowledge, repeated work, or request to record rules/skills/docs -> run skill `codify`.
+- Design/implementation decision to make or change -> run skill `adr`; record user-chosen decisions only, never invent them.
 - After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
 - User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
 - Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
@@ -32,11 +33,13 @@ Ambiguous -> skill `codify`.
 - Deterministic checks (lint, tests, lines, scripts) run through their owners (scripts); do not hand-read or repeat an unchanged green suite.
 - Review for judgment only, scoped to changed/failing/unresolved inputs or explicit risk.
 - Reuse passed evidence unchanged; rerun only affected checks after a relevant edit or failure.
-- No unsolicited scope expansion: stay inside the assigned unit and acceptance criteria.
+- Scope frozen at dispatch: acceptance criteria change only with user approval. Reviewers judge only against them; outside findings are out-of-scope observations, never blocking. Fix rounds carry blocking findings only. Non-blocking or out-of-scope findings never become new units — log to the harness ledger or propose to the user. Workers stay within owned files + acceptance and report other issues instead of fixing.
 - Status and report reads are event-driven (completion, failure, or next decision needed), not pane polling.
 
 ## Orchestration
 - Non-trivial task -> invoke skill `orchestrate` and delegate via Herdr by default; no separate user request required; orchestrator only dispatches briefs and does final review.
+- Orchestrator actions limited to ask/brief/dispatch/wait/review/commit; every other edit (scaffolding, code/docs/skills/AGENTS, prompt-log, gh writes, gate fixes) is worker work even when unrequested -> details in skill `orchestrate`.
+- Self-improve: "하네스 업데이트" or similar request -> skill `harness` full pass. Run harness light pass automatically (no request needed) on user corrections, reviewer blocking findings, repeated manual steps, gate failure classes, worker drift, and before each commit.
 - Delegation transport strictly means existing Herdr worker panes dispatched via `orchestrate/scripts`; never built-in collaboration spawn/followup/subagent APIs. Tool availability is not authorization to substitute backend.
 - Before dispatch, resolve live workspace/self and verify intended worker; if Herdr is unavailable, context missing, or no worker ready, follow safe discovery/escalation; never silently replace with native subagents or self-implement worker units.
 - Dispatch + waits run in background; orchestrator never blocks on a worker; redistribute as each worker settles.
@@ -63,11 +66,13 @@ Ambiguous -> skill `codify`.
 
 ## Skills
 <!-- skills:begin -->
+- adr: Record design decisions as ADRs from user Q&A; scaffold, index, check. Use when making or changing architecture/implementation decisions or running a decision interview.
 - codify: Persist knowledge into tmp, docs, skills, scripts or AGENTS.md by placement rules; scaffold, index, check. Use when recording rules/skills/docs, after learning a reusable procedure or project structure, or when work repeats.
 - gh-actions: Discover and verify latest stable or LTS GitHub Actions and runtime versions. Use when creating or updating GitHub Actions workflow files.
 - gh-issues: Create and manage GitHub issues with canonical labels and milestones. Use for issue workflows.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
 - handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.
+- harness: Harvest lessons from reviews, failures, and corrections, then dispatch them as skill/rule/doc/script updates; use for self-improvement passes or when the user asks for a harness update.
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
 - ui-prototype: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.
