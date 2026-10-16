@@ -36,12 +36,15 @@
   pointer-events: none;
 }
 
+.card.is-playable:has(+ .card.is-playable)::after {
+  display: none;
+}
+
 @media (max-width: 599px) {
   .hand-fan {
-    grid-auto-columns: 30px;
+    grid-auto-columns: 24px;
     justify-content: flex-start;
-    padding-left: var(--space-2);
-    padding-right: var(--space-10);
+    padding: var(--space-3) var(--space-4) var(--space-1) var(--space-2);
   }
 
   .hand-fan .card {
@@ -88,11 +91,6 @@
     inset: var(--space-0-25);
   }
 
-  .hand-fan .card {
-    transform: none !important;
-  }
-
-  .hand-fan .card.is-selected {
-    transform: translateY(-16px) !important;
-  }
+  .hand-fan .card { transform: none !important; }
+  .hand-fan .card.is-selected { transform: translateY(-16px) !important; }
 }

@@ -15,7 +15,7 @@
   justify-content: space-between;
   position: relative;
   overflow: visible;
-  height: 230px;
+  min-height: 230px;
 }
 
 .table-felt::before {
@@ -63,7 +63,7 @@
   .table-felt {
     height: auto;
     min-height: var(--space-12);
-    padding: var(--space-0-5);
+    padding: var(--space-0-5) var(--space-0-5) var(--space-2);
   }
 
   .table-felt::before {
