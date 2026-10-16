@@ -52,3 +52,8 @@
 - [2026-10-15](2026-10-15-48-turn-inactivity-disconnect-policy.md) — 미행동 강제 퇴장 및 봇 대행 정책 결정
 - [2026-10-15](2026-10-15-49-supabase-realtime-and-spring-boot-redis-migration.md) — Supabase Realtime 채택 및 향후 Spring Boot Redis 이관 경계 고려
 - [2026-10-16](2026-10-16-01-spring-boot-backend-scope-and-supabase-delegation.md) — 백엔드 기능 위임 원칙 및 Spring Boot 이관 범위 결정
+- [2026-10-16](2026-10-16-02-adr-skill-rules.md) — adr 스킬·룰·문서·스크립트 정립 워커 분배
+- [2026-10-16](2026-10-16-03-orchestration-delegation.md) — Orchestrate by default + harness 갱신 명심
+- [2026-10-16](2026-10-16-04-harness-self-improvement.md) — 하네스 업데이트 스킬·반복 적용
+- [2026-10-16](2026-10-16-05-scope-freeze.md) — 범위 확장 방지 하네스 갱신
+- [2026-10-16](2026-10-16-06-worker-timebox.md) — 오케스트레이터 10분 타임박스·워커 역량 판정 하네스 갱신
