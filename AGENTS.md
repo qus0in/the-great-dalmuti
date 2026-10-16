@@ -42,7 +42,7 @@ Ambiguous -> skill `codify`.
 - Self-improve: "하네스 업데이트" or similar request -> skill `harness` full pass. Run harness light pass automatically (no request needed) on user corrections, reviewer blocking findings, repeated manual steps, gate failure classes, worker drift, and before each commit.
 - Delegation transport strictly means existing Herdr worker panes dispatched via `orchestrate/scripts`; never built-in collaboration spawn/followup/subagent APIs. Tool availability is not authorization to substitute backend.
 - Before dispatch, resolve live workspace/self and verify intended worker; if Herdr is unavailable, context missing, or no worker ready, follow safe discovery/escalation; never silently replace with native subagents or self-implement worker units.
-- Dispatch + waits run in background; orchestrator never blocks on a worker; redistribute as each worker settles.
+- Event-driven via worker callbacks (orchestrate/scripts/notify.sh); orchestrator acts on callback or triage timer without polling loops, redistributing as units settle.
 - Herdr workers implement; reviewer != author; each worker owns a disjoint file set.
 - Assign units by each worker's model tier (see skill `orchestrate`); reviewer differs from author in model family when possible.
 - Trivial single-step answer: answer directly, no orchestration.
