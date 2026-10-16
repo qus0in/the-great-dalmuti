@@ -64,6 +64,9 @@ Ambiguous -> skill `codify`.
 - UI work under dist/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
 - Visual/headless verification is worker-only: never run headless Chrome as orchestrator; assign to a worker and read its report/PNGs.
 
+## Structure (0.3)
+- 0.3 source: layers above features under `src/{ui,app,domain,infra}/<feature>` (deps ui -> app -> domain, infra implements ports, domain no external deps); 0.3 screens at `src/ui/public/`; `dist/` frozen as 0.2 Pages preview, Render serves 0.3. Canonical: `docs/adr/0007-0.3-structure.md` + `docs/structure.md`.
+
 ## Skills
 <!-- skills:begin -->
 - adr: Record design decisions as ADRs from user Q&A; scaffold, index, check. Use when making or changing architecture/implementation decisions or running a decision interview.
@@ -73,6 +76,7 @@ Ambiguous -> skill `codify`.
 - git-flow: Manage git flow by protecting main, shipping dev via PR, syncing, and bootstrapping dev. Use for branch and release workflows.
 - handoff: Record and verify live Herdr orchestrator state during handoff or takeover. Use when transferring orchestrator duties between agents, verifying caller identity, or resuming tasks.
 - harness: Harvest lessons from reviews, failures, and corrections, then dispatch them as skill/rule/doc/script updates; use for self-improvement passes or when the user asks for a harness update.
+- layers: Lint layer dependency rules and 100-line limit for src features
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
 - ui-prototype: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.

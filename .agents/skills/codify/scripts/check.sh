@@ -33,6 +33,16 @@ $adr_out
 EOF
   fi
 fi
+if [ -x .agents/skills/layers/scripts/check.sh ]; then
+  if ! layers_out=$(.agents/skills/layers/scripts/check.sh 2>&1); then
+    while IFS= read -r l; do
+      [ -n "$l" ] || continue
+      err "layers: $l"
+    done <<EOF
+$layers_out
+EOF
+  fi
+fi
 if git rev-parse --git-dir >/dev/null 2>&1; then
   t=$(git ls-files tmp | grep -v '\.gitkeep$' || true)
   [ -z "$t" ] || err "tracked files in tmp/: $t"
