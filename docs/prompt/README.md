@@ -63,3 +63,4 @@
 - [2026-10-16](2026-10-16-10-browser-95-zod-thymeleaf.md) — 브라우저 95% 도달 + zod 검증 + Thymeleaf 연동 고려
 - [2026-10-16](2026-10-16-11-exception-http-status.md) — 예외처리 적극 반영 + HTTP status 적극 사용
 - [2026-10-16](2026-10-16-12-async-await-promise-helpers.md) — async/await 프로미스 문법 적극 사용
+- [2026-10-16](2026-10-16-13-learn-branches.md) — 학습 범위 브랜치 기록
