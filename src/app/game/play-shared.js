@@ -25,11 +25,11 @@ export async function loadPlayingRoom(
   return { ...agg, seat: found.seat };
 }
 
-function buildNewTrick(game, publicState) {
+function buildNewTrick(game, publicState, seq) {
   return {
     id: randomUUID(),
     gameId: game.id,
-    seq: 1,
+    seq,
     leaderSeat: publicState.currentTurnSeat ?? 0,
     passes: 0,
     winnerSeat: null,
@@ -45,9 +45,11 @@ export async function loadTrickContext({
   publicState,
   hands,
 }) {
-  const trick =
-    (await gameRepository.findCurrentTrick(game.id)) ??
-    buildNewTrick(game, publicState);
+  const current = await gameRepository.findCurrentTrick(game.id);
+  if (current)
+    return { trick: current, state: rebuildEndedState(current, hands) };
+  const latest = await gameRepository.findLatestTrick(game.id);
+  const trick = buildNewTrick(game, publicState, latest ? latest.seq + 1 : 1);
   return { trick, state: rebuildEndedState(trick, hands) };
 }
 

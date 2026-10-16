@@ -79,6 +79,11 @@ describe('Pass turn trick ending signal', () => {
 
     assert.equal(result.trickEnded, true);
     assert.equal(result.publicState.currentTurnSeat, 0);
-    assert.equal(await gameRepository.findCurrentTrick(game.id), null);
+    // 결정 96: 트릭 종료 직후 서버가 다음 트릭(seq+1)을 열어 둔다
+    const current = await gameRepository.findCurrentTrick(game.id);
+    assert.ok(current);
+    assert.equal(current.seq, 2);
+    assert.equal(current.leaderSeat, 0);
+    assert.equal(current.plays.length, 0);
   });
 });

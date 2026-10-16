@@ -28,6 +28,7 @@ export function playCardsHandler({ repository, clock }) {
       publicState: result.publicState,
       trickEnded: result.trickEnded,
       roundEnded: result.roundEnded,
+      rankings: result.rankings ?? null,
     });
   });
 }
@@ -45,6 +46,7 @@ export function passHandler({ repository, clock }) {
       publicState: result.publicState,
       trickEnded: result.trickEnded,
       roundEnded: result.roundEnded,
+      rankings: result.rankings ?? null,
     });
   });
 }
