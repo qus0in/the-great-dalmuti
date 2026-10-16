@@ -67,6 +67,16 @@
       <p class="hall__intro">《더 그레이트 달무티》는 리처드 가필드가 1995년에 디자인한 카드 게임입니다. <span class="nowrap">4–8명</span>이 함께하고, 손에 든 카드를 가장 먼저 비우는 플레이어가 달무티가 됩니다. 대기실에서 자리와 계급을 확인한 뒤 게임에 입장하세요.</p>
     </header>
 
+    <section class="panel text-center" aria-label="로그인">
+      <div data-auth="signed-out">
+        <button type="button" class="btn btn--gold" data-auth="login">Google로 로그인</button>
+      </div>
+      <div data-auth="signed-in" hidden>
+        <span class="badge badge--primary" data-auth="user-name"></span>
+        <button type="button" class="btn btn--secondary" data-auth="logout">로그아웃</button>
+      </div>
+    </section>
+
     <main class="grid hall__main">
       <!-- 4-seat waiting room on the table felt -->
       <section class="col-span-12 panel panel--table hall__room anim-fade-up hall__delay-1" aria-labelledby="room-title">
@@ -211,5 +221,6 @@
       <small>달무티 0.2 프로토타입 — 이미지 없이 HTML·CSS만으로 구성한 대기실 화면입니다.</small>
     </footer>
   </div>
+  <script type="module" src="js/auth.js"></script>
 </body>
 </html>

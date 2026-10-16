@@ -524,5 +524,9 @@
     </footer>
 
   </div>
+  <script type="module">
+    import { requireSession } from './js/auth.js';
+    await requireSession();
+  </script>
 </body>
 </html>
