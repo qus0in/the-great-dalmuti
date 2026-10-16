@@ -1,9 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { DomainError } from '../../domain/game/cards.js';
-import { createTrickState, pass, play } from '../../domain/game/trick.js';
 import { ConflictError, ForbiddenError, NotFoundError } from './room-errors.js';
-
-const PLAYER_ORDER = ['0', '1', '2', '3'];
+import { rebuildEndedState } from './round-support.js';
 
 // 공통 선행 검사: 방 존재(404)·진행 중(409)·버전(409)·좌석(403)
 export async function loadPlayingRoom(gameRepository, { code, user, version }) {
@@ -32,7 +30,8 @@ function buildNewTrick(game, publicState) {
   };
 }
 
-// 저장된 트릭·플레이·손패로 도메인 트릭 상태를 복원한다 (규칙 판정은 도메인 몫)
+// 트릭 시작 시점 장수(현재 장수 + 이 트릭에서 낸 장수)로 상태를 복원한다
+// (round-support.js의 rebuildEndedState 재사용 — 복원 계산 중복 금지)
 export async function loadTrickContext({
   gameRepository,
   game,
@@ -42,23 +41,7 @@ export async function loadTrickContext({
   const trick =
     (await gameRepository.findCurrentTrick(game.id)) ??
     buildNewTrick(game, publicState);
-  const handCounts = Object.fromEntries(
-    PLAYER_ORDER.map((s) => [s, hands[Number(s)].length]),
-  );
-  let state = createTrickState({
-    playerOrder: PLAYER_ORDER,
-    leaderId: String(trick.leaderSeat),
-    handCounts,
-    hands,
-  });
-  const rows = [...trick.plays].sort((a, b) => a.turnNo - b.turnNo);
-  for (const row of rows) {
-    state =
-      row.action === 'pass'
-        ? pass(state, String(row.seat))
-        : play(state, String(row.seat), row.cards);
-  }
-  return { trick, state };
+  return { trick, state: rebuildEndedState(trick, hands) };
 }
 
 // 카드 id를 손패의 실제 카드로 바꾼다 (없으면 규칙 위반 422로 매핑)
