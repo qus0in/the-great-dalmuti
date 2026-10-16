@@ -1,13 +1,11 @@
 import { ConflictError } from '../room-errors.js';
-
+import { buildStatsMethods } from '../stats-store.js';
 const clone = (data) => JSON.parse(JSON.stringify(data));
+const openOf = (trick) => (trick && trick.winnerSeat === null ? trick : null);
 const latestOf = (state, gameId) => {
   const found = [...state.tricks.values()].filter((t) => t.gameId === gameId);
-  found.sort((a, b) => b.seq - a.seq);
-  return found[0] ? clone(found[0]) : null;
+  return found.sort((a, b) => b.seq - a.seq).map(clone)[0] ?? null;
 };
-
-const openOf = (trick) => (trick && trick.winnerSeat === null ? trick : null);
 function findByCode(state, joinCode) {
   for (const game of state.games.values()) {
     if (game.joinCode === joinCode) {
@@ -86,7 +84,6 @@ function buildSaveMethods(state) {
   };
 }
 
-// 테스트 및 가짜 환경용 인메모리 게임 저장소
 export function createInMemoryGameRepository() {
   const state = {
     games: new Map(),
@@ -95,5 +92,9 @@ export function createInMemoryGameRepository() {
     public: new Map(),
     tricks: new Map(),
   };
-  return { ...buildFindMethods(state), ...buildSaveMethods(state) };
+  return {
+    ...buildFindMethods(state),
+    ...buildSaveMethods(state),
+    ...buildStatsMethods(state, clone),
+  };
 }
