@@ -17,7 +17,7 @@ function handleNotFound(req, res, next) {
   res.status(404).sendFile(join(PUBLIC_DIR, '404.html'));
 }
 
-export function createApp({ config } = {}) {
+export function createApp({ config, gameRouter } = {}) {
   const app = express();
   registerHealth(app);
   // 파일명 없는 깔끔한 주소로 보낸다 (쿼리스트링 유지)
@@ -40,6 +40,11 @@ export function createApp({ config } = {}) {
     res.set('Cache-Control', 'public, max-age=300');
     res.json(publicConfig);
   });
+
+  // U11a 게임 라우터(있을 때만): 내부에 /api/... 전체 경로가 들어 있어 root에 mount한다
+  if (gameRouter) {
+    app.use(gameRouter);
+  }
 
   // 없는 주소: 화면은 404 안내 페이지, API는 Problem Details 유지
   app.use(handleNotFound);
