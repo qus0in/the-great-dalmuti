@@ -34,14 +34,20 @@ export function rebuildEndedState(trick, hands) {
 
 // 아웃 순서대로 빈 finish_position을 채운다 (기존 기록은 유지)
 export function applyFinishPositions(seats, order) {
+  const positions = new Map();
   let next = seats.filter((s) => s.finishPosition !== null).length + 1;
   for (const id of order) {
-    const seat = seats[Number(id)];
-    if (seat && seat.finishPosition === null) {
-      seat.finishPosition = next;
+    const index = Number(id);
+    const seat = seats[index];
+    if (seat && seat.finishPosition === null && !positions.has(index)) {
+      positions.set(index, next);
       next += 1;
     }
   }
+  return seats.map((seat, index) => ({
+    ...seat,
+    finishPosition: positions.get(index) ?? seat.finishPosition,
+  }));
 }
 
 // 방·손패·최신 트릭·복원 상태를 한 번에 읽는다 (선행 검사 포함)

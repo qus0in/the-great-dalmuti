@@ -8,14 +8,15 @@ import {
   saveFinishedTrick,
 } from './round-fixtures.js';
 import { advanceAfterTrick } from './round-advance.js';
+import { applyFinishPositions } from './round-support.js';
 
 describe('Advance after trick winner lead', () => {
   it('Given finished trick, When advance, Then winner leads new trick', async () => {
     const { gameRepository, game, hands } = await playingGame();
     const played = hands[0][0];
-    hands[0] = hands[0].slice(1);
+    const nextHands = { ...hands, 0: hands[0].slice(1) };
     await saveFinishedTrick(gameRepository, game, {
-      hands,
+      hands: nextHands,
       plays: fourRows(played),
     });
 
@@ -39,9 +40,9 @@ describe('Advance after trick out ordering', () => {
   it('Given emptied seat, When advance, Then finish position recorded', async () => {
     const { gameRepository, game, hands } = await playingGame();
     const played = hands[0][0];
-    hands[0] = [];
+    const nextHands = { ...hands, 0: [] };
     await saveFinishedTrick(gameRepository, game, {
-      hands,
+      hands: nextHands,
       plays: fourRows(played),
     });
 
@@ -56,5 +57,24 @@ describe('Advance after trick out ordering', () => {
     const latest = await gameRepository.findLatestTrick(game.id);
     assert.equal(latest.leaderSeat, 1);
     assert.equal(result.publicState.currentTurnSeat, 1);
+  });
+});
+
+describe('Finish position immutability', () => {
+  it('Given seats, When positions are applied, Then inputs stay unchanged', () => {
+    const seats = [
+      { seat: 0, finishPosition: null },
+      { seat: 1, finishPosition: 1 },
+      { seat: 2, finishPosition: null },
+    ];
+    const before = seats.map((seat) => ({ ...seat }));
+
+    const updated = applyFinishPositions(seats, ['2', '0']);
+
+    assert.deepEqual(seats, before);
+    assert.deepEqual(
+      updated.map((seat) => seat.finishPosition),
+      [3, 1, 2],
+    );
   });
 });

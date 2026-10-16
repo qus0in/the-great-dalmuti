@@ -15,10 +15,12 @@ export async function finishRound({
     ...latest,
     winnerSeat: Number(state.trick.lastPlay.playerId),
   });
-  const waiting = seats.find((s) => s.finishPosition === null);
-  if (waiting) waiting.finishPosition = 4;
+  const waitingIndex = seats.findIndex((s) => s.finishPosition === null);
   const ordered = seats
-    .slice()
+    .map((seat, index) => ({
+      ...seat,
+      finishPosition: index === waitingIndex ? 4 : seat.finishPosition,
+    }))
     .sort((a, b) => a.finishPosition - b.finishPosition)
     .map((s) => s.seat);
   return assignRanksByFinishOrder(ordered);
@@ -48,13 +50,13 @@ export async function runAdvanceStep({
   latest,
   state,
 }) {
-  applyFinishPositions(seats, state.finishOrder);
-  await gameRepository.saveSeats(game.id, seats);
+  const nextSeats = applyFinishPositions(seats, state.finishOrder);
+  await gameRepository.saveSeats(game.id, nextSeats);
   if (state.status === 'round-ended') {
     const rankings = await finishRound({
       gameRepository,
       game,
-      seats,
+      seats: nextSeats,
       latest,
       state,
     });
