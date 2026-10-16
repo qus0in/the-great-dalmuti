@@ -59,3 +59,7 @@
 - [2026-10-16](2026-10-16-06-worker-timebox.md) — 오케스트레이터 10분 타임박스·워커 역량 판정 하네스 갱신
 - [2026-10-16](2026-10-16-07-orchestrator-gates-allowed.md) — 오케스트레이터도 게이트 실행 허용
 - [2026-10-16](2026-10-16-08-worker-self-finish-callback.md) — 워커가 종료 시 스스로 마무리하고 오케스트레이터가 watch하지 않게 하네스 개선
+- [2026-10-16](2026-10-16-09-es6-lint-declaration-style.md) — ES6+ 린트 기반 문답
+- [2026-10-16](2026-10-16-10-browser-95-zod-thymeleaf.md) — 브라우저 95% 도달 + zod 검증 + Thymeleaf 연동 고려
+- [2026-10-16](2026-10-16-11-exception-http-status.md) — 예외처리 적극 반영 + HTTP status 적극 사용
+- [2026-10-16](2026-10-16-12-async-await-promise-helpers.md) — async/await 프로미스 문법 적극 사용
