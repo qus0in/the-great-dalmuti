@@ -21,6 +21,8 @@ norm_rel() { p=$1/$2; res=; while [ -n "$p" ]; do case "$p" in */*) c=${p%%/*}; 
 find "$SRC" -type f | sort | while IFS= read -r f; do
   case "$f" in *.js|*.mjs|*.ts|*.tsx|*.jsx) ;; *) continue;; esac
   rel=${f#"$SRC"/}
+  # Decision 60 / ADR-0008 follow-up: composition root src/main.js lives outside layers to wire infra and ui
+  [ "$rel" = "main.js" ] && continue
   sl=$(layer_of "$rel"); [ -n "$sl" ] || continue
   grep -nE "^[[:space:]]*(import|export)[[:space:]].*from[[:space:]]+['\"]" "$f" 2>/dev/null | while IFS= read -r line; do
     mod=$(printf '%s\n' "$line" | sed -nE "s/.*from[[:space:]]+['\"]([^'\"]+)['\"].*/\1/p")

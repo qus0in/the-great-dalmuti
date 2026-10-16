@@ -1,3 +1,4 @@
 tmp/*
 !**/.gitkeep
 node_modules/
+.env
