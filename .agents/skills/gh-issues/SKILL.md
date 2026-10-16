@@ -14,6 +14,7 @@ Every issue gets exactly one milestone, exactly one FIT label, and optional doma
 Issue body explanation order: why -> what -> how.
 
 Milestones: semver titles with Korean stage description.
+Closing: issues close with their work — `Closes #N` in the shipping PR body, or verify acceptance against main right after merge and close with that evidence; never leave shipped issues open.
 
 Scripts (POSIX sh; --dry-run prints mutations):
 - labels.sh: sync labels to canonical set (create missing, delete extras).

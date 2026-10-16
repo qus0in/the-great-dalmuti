@@ -1,32 +1,85 @@
-# 배포 (GitHub Pages · Actions)
+# 배포 — Render (0.3 서비스)
 
 ## 왜 (Why)
 
-- `dist/`의 정적 프로토타입을 누구나 브라우저로 확인할 수 있도록 고정 공개 URL로 배포합니다.
-- 이 저장소의 Pages는 이미 **GitHub Actions 소스**(`build_type: "workflow"`)로 설정되어 있어, 별도 사용자 전환이 필요하지 않습니다(API로 확인: `source.branch: main`).
+- `dist/`는 0.2 프로토타입 미리보기로 동결되어 있고, 0.3은 Express 서버와 Supabase를 사용하는 실제 서비스입니다 (`ADR-0007`).
+- GitHub Pages 정적 배포 워크플로는 `f88a869`에서 삭제되었습니다.
+- 0.3은 Render Web Service로 배포하고, `dist/`는 0.2 frozen artifact로 유지합니다.
 
 ## 무엇을 (What)
 
-- **사이트 URL**: `https://qus0in.github.io/the-great-dalmuti/`
-- **산출물**: `dist/` 디렉터리만 업로드합니다. 공개 URL 루트는 `dist/` 내부가 그대로 노출되므로 URL에 `/dist` 경로가 포함되지 않으며, 페이지의 상대 경로(`css/…`, `play.html`)가 그대로 동작합니다.
-- **워크플로**: `.github/workflows/pages.yml`
-  - 트리거: `main` 브랜치 push(`dist/**` 또는 워크플로 파일 자체가 바뀐 경우) + 수동 `workflow_dispatch`
-  - 권한: `contents: read`, `pages: write`, `id-token: write`
-  - 환경: `github-pages`, 동시성: `group: pages`(진행 중 취소 없음)
-  - 단계: checkout → configure-pages → upload-pages-artifact(`path: dist`) → deploy-pages
-  - 정적 HTML/CSS만 배포하므로 빌드 스택(Node 등) 설정이 없습니다.
-
-### 배포 소스 선택 평가 (SWOT)
-
-- **강점**: `dist/`만 정확히 업로드되어 공개 범위가 명확하고, 빌드 도구 없이 순수 정적 산출물을 그대로 배포하며, 모든 배포가 Actions 로그로 감사됩니다.
-- **약점**: 배포가 Actions 러너에 의존하므로 러너 장애 시 수동 재실행이 필요합니다.
-- **기회**: 같은 사이트에서 현재의 정적 대기실(hall)/플레이(play) 프로토타입을 링크 하나로 공유할 수 있어, 별도 호스팅 없이 확인과 피드백이 가능합니다.
-- **위협**: 워크플로 파일 변경도 배포를 트리거하므로, 변경은 `paths` 한정과 수동 dispatch로 통제합니다.
+- **배포 대상**: GitHub 저장소 `qus0in/the-great-dalmuti`, 브랜치 `main` (git-flow에서 `dev` → `main` PR).
+- **런타임**: Native Node, Dockerfile 없음.
+- **빌드/시작**: build `npm ci`, start `npm start`.
+- **Node 버전**: `package.json`의 `"engines": { "node": "^22 || ^24" }`; Render 환경변수 `NODE_VERSION=24` 권장 ([Node version](https://render.com/docs/node-version)).
+- **환경 변수** (`Render` dashboard, `.env.sample` 키 기준):
+  - `SUPABASE_URL`
+  - `SUPABASE_PUBLISHABLE_KEY`
+  - `SUPABASE_SECRET_KEY`
+  - `SUPABASE_JWKS_URL`
+  - `NODE_ENV=production`
+  - `PORT`는 Render가 자동 주입하므로 수동 입력하지 않습니다.
+- **리전/플랜**: Region `oregon`, Plan `free` (이후 사용할 AI API의 리전 제약을 피하기 위함).
+- **헬스 경로**: `/healthz` ([Health checks](https://render.com/docs/health-checks)).
+- **Supabase Auth redirect URL**: Render 도메인으로 설정 ([Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)).
+- 역할 참조: [ADR-0002 렌더링](adr/0002-0.3-rendering.md), [ADR-0003 전송과 저장](adr/0003-0.3-transport.md), [ADR-0007 구조](adr/0007-0.3-structure.md).
 
 ## 어떻게 (How)
 
-1. **자동 배포**: `dev`에서 작업 → PR로 `dev` -> `main` 병합 → `main`에 push되면 워크플로가 실행되어 `dist/`가 사이트 루트로 게시됩니다.
-2. **수동 배포**: GitHub Actions 탭에서 "Deploy GitHub Pages" 워크플로를 선택해 `main` 기준으로 Run workflow(= `workflow_dispatch`).
-3. **실패 확인**: Actions 탭의 해당 실행 로그에서 어느 단계에서 실패했는지 확인합니다.
-4. **설정 위치**: 저장소 Settings의 Pages에서 소스가 "GitHub Actions"인지 확인할 수 있습니다(현재 이미 Actions 소스).
-5. **주의**: `dist/` 밖의 파일은 배포에 포함되지 않고, 공개 URL에는 `/dist`가 없으며, 워크플로 파일 자체 변경도 배포를 트리거합니다.
+### 0. 승인 전 로컬 확인
+
+```sh
+npm ci
+npm test
+npm run lint
+npm run format:check
+.agents/skills/layers/scripts/check.sh
+```
+
+### 1. Render Web Service 생성 (승인 후 실행)
+
+외부 효과를 만드는 단계이므로 승인 필요(외부 효과) — 대시보드 또는 CLI 중 하나로 실행합니다.
+
+- 공통: Region `oregon`, Plan `free` — "리전은 오리건, free tier로 만들어야함. 이후 사용할 ai api 가 싱가포르 등에서 허용이 안됨".
+- 대시보드: `New +` → `Web Service`; GitHub 저장소 `qus0in/the-great-dalmuti` 연결. ([Render web services](https://render.com/docs/web-services))
+- 대시보드: Runtime `Node`, Branch `main`, Build Command `npm ci`, Start Command `npm start`.
+- 대시보드: `healthCheckPath`는 `/healthz`로 지정.
+- CLI (대안, 승인 필요(외부 효과), 플래그는 `render services create --help`에서 확인):
+
+```sh
+render services create --name <service-name> --type web_service --repo https://github.com/qus0in/the-great-dalmuti --runtime node --branch main --build-command "npm ci" --start-command "npm start" --health-check-path /healthz --region oregon --plan free --output json
+```
+
+### 2. 환경 변수 등록 (승인 후 실행)
+
+dashboard `Environment` 탭에서 위 4개 Supabase 키와 `NODE_ENV=production`을 입력하고, `.env` 파일은 커밋하지 않습니다. ([Environment variables](https://render.com/docs/configure-environment-variables))
+
+### 3. 배포 브랜치와 자동 배포 (승인 후 실행)
+
+- Render의 auto-deploy branch를 `main`으로 설정합니다. ([Web services](https://render.com/docs/web-services))
+- `dev`에서 `main`으로 PR 병합 후 자동 빌드/배포가 실행됩니다.
+- 무료 티어 제약: 15분 무요청 시 sleep, cold start 약 50초~1분, ephemeral disk, 월 750시간. ([Free tier](https://render.com/docs/free#free-web-services))
+
+### 4. Supabase Auth redirect URL (승인 후 실행)
+
+- Supabase Dashboard → Authentication → URL Configuration.
+- Site URL: `https://<render-service-name>.onrender.com`
+- Redirect URLs: `https://<render-service-name>.onrender.com/**`, `http://localhost:3000/**`
+
+### 5. 수동 E2E 체크리스트 (승인 후 실행)
+
+- [ ] 정적 화면 렌더링 (`GET /`)
+- [ ] 플레이 화면 (`GET /play.html`)
+- [ ] 헬스체크 (`GET /healthz`)
+- [ ] `GET /api/config` 공개 필드 + Cache-Control
+- [ ] Google 로그인 redirect 흐름
+- [ ] 브라우저 콘솔에서 secret sentinel 부재
+
+### 6. 복구
+
+배포 실패는 Render가 이전 버전으로 유지하므로, 먼저 Actions/Render 로그를 확인하고, 필요한 경우 이전 successful deploy로 rollback합니다.
+
+## 참고 (References)
+
+- Render: [Web services](https://render.com/docs/web-services), [Node version](https://render.com/docs/node-version), [Node + Express](https://render.com/docs/deploy-node-express-app), [Environment variables](https://render.com/docs/configure-environment-variables), [Health checks](https://render.com/docs/health-checks), [Web services(auto-deploy)](https://render.com/docs/web-services#auto-deploy), [Free tier](https://render.com/docs/free#free-web-services)
+- Supabase: [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)

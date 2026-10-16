@@ -49,7 +49,7 @@ is_exempt() {
     *.png|*.ico|*.jpg|*.jpeg|*.gif|*.webp|*.woff|*.woff2|*.pdf) return 0 ;;
     *.svg|*.webmanifest|*.json) return 0 ;;
     # Temporary exception until 0.3 SSR splits it into template partials (issue #19/#20)
-    dist/*.html|*/dist/*.html) return 0 ;;
+    dist/*.html|*/dist/*.html|src/ui/public/*.html|*/src/ui/public/*.html) return 0 ;;
     *) return 1 ;;
   esac
 }

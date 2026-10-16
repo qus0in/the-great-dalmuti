@@ -44,3 +44,23 @@
 - [2026-10-15](2026-10-15-40-css-module-split-final-review.md) — CSS 모듈 분리와 최종 리뷰 수정 완료
 - [2026-10-15](2026-10-15-41-pages-actions-configuration-push.md) — Pages Actions 배포 구성·안내 작성과 푸시
 - [2026-10-15](2026-10-15-42-guard-no-hide-untracked.md) — 가드 우회로 파일 숨기기 금지
+- [2026-10-15](2026-10-15-43-issue-close-with-work.md) — 이슈는 작업과 함께 닫기
+- [2026-10-15](2026-10-15-44-adr-tdd-bdd-layers.md) — TDD·BDD와 4레이어 도입 ADR
+- [2026-10-15](2026-10-15-45-adr-layer-feature-direction.md) — 레이어 아래 도메인/피처 방향 정정
+- [2026-10-15](2026-10-15-46-online-four-player-and-bot-single.md) — 온라인 4인 플레이 및 봇 싱글 플레이 범위 결정
+- [2026-10-15](2026-10-15-47-room-start-countdown-policy.md) — 방 시작 10초 카운트다운 정책 결정
+- [2026-10-15](2026-10-15-48-turn-inactivity-disconnect-policy.md) — 미행동 강제 퇴장 및 봇 대행 정책 결정
+- [2026-10-15](2026-10-15-49-supabase-realtime-and-spring-boot-redis-migration.md) — Supabase Realtime 채택 및 향후 Spring Boot Redis 이관 경계 고려
+- [2026-10-16](2026-10-16-01-spring-boot-backend-scope-and-supabase-delegation.md) — 백엔드 기능 위임 원칙 및 Spring Boot 이관 범위 결정
+- [2026-10-16](2026-10-16-02-adr-skill-rules.md) — adr 스킬·룰·문서·스크립트 정립 워커 분배
+- [2026-10-16](2026-10-16-03-orchestration-delegation.md) — Orchestrate by default + harness 갱신 명심
+- [2026-10-16](2026-10-16-04-harness-self-improvement.md) — 하네스 업데이트 스킬·반복 적용
+- [2026-10-16](2026-10-16-05-scope-freeze.md) — 범위 확장 방지 하네스 갱신
+- [2026-10-16](2026-10-16-06-worker-timebox.md) — 오케스트레이터 10분 타임박스·워커 역량 판정 하네스 갱신
+- [2026-10-16](2026-10-16-07-orchestrator-gates-allowed.md) — 오케스트레이터도 게이트 실행 허용
+- [2026-10-16](2026-10-16-08-worker-self-finish-callback.md) — 워커가 종료 시 스스로 마무리하고 오케스트레이터가 watch하지 않게 하네스 개선
+- [2026-10-16](2026-10-16-09-es6-lint-declaration-style.md) — ES6+ 린트 기반 문답
+- [2026-10-16](2026-10-16-10-browser-95-zod-thymeleaf.md) — 브라우저 95% 도달 + zod 검증 + Thymeleaf 연동 고려
+- [2026-10-16](2026-10-16-11-exception-http-status.md) — 예외처리 적극 반영 + HTTP status 적극 사용
+- [2026-10-16](2026-10-16-12-async-await-promise-helpers.md) — async/await 프로미스 문법 적극 사용
+- [2026-10-16](2026-10-16-13-learn-branches.md) — 학습 범위 브랜치 기록

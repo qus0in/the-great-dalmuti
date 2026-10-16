@@ -61,6 +61,14 @@
 - 생성은 `add.sh`가 맡고, 목록(`docs/prompt/README.md`)은 `index.sh`가 자동으로 만듭니다.
 - 목록이 어긋나면 `codify`의 `check.sh`가 잡아냅니다.
 
+## 설계 결정 기록 (`adr` 스킬)
+
+설계·구현 결정은 사용자 문답(인터뷰)으로 받아 `docs/adr/`의 ADR로 기록합니다. 결정 캡처 규칙과 ADR 작성 형식의 단일 원천은 `adr` 스킬(`.agents/skills/adr/SKILL.md`)이며 여기서 다시 기술하지 않습니다.
+
+- 결정 파일은 `docs/adr/NNNN-<슬러그>.md`이며, 확정(사용자 선택)·제안(공학적 수단)·미결(임의 결정 금지)을 분리해 적습니다. 같은 결정은 하나의 ADR에만 본문으로 기록하고 다른 ADR은 링크로 가리킵니다.
+- `docs/adr/README.md`는 `adr` 스킬의 `scripts/index.sh`가 생성하는 목록이므로 직접 고치지 않으며, 형식과 목록 정합은 `scripts/check.sh`가 검사합니다.
+- 관련 이슈는 열린 이슈만 링크하고 종료된 부모 이슈는 이력으로만 남깁니다. 이슈 본문 정합 편집은 사용자 승인 후에만 수행합니다.
+
 ## 0.2 프로토타입 구조
 
 0.2 마일스톤은 HTML과 CSS만으로 만든 달무티 화면 프로토타입을 만들고, 설계 결정을 이후 작업으로 이어가는 단계입니다.
@@ -74,6 +82,21 @@
   - 구현 시작 전 `DESIGN.md`와 `ui-prototype` 스킬(`.agents/skills/ui-prototype/SKILL.md`)을 읽습니다.
   - 계약 위반(하드코딩, 하위 경로·8px 간격·토큰 정합성 등)은 `scripts/check.sh [dist-dir]`로 검사합니다. 깨끗하면 `ok`, 위반은 `file:line` 목록으로 출력합니다.
   - 리뷰와 보고 전 데스크톱(1440×900)과 모바일(390×844) 스크린샷을 `scripts/shot.sh`로 남기고, 결과(PNG·보고)를 산출물로 검토합니다. 헤드리스 검증은 워커가 수행하고, 오케스트레이터는 결과를 확인합니다.
+
+## 0.3 서비스 구조
+
+0.3은 Express 서버와 Supabase를 도입해 실제 게임 서비스를 만드는 단계입니다. 저장소에 0.2 프로토타입(`dist/`)과 0.3 코드(`src/`)가 공존하므로, 자산 위치·레이어 배치·호스팅 역할을 한 번만 정해 이후 작업이 재결정하지 않도록 합니다. 결정 문구의 단일 원천은 [ADR-0007](adr/0007-0.3-structure.md)이며, 이 문서는 따라야 할 실무 지도만 다룹니다.
+
+- **왜 (why)**: 인증·게임·화면 코드가 서로 얽히기 전에 레이어 경계와 자산 경로를 고정하고([#26](https://github.com/qus0in/the-great-dalmuti/issues/26)), 0.2 미리보기와 0.3 서비스가 서로 회귀하지 않도록 역할을 분리하기 위해서입니다.
+- **무엇을 (what)**:
+  - 코드 배치: 레이어 위·피처 아래 — `src/ui/`, `src/app/`, `src/domain/`, `src/infra/` 아래에 `auth/`, `game/` 같은 피처(예: `src/app/auth`). 테스트는 피처 옆에 `*.test.js`로 둡니다.
+  - 화면 자산: 0.3 정적 뷰는 `src/ui/public/`에 두고 Express가 서빙합니다. `dist/`는 0.2 GitHub Pages 미리보기로 동결하며 삭제·이동하지 않습니다.
+  - 레이어 의존 규칙(의존 방향·포트·`domain` 무의존)의 규정 원본은 [ADR-0005](adr/0005-0.3-migration-boundaries.md)이며 여기서 재기술하지 않습니다.
+  - 역할 구분: GitHub Pages = 0.2 프로토타입 미리보기, Render = 0.3 서비스. 종료된 [#15](https://github.com/qus0in/the-great-dalmuti/issues/15)의 완료 기준(`dist/`만 업로드)은 `dist/` 동결 덕분에 계속 유지됩니다.
+- **어떻게 (how)**:
+  - 구현 전에 [ADR-0007](adr/0007-0.3-structure.md)(결정 원문)과 [ADR-0005](adr/0005-0.3-migration-boundaries.md)·[ADR-0006](adr/0006-0.3-tdd-bdd-and-layers.md)(레이어·테스트 규칙)을 확인합니다.
+  - 레이어 의존 역행과 피처 100줄 초과는 `layers` 스킬(`.agents/skills/layers/SKILL.md`)로 검사합니다.
+  - 구조를 바꾸는 결정은 ADR을 잇는 방식으로 기록하고(`adr` 스킬), 이 문서는 지도만 갱신합니다.
 
 ## 작업 분담 (orchestrate 스킬)
 

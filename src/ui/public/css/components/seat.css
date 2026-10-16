@@ -1,0 +1,98 @@
+/* Seat / Player Panel Component for The Great Dalmuti */
+.seat {
+  position: relative;
+  background-color: var(--color-surface-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-2);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-1);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+}
+
+.seat__avatar {
+  min-width: 44px;
+  min-height: 44px;
+  width: auto;
+  height: 44px;
+  padding-inline: var(--space-0-5);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-panel-alt);
+  border: 2px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  color: var(--color-ink);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  overflow: visible;
+}
+
+.seat__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.seat__name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.seat__name {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+  white-space: nowrap;
+  word-break: keep-all;
+  flex-shrink: 0;
+}
+
+.seat__status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+}
+
+.seat__count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Seat States */
+.seat--me {
+  border-color: var(--color-accent-sky);
+  background-color: color-mix(in srgb, var(--color-sky) 12%, var(--color-surface-panel));
+}
+
+.seat.is-turn {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-turn-glow);
+  animation: turn-glow 2s var(--ease-in-out) infinite;
+}
+
+.seat.is-passed {
+  border-style: dashed;
+  border-color: var(--color-pass);
+  background-color: color-mix(in srgb, var(--color-pass-soft) 40%, var(--color-surface-panel));
+}
+
+.seat.is-passed .seat__avatar {
+  opacity: 0.75;
+}
