@@ -37,17 +37,11 @@ async function commitTribute({ gameRepository, clock, agg, nextHands }) {
   };
 }
 
-export async function submitTribute(
-  { gameRepository, clock = DEFAULT_CLOCK },
-  { code, joinCode, gameId, user, returns, version },
+// 조공 실행 본체: 사용자 경로·좌석 지정 경로가 공유한다
+async function executeTribute(
+  { gameRepository, clock },
+  { agg, seat, returns },
 ) {
-  const { agg, seat } = await loadTributeRoom(gameRepository, {
-    code,
-    joinCode,
-    gameId,
-    user,
-    version,
-  });
   assertCanSubmitTribute(agg, seat);
   const hands = await gameRepository.findHands(agg.game.id);
   if (!hands) throw new ConflictError('Hands missing', 'CONFLICT');
@@ -66,4 +60,36 @@ export async function submitTribute(
     agg,
     nextHands,
   });
+}
+
+export async function submitTribute(
+  { gameRepository, clock = DEFAULT_CLOCK },
+  { code, joinCode, gameId, user, returns, version },
+) {
+  const { agg, seat } = await loadTributeRoom(gameRepository, {
+    code,
+    joinCode,
+    gameId,
+    user,
+    version,
+  });
+  return executeTribute({ gameRepository, clock }, { agg, seat, returns });
+}
+
+// 서버 내부용 조공: 좌석 번호로 직접 실행한다 (봇·타이머 대행용, HTTP 미노출)
+export async function submitTributeAsSeat(
+  { gameRepository, clock = DEFAULT_CLOCK },
+  { code, joinCode, gameId, seat, returns, version },
+) {
+  const { agg, seat: resolved } = await loadTributeRoom(gameRepository, {
+    code,
+    joinCode,
+    gameId,
+    seat,
+    version,
+  });
+  return executeTribute(
+    { gameRepository, clock },
+    { agg, seat: resolved, returns },
+  );
 }

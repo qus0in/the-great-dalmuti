@@ -38,7 +38,7 @@ function buildInitialEntities(seats, phase, version) {
     seatSummary: seats.map((s) => ({
       seat: s.seat,
       userName: s.userName,
-      isBot: false,
+      isBot: s.isBot === true,
       cardCount: 3,
     })),
     lastPlay: null,
@@ -51,9 +51,10 @@ export async function setupTributeFixture({
   phase = 'tribute',
   version = 1,
   handsOverride = null,
+  seatsOverride = null,
 } = {}) {
   const gameRepository = createInMemoryGameRepository();
-  const seats = makeTestSeats();
+  const seats = seatsOverride ?? makeTestSeats();
   const { gd, ld, lp, gp } = makeTestCards();
   const { game, publicState } = buildInitialEntities(seats, phase, version);
   await gameRepository.createGame({ game, seats, publicState });

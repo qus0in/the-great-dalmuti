@@ -50,7 +50,7 @@ function findAggregate(gameRepository, { code, joinCode, gameId }) {
 
 export async function loadTributeRoom(
   gameRepository,
-  { code, joinCode, gameId, user, version },
+  { code, joinCode, gameId, user, seat: seatNo, version },
 ) {
   const agg = await findAggregate(gameRepository, { code, joinCode, gameId });
   if (!agg) throw new NotFoundError('Room not found', 'ROOM_NOT_FOUND');
@@ -60,7 +60,10 @@ export async function loadTributeRoom(
   if (version !== undefined && agg.game.version !== version) {
     throw new ConflictError('Stale version', 'STALE_VERSION');
   }
-  const seat = agg.seats.find((s) => s.userId === user?.id);
+  const seat =
+    seatNo === undefined
+      ? agg.seats.find((s) => s.userId === user?.id)
+      : agg.seats.find((s) => s.seat === seatNo);
   if (!seat) throw new ForbiddenError('Not seated', 'FORBIDDEN');
   return { agg, seat };
 }
