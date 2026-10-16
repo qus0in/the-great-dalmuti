@@ -3,6 +3,7 @@ import { joinRoom } from '../../app/game/room-join.js';
 import { startGame } from '../../app/game/room-start.js';
 import { ForbiddenError, NotFoundError } from '../../app/game/room-errors.js';
 import { wrap } from './wrap.js';
+import { applyRuntime } from './runtime-response.js';
 
 // POST /api/rooms — 호스트가 대기실을 만든다 (201)
 export function createRoomHandler({ repository, clock, rng }) {
@@ -50,12 +51,13 @@ export function getRoomHandler({ repository }) {
 }
 
 // POST /api/rooms/:code/start — 방장만 시작, 빈자리는 봇으로 채운다 (200)
-export function startGameHandler({ repository, clock, rng }) {
+export function startGameHandler({ repository, clock, rng, runtime }) {
   return wrap(async (req, res) => {
     const result = await startGame(
       { gameRepository: repository, clock, rng },
       { joinCode: req.params.code, user: req.authUser },
     );
-    res.json({ game: result.game, publicState: result.publicState });
+    const latest = await applyRuntime(runtime, req.params.code, result);
+    res.json({ game: latest.game, publicState: latest.publicState });
   });
 }
