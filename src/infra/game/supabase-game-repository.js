@@ -13,6 +13,7 @@ import {
   fetchLatestTrick,
   saveTrickAndPlays,
 } from './trick-fetcher.js';
+import { buildStatsMethods } from './stats-repository.js';
 
 export { SupabaseError };
 
@@ -77,5 +78,6 @@ export function createSupabaseGameRepository({ client }) {
     findCurrentTrick: (gameId) => fetchCurrentTrick(client, gameId),
     findLatestTrick: (gameId) => fetchLatestTrick(client, gameId),
     ...buildSaveMethods(client),
+    ...buildStatsMethods(client),
   };
 }
