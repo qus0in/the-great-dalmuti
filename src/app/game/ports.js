@@ -41,6 +41,17 @@
  */
 
 /**
+ * @typedef {Object} TrickEntity
+ * @property {string} id
+ * @property {string} gameId
+ * @property {number} seq
+ * @property {number} leaderSeat
+ * @property {number} passes
+ * @property {number|null} winnerSeat
+ * @property {Array<{ turnNo: number, seat: number, action: 'play'|'pass', cards: any[] }>} plays
+ */
+
+/**
  * @typedef {Object} GameRepository
  * @property {(params: { game: GameEntity, seats: SeatEntity[], publicState: PublicStateEntity }) => Promise<void>} createGame
  * @property {(joinCode: string) => Promise<GameAggregate|null>} findGameByCode
@@ -48,6 +59,8 @@
  * @property {(gameId: string, seats: SeatEntity[]) => Promise<void>} saveSeats
  * @property {(gameId: string, hands: Record<number, any[]>) => Promise<void>} saveHands
  * @property {(gameId: string) => Promise<Record<number, any[]>|null>} findHands
+ * @property {(gameId: string) => Promise<TrickEntity|null>} findCurrentTrick
+ * @property {(gameId: string, trick: TrickEntity) => Promise<void>} saveTrick
  * @property {(params: { game: GameEntity, publicState: PublicStateEntity, expectedVersion: number }) => Promise<void>} saveGameAndPublic
  */
 

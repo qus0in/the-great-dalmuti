@@ -1,7 +1,15 @@
 import { ConflictError } from '../room-errors.js';
 
 const clone = (data) => JSON.parse(JSON.stringify(data));
+const openTrick = (state, gameId) => {
+  const trick = state.tricks.get(state.currentTricks.get(gameId));
+  return trick && trick.winnerSeat === null ? clone(trick) : null;
+};
 
+const storeTrick = (state, gameId, trick) => {
+  state.currentTricks.set(gameId, trick.id);
+  state.tricks.set(trick.id, clone(trick));
+};
 function findByCode(state, joinCode) {
   for (const game of state.games.values()) {
     if (game.joinCode === joinCode) {
@@ -72,6 +80,9 @@ function buildSaveMethods(state) {
       await Promise.resolve();
       updateGameAndPublic(state, params);
     },
+    findCurrentTrick: (gameId) => Promise.resolve(openTrick(state, gameId)),
+    saveTrick: (gameId, trick) =>
+      Promise.resolve(storeTrick(state, gameId, trick)),
   };
 }
 
@@ -82,6 +93,8 @@ export function createInMemoryGameRepository() {
     seats: new Map(),
     hands: new Map(),
     public: new Map(),
+    tricks: new Map(),
+    currentTricks: new Map(),
   };
   return { ...buildFindMethods(state), ...buildSaveMethods(state) };
 }
