@@ -1,0 +1,11 @@
+**/*.html
+**/*.css
+**/*.png
+**/*.ico
+**/*.svg
+**/*.webmanifest
+**/.gitkeep
+node_modules/
+package-lock.json
+dist/
+tmp/

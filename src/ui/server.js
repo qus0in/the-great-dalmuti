@@ -22,7 +22,8 @@ export function startServer(port = Number(process.env.PORT) || 3000) {
   });
 }
 
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+const isMain =
+  process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
   const server = await startServer();
   const address = server.address();
