@@ -9,3 +9,4 @@ Re-tier from observed results (failed briefs, review findings). Durable findings
 - high/max reasoning effort: review, debugging. low effort: mechanical work.
 - reviewer should differ in model family from author when possible.
 - free/preview models: struggle with stateful shell scripts that depend on real CLI semantics (e.g. herdr status/wait) — avoid assigning them such units or pair with a real-path reviewer; fake/stub/dry-run tests are not sufficient evidence (reviewers must verify the real path's inputs and behavior).
+- Self-corrupting tool calls: a model emitting malformed raw tool-call tokens or editing files under a read-only brief is class (3) self error — stop it (triage), do not assign reviews until re-tiered from clean results (observed example: MiMo-V2.6-Flash Free).
