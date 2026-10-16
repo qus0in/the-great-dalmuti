@@ -31,4 +31,4 @@ Parallel scope (S11): briefs scope gates to owned files while parallel units are
 Blocked worker: read pane/report then escalate — pane reads only for blocked/errored/stalled/triage work, not routine polling. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
 User-reported failure (S17): treat as our defect first — answer with a fix unit or proposal; never correct the user's behavior (state facts only alongside the fix).
 Provider errors: reassign a worker that errors for ~5 min (references/models.md).
-Orchestrator never runs headless/visual QA itself; assign visual/headless verification to a worker and read its report/PNGs.
+Orchestrator never runs headless/visual QA itself; assign visual/headless verification to a worker and read its report/PNGs. Visual claims (S24): UI briefs require every visual claim in the report to cite its PNG path; reviewers open the PNGs themselves before judging visual criteria.
