@@ -9,6 +9,11 @@ ship_parse_args "$@"
 cur=$(git branch --show-current 2>/dev/null) || cur=
 [ "$cur" = "dev" ] || { echo "not on dev (current: ${cur:-none})" >&2; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "working tree dirty" >&2; exit 1; }
+if git rev-parse --verify --quiet refs/remotes/origin/main >/dev/null 2>&1; then
+  if ! git merge-base --is-ancestor refs/remotes/origin/main HEAD 2>/dev/null; then
+    echo "warning: origin/main is not an ancestor of dev; PR may conflict (run sync.sh first)" >&2
+  fi
+fi
 if [ "$MERGE" -eq 1 ]; then
   origin=$(git remote get-url origin) || { echo "cannot read origin" >&2; exit 1; }
   case "$origin" in
@@ -68,4 +73,5 @@ if [ "$MERGE" -eq 1 ]; then
   if [ "$DRY" -eq 1 ]; then
     printf '# if dev cannot fast-forward: git merge --no-edit origin/main\n'
   fi
+  run_git push origin dev || exit 1
 fi

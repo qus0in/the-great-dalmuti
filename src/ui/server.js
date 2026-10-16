@@ -10,7 +10,17 @@ const PUBLIC_DIR = join(__dirname, 'public');
 export function createApp({ config } = {}) {
   const app = express();
   registerHealth(app);
-  app.use(express.static(PUBLIC_DIR));
+  // 파일명 없는 깔끔한 주소로 보낸다 (쿼리스트링 유지)
+  app.use((req, res, next) => {
+    if (req.path === '/index.html') {
+      res.redirect(301, `/${req.url.slice('/index.html'.length)}`);
+    } else if (req.path === '/play.html') {
+      res.redirect(301, `/play${req.url.slice('/play.html'.length)}`);
+    } else {
+      next();
+    }
+  });
+  app.use(express.static(PUBLIC_DIR, { extensions: ['html'] }));
 
   app.get('/api/config', (_req, res) => {
     const publicConfig = config?.publicConfig ?? {

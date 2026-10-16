@@ -23,22 +23,40 @@ async function withServer(fn) {
   }
 }
 
+async function assertHtmlOk(baseUrl, path) {
+  const res = await fetch(`${baseUrl}${path}`);
+  assert.equal(res.status, 200);
+  assert.match(res.headers.get('content-type') ?? '', /text\/html/);
+}
+
+async function assertMoved(baseUrl, path, location) {
+  const res = await fetch(`${baseUrl}${path}`, { redirect: 'manual' });
+  assert.equal(res.status, 301);
+  assert.equal(res.headers.get('location'), location);
+}
+
+async function assertStaticAssets(baseUrl) {
+  const cssRes = await fetch(`${baseUrl}/css/tokens.css`);
+  assert.equal(cssRes.status, 200);
+  assert.match(cssRes.headers.get('content-type') ?? '', /text\/css/);
+
+  const notFound = await fetch(`${baseUrl}/missing-file-404.xyz`);
+  assert.equal(notFound.status, 404);
+}
+
 describe('Static routes and public config', () => {
-  it('Given static files, When requesting paths, Then returns expected types or 404', async () => {
+  it('Given clean URLs, When requesting page paths, Then serves html with 200', async () => {
     await withServer(async (baseUrl) => {
-      const rootRes = await fetch(`${baseUrl}/`);
-      assert.equal(rootRes.status, 200);
-      assert.match(rootRes.headers.get('content-type') ?? '', /text\/html/);
+      await assertHtmlOk(baseUrl, '/');
+      await assertHtmlOk(baseUrl, '/play');
+      await assertStaticAssets(baseUrl);
+    });
+  });
 
-      const playRes = await fetch(`${baseUrl}/play.html`);
-      assert.equal(playRes.status, 200);
-
-      const cssRes = await fetch(`${baseUrl}/css/tokens.css`);
-      assert.equal(cssRes.status, 200);
-      assert.match(cssRes.headers.get('content-type') ?? '', /text\/css/);
-
-      const notFound = await fetch(`${baseUrl}/missing-file-404.xyz`);
-      assert.equal(notFound.status, 404);
+  it('Given html file paths, When requested, Then 301 to clean URL keeping query', async () => {
+    await withServer(async (baseUrl) => {
+      await assertMoved(baseUrl, '/play.html', '/play');
+      await assertMoved(baseUrl, '/index.html?a=1', '/?a=1');
     });
   });
 

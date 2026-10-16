@@ -43,6 +43,7 @@
   <link rel="stylesheet" href="css/components/seat.css">
   <link rel="stylesheet" href="css/components/badge.css">
   <link rel="stylesheet" href="css/components/button.css">
+  <link rel="stylesheet" href="css/components/button-google.css">
   <link rel="stylesheet" href="css/components/panel.css">
   <link rel="stylesheet" href="css/hall/page-shell.css">
   <link rel="stylesheet" href="css/hall/waiting-room.css">
@@ -66,6 +67,16 @@
       <p class="hall__subtitle">The Great Dalmuti</p>
       <p class="hall__intro">《더 그레이트 달무티》는 리처드 가필드가 1995년에 디자인한 카드 게임입니다. <span class="nowrap">4–8명</span>이 함께하고, 손에 든 카드를 가장 먼저 비우는 플레이어가 달무티가 됩니다. 대기실에서 자리와 계급을 확인한 뒤 게임에 입장하세요.</p>
     </header>
+
+    <section class="panel text-center" aria-label="로그인">
+      <div data-auth="signed-out">
+        <button type="button" class="gsi-btn" data-auth="login"><img src="/images/google-g.svg" alt="" width="20" height="20">Google 계정으로 로그인</button>
+      </div>
+      <div data-auth="signed-in" hidden>
+        <span class="badge badge--primary" data-auth="user-name"></span>
+        <button type="button" class="btn btn--secondary" data-auth="logout">로그아웃</button>
+      </div>
+    </section>
 
     <main class="grid hall__main">
       <!-- 4-seat waiting room on the table felt -->
@@ -203,7 +214,7 @@
       <section class="col-span-12 panel hall__cta text-center anim-fade-up hall__delay-4" aria-labelledby="cta-title">
         <h2 id="cta-title">준비를 마치고 입장하세요</h2>
         <p class="text-muted">네 자리가 모두 앉았습니다. 마지막 준비를 확인하고 게임 화면으로 들어갑니다.</p>
-        <a class="btn btn--gold btn--lg" href="play.html">입장</a>
+        <a class="btn btn--gold btn--lg" href="/play">입장</a>
       </section>
     </main>
 
@@ -211,5 +222,6 @@
       <small>달무티 0.2 프로토타입 — 이미지 없이 HTML·CSS만으로 구성한 대기실 화면입니다.</small>
     </footer>
   </div>
+  <script type="module" src="js/auth.js"></script>
 </body>
 </html>
