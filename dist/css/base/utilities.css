@@ -35,10 +35,23 @@
 .text-right       { text-align: right; }
 .text-muted       { color: var(--color-ink-muted); }
 
+/* 키보드 포커스 링: 어두운 펠트·밝은 패널 모두에서 3:1 이상이 되도록 로즈 90% + 크림 10% 혼합색을 쓴다 */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid color-mix(in srgb, var(--color-rose) 90%, var(--color-cream));
   outline-offset: var(--space-0-5);
   border-radius: var(--radius-1);
+}
+
+/* :focus-visible 미지원 브라우저용 폴백: :focus에도 같은 링을 그린다 */
+:focus {
+  outline: 2px solid color-mix(in srgb, var(--color-rose) 90%, var(--color-cream));
+  outline-offset: var(--space-0-5);
+  border-radius: var(--radius-1);
+}
+
+/* 마우스 클릭 등 비키보드 포커스에는 링을 그리지 않는다 */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .sr-only {
