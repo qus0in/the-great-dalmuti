@@ -37,16 +37,21 @@
 
 ### 7. 오류 4행
 
-| 오류 | 대응 |
-| --- | --- |
-| `redirect_uri_mismatch` | Google에 등록된 Supabase Callback URL을 확인한다. |
-| `invalid_client` | Client ID·Secret이 Supabase 대시보드에 바르게 들어갔는지 확인한다. |
-| `access_denied`·403 | Audience·Test users 등록을 확인한다. |
-| 잘못된 페이지로 이동 | Site URL·Redirect URLs를 확인한다. |
+| 오류                    | 대응                                                               |
+| ----------------------- | ------------------------------------------------------------------ |
+| `redirect_uri_mismatch` | Google에 등록된 Supabase Callback URL을 확인한다.                  |
+| `invalid_client`        | Client ID·Secret이 Supabase 대시보드에 바르게 들어갔는지 확인한다. |
+| `access_denied`·403     | Audience·Test users 등록을 확인한다.                               |
+| 잘못된 페이지로 이동    | Site URL·Redirect URLs를 확인한다.                                 |
 
 ### 8. 브라우저 탑재 방식
 
 - 브라우저 탑재 방식은 [ADR-0010](adr/0010-0.3-browser-supabase-js.md)에 따라 ESM CDN import로 싣는다.
+
+### 9. 버튼 표기
+
+- 로그인 버튼은 Sign in with Google 브랜딩 지침([브랜딩 지침](https://developers.google.com/identity/branding-guidelines))을 따른다. 로고는 지침의 공식 자산 내려받기(`signin-assets.zip`, 확인일 2026-10-16)에서 가져온 표준 4색 "G"이며(`src/ui/public/images/google-g.svg`), 색·비율을 바꾸지 않는다.
+- 상표 사용 조건: 이 로고는 오픈소스가 아니라 Google 상표 사용 허락(지침 준수 조건부)에 따라 쓴다.
 
 ## 어떻게
 

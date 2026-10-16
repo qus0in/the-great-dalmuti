@@ -1,0 +1,36 @@
+/* Google 로그인 버튼 (Sign in with Google 브랜딩 지침, light 테마).
+지침: https://developers.google.com/identity/branding-guidelines (확인일 2026-10-16) */
+.gsi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* 지침: 로고 뒤 10px (Android·Web) */
+  height: 40px;
+  min-height: 40px;
+  padding: 0 12px; /* 지침: 로고 앞 12px, 글 뒤 12px */
+  background-color: #ffffff; /* 지침 light Fill */
+  border: 1px solid #747775; /* 지침 light Stroke (inside) */
+  border-radius: 4px; /* 지침 제공 모양 중 직사각형 */
+  color: #1f1f1f; /* 지침 light Font */
+  font-family: 'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; /* 지침 Font (없으면 시스템 글꼴) */
+  font-size: 14px; /* 지침 14/20 */
+  font-weight: 500; /* Medium */
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.gsi-btn img {
+  display: block;
+  flex: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gsi-btn:hover {
+    background-color: #f2f2f2; /* 지침 Neutral Fill (누름 상태) */
+  }
+}
+
+.gsi-btn:focus-visible {
+  outline: 2px solid #1f1f1f;
+  outline-offset: 2px;
+}
