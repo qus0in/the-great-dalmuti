@@ -1,11 +1,21 @@
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { registerHealth } from './health.js';
+import { errorMiddleware, notFoundHandler } from './http/error-middleware.js';
 import { dirname, join } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PUBLIC_DIR = join(__dirname, 'public');
+
+// 없는 주소: 화면은 404 안내 페이지, API는 Problem Details 유지
+function handleNotFound(req, res, next) {
+  if (req.path.startsWith('/api/')) {
+    notFoundHandler(req, res, next);
+    return;
+  }
+  res.status(404).sendFile(join(PUBLIC_DIR, '404.html'));
+}
 
 export function createApp({ config } = {}) {
   const app = express();
@@ -30,6 +40,10 @@ export function createApp({ config } = {}) {
     res.set('Cache-Control', 'public, max-age=300');
     res.json(publicConfig);
   });
+
+  // 없는 주소: 화면은 404 안내 페이지, API는 Problem Details 유지
+  app.use(handleNotFound);
+  app.use(errorMiddleware);
 
   return app;
 }
