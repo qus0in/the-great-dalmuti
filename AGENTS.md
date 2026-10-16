@@ -66,6 +66,7 @@ Ambiguous -> skill `codify`.
 
 ## Structure (0.3)
 - 0.3 source: layers above features under `src/{ui,app,domain,infra}/<feature>` (deps ui -> app -> domain, infra implements ports, domain no external deps); 0.3 screens at `src/ui/public/`; `dist/` frozen as 0.2 Pages preview, Render serves 0.3. Canonical: `docs/adr/0007-0.3-structure.md` + `docs/structure.md`.
+- 0.3 targets early-course learners who don't know servers yet: browser-first (CDN supabase-js), Express only for server-only work, short readable code; canonical `docs/adr/0010-0.3-browser-supabase-js.md`.
 
 ## Skills
 <!-- skills:begin -->

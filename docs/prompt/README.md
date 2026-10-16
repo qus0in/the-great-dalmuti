@@ -65,3 +65,7 @@
 - [2026-10-16](2026-10-16-12-async-await-promise-helpers.md) — async/await 프로미스 문법 적극 사용
 - [2026-10-16](2026-10-16-13-learn-branches.md) — 학습 범위 브랜치 기록
 - [2026-10-16](2026-10-16-14-auth-providers.md) — 소셜 로그인 제공자 메모
+- [2026-10-16](2026-10-16-15-browser-cdn-first.md) — 브라우저 CDN 우선 원칙
+- [2026-10-16](2026-10-16-16-learner-level-0-3.md) — 0.3 설계 눈높이: 초반부 수강생 기준
+- [2026-10-16](2026-10-16-17-patch-0-2-css.md) — 0.2 계열 CSS·HTML patch 처리
+- [2026-10-16](2026-10-16-18-hide-html-extensions.md) — 0.3 주소에서 .html 노출 제거
