@@ -14,3 +14,5 @@
 | [0008](0008-0.3-code-conventions.md) | [0.3 코드 규칙 — ES6+ 린트·브라우저·검증·예외·비동기](0008-0.3-code-conventions.md) | accepted | 2026-10-16 |
 | [0009](0009-0.x-learn-branches.md) | [0.x 학습 범위 브랜치](0009-0.x-learn-branches.md) | accepted | 2026-10-16 |
 | [0010](0010-0.3-browser-supabase-js.md) | [브라우저 supabase-js 탑재 방식](0010-0.3-browser-supabase-js.md) | accepted | 2026-10-16 |
+| [0011](0011-0.3-game-progress.md) | [0.3 게임 진행: 상태 저장·Realtime·봇·전적](0011-0.3-game-progress.md) | accepted | 2026-10-16 |
+| [0012](0012-pino-http-logging.md) | [Pino HTTP 요청 로깅](0012-pino-http-logging.md) | accepted | 2026-10-16 |

@@ -1,0 +1,84 @@
+/* Top Navigation Component for The Great Dalmuti */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-dropdown);
+  width: 100%;
+  background-color: var(--color-surface-bg);
+  border-bottom: 1px solid var(--color-line-subtle);
+  box-shadow: var(--shadow-1);
+}
+
+.top-nav__inner {
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-1-5) var(--space-3);
+  gap: var(--space-2);
+  min-height: var(--space-6);
+  box-sizing: border-box;
+}
+
+.top-nav__brand {
+  font-family: var(--font-title);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  word-break: keep-all;
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .top-nav__brand:hover {
+    color: var(--color-accent);
+  }
+}
+
+.top-nav__auth {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.top-nav__auth[hidden] {
+  display: none;
+}
+
+.top-nav__chip {
+  height: var(--space-5);
+  min-height: var(--space-5);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  line-height: var(--space-5);
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.top-nav__btn {
+  height: var(--space-5);
+  min-height: var(--space-5);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+@media (max-width: 599px) {
+  .top-nav__inner {
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .top-nav__chip {
+    max-width: 100px;
+  }
+}

@@ -69,3 +69,6 @@
 - [2026-10-16](2026-10-16-16-learner-level-0-3.md) — 0.3 설계 눈높이: 초반부 수강생 기준
 - [2026-10-16](2026-10-16-17-patch-0-2-css.md) — 0.2 계열 CSS·HTML patch 처리
 - [2026-10-16](2026-10-16-18-hide-html-extensions.md) — 0.3 주소에서 .html 노출 제거
+- [2026-10-16](2026-10-16-19-readme-pino-pr-rules.md) — README 최소 수정·Pino 도입과 PR 진행 규칙
+- [2026-10-16](2026-10-16-20-semver-patch-tracking-c-stage.md) — semver patch 추적·공개배포 승인·C단계 기준 확정
+- [2026-10-16](2026-10-16-21-anonymous-test-accounts.md) — 테스트 전용 Anonymous 계정 허용

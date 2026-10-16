@@ -38,7 +38,7 @@ case "$GATES" in
   rules|all) gate rules "$ROOT/.agents/skills/codify/scripts/check.sh" || fail=1;;
 esac
 case "$GATES" in
-  ui|all) gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/dist" || fail=1;;
+  ui|all) gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/src/ui/public" || fail=1;;
 esac
 if [ "$fail" -eq 0 ]; then echo "verify: pass"; exit 0; fi
 echo "verify: FAIL"

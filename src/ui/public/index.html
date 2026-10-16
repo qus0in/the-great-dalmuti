@@ -16,15 +16,15 @@
   <meta property="og:locale" content="ko_KR">
   <meta property="og:title" content="달무티 · 대기실">
   <meta property="og:description" content="리처드 가필드의 신분제 카드 게임 달무티, HTML·CSS 프로토타입">
-  <meta property="og:url" content="https://qus0in.github.io/the-great-dalmuti/">
-  <meta property="og:image" content="https://qus0in.github.io/the-great-dalmuti/og.png">
+  <meta property="og:url" content="https://the-great-dalmuti.onrender.com/">
+  <meta property="og:image" content="https://the-great-dalmuti.onrender.com/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="달무티 · 대기실">
   <meta name="twitter:description" content="리처드 가필드의 신분제 카드 게임 달무티, HTML·CSS 프로토타입">
-  <meta name="twitter:image" content="https://qus0in.github.io/the-great-dalmuti/og.png">
+  <meta name="twitter:image" content="https://the-great-dalmuti.onrender.com/og.png">
   <meta name="twitter:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/tokens.css">
@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="css/components/button.css">
   <link rel="stylesheet" href="css/components/button-google.css">
   <link rel="stylesheet" href="css/components/panel.css">
+  <link rel="stylesheet" href="css/components/top-nav.css">
   <link rel="stylesheet" href="css/hall/page-shell.css">
   <link rel="stylesheet" href="css/hall/waiting-room.css">
   <link rel="stylesheet" href="css/hall/rank-ladder.css">
@@ -55,7 +56,16 @@
   <link rel="stylesheet" href="css/hall/responsive.css">
   <link rel="stylesheet" href="css/hall/reduced-motion.css">
 </head>
-<body>
+<body data-page="hall">
+  <header class="top-nav">
+    <div class="top-nav__inner">
+      <a class="top-nav__brand" href="/">달무티</a>
+      <div class="top-nav__auth" data-auth="signed-in" hidden>
+        <span class="badge badge--primary top-nav__chip" data-auth="user-name"></span>
+        <button type="button" class="btn btn--secondary top-nav__btn" data-auth="logout">로그아웃</button>
+      </div>
+    </div>
+  </header>
   <div class="container hall">
     <header class="hall__hero anim-fade-up text-center">
       <div class="cluster cluster--sm justify-center">
@@ -67,16 +77,6 @@
       <p class="hall__subtitle">The Great Dalmuti</p>
       <p class="hall__intro">《더 그레이트 달무티》는 리처드 가필드가 1995년에 디자인한 카드 게임입니다. <span class="nowrap">4–8명</span>이 함께하고, 손에 든 카드를 가장 먼저 비우는 플레이어가 달무티가 됩니다. 대기실에서 자리와 계급을 확인한 뒤 게임에 입장하세요.</p>
     </header>
-
-    <section class="panel text-center" aria-label="로그인">
-      <div data-auth="signed-out">
-        <button type="button" class="gsi-btn" data-auth="login"><img src="/images/google-g.svg" alt="" width="20" height="20">Google 계정으로 로그인</button>
-      </div>
-      <div data-auth="signed-in" hidden>
-        <span class="badge badge--primary" data-auth="user-name"></span>
-        <button type="button" class="btn btn--secondary" data-auth="logout">로그아웃</button>
-      </div>
-    </section>
 
     <main class="grid hall__main">
       <!-- 4-seat waiting room on the table felt -->
