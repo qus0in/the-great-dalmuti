@@ -1,0 +1,42 @@
+/* Card Back (Pure CSS Geometric Medieval Lattice) for The Great Dalmuti */
+.card--back {
+  background-color: var(--color-rose);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 0,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 2px,
+      transparent 2px,
+      transparent var(--space-2)
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 0,
+      color-mix(in srgb, var(--color-cream) 20%, transparent) 2px,
+      transparent 2px,
+      transparent var(--space-2)
+    );
+  border: 2px solid var(--color-line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card--back::before {
+  inset: var(--space-1);
+  border: 1px solid var(--color-cream);
+  border-radius: calc(var(--radius-1) - var(--space-0-5));
+}
+
+.card--back::after {
+  content: 'DALMUTI';
+  font-family: var(--font-title);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.25em;
+  color: var(--color-cream);
+  padding: var(--space-0-5) var(--space-1);
+  border: 1px solid var(--color-cream);
+  border-radius: var(--radius-1);
+  background: color-mix(in srgb, var(--color-rose) 80%, var(--color-raw-dark));
+  z-index: var(--z-base);
+}

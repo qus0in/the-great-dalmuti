@@ -1,0 +1,73 @@
+/* Mobile (Phone) Responsive Overrides for Arena (minmax 0 1fr to prevent overflow) */
+@media (max-width: 599px) {
+  .play-arena {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "top-seat right-seat left-seat"
+      "center-table center-table center-table";
+    gap: var(--space-1);
+  }
+
+  .play-arena__seat--north { grid-area: top-seat; width: 100%; max-width: 100%; min-width: 0; }
+  .play-arena__seat--east  { grid-area: right-seat; width: 100%; max-width: 100%; min-width: 0; }
+  .play-arena__seat--west  { grid-area: left-seat; width: 100%; max-width: 100%; min-width: 0; }
+  .play-arena__table       { grid-area: center-table; width: 100%; min-height: auto; }
+
+  .play-arena .seat {
+    padding: var(--space-0-5);
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-0-5);
+    min-width: 0;
+  }
+
+  .play-arena .seat__avatar {
+    min-width: 24px;
+    min-height: 24px;
+    width: auto;
+    height: 24px;
+    padding-inline: var(--space-0-25);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    overflow: visible;
+  }
+
+  .play-arena .seat__content {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .play-arena .seat__name-row {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-0-5);
+    flex-wrap: wrap;
+  }
+
+  .play-arena .seat__name {
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-tight);
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .play-arena .seat .badge {
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-snug);
+    padding: var(--space-0-25) var(--space-1);
+  }
+
+  .play-arena .seat__status-row {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-0-5);
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-snug);
+  }
+
+  .play-arena .card-stack {
+    display: none;
+  }
+}

@@ -1,0 +1,38 @@
+/* ==========================================================================
+   8. Responsive bands (contract: phone 360–599, tablet 600–1023,
+      desktop >= 1024; defaults above are the tablet-landscape/desktop style)
+   ========================================================================== */
+/* Tablet, narrow half (600–767): foundation grid is single-column below 768,
+   keep the room seats 2-up like the rest of the tablet band. */
+@media (min-width: 600px) and (max-width: 767px) {
+  .hall__room .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Phone (360–599) */
+@media (max-width: 599px) {
+  .hall__rules {
+    grid-template-columns: 1fr;
+  }
+
+  .hall__room-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hall__hero {
+    padding-top: var(--space-4);
+  }
+
+  /* Narrow ladder: 2 tiles per row at 360–599; per-tile count lives in the
+     description paragraph above, so the meta chip is dropped to fit. */
+  .hall__rank {
+    flex-basis: calc(var(--space-10) + var(--space-6));
+    padding: var(--space-1);
+  }
+
+  .hall__rank-meta {
+    display: none;
+  }
+}

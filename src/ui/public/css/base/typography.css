@@ -1,0 +1,73 @@
+/* Base Typography for The Great Dalmuti */
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-ink);
+  background-color: var(--color-surface-bg);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-title);
+  color: var(--color-ink);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+  letter-spacing: var(--tracking-normal);
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, var(--font-size-3xl));
+  margin-bottom: var(--space-2);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-2);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-1);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-1);
+}
+
+p {
+  margin-bottom: var(--space-2);
+  line-height: var(--leading-body);
+  max-width: 40em;
+}
+
+.text-measure {
+  max-width: 40em;
+}
+
+small {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+}
+
+strong,
+b {
+  font-weight: 700;
+}
