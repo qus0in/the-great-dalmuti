@@ -23,6 +23,16 @@ for dir in .agents/skills/*/; do
   for f in "$dir"scripts/*; do [ -e "$f" ] || continue; [ -x "$f" ] || err "$n: not executable $f"; done
 done
 "$HERE/index.sh" --check >/dev/null || err "AGENTS.md skills index stale -> run index.sh"
+if [ -x .agents/skills/adr/scripts/check.sh ]; then
+  if ! adr_out=$(.agents/skills/adr/scripts/check.sh 2>&1); then
+    while IFS= read -r l; do
+      [ -n "$l" ] || continue
+      err "adr: $l"
+    done <<EOF
+$adr_out
+EOF
+  fi
+fi
 if git rev-parse --git-dir >/dev/null 2>&1; then
   t=$(git ls-files tmp | grep -v '\.gitkeep$' || true)
   [ -z "$t" ] || err "tracked files in tmp/: $t"
