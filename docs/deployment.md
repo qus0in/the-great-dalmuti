@@ -19,6 +19,7 @@
   - `SUPABASE_JWKS_URL`
   - `NODE_ENV=production`
   - `PORT`는 Render가 자동 주입하므로 수동 입력하지 않습니다.
+- **리전/플랜**: Region `oregon`, Plan `free` (이후 사용할 AI API의 리전 제약을 피하기 위함).
 - **헬스 경로**: `/healthz` ([Health checks](https://render.com/docs/health-checks)).
 - **Supabase Auth redirect URL**: Render 도메인으로 설정 ([Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)).
 - 역할 참조: [ADR-0002 렌더링](adr/0002-0.3-rendering.md), [ADR-0003 전송과 저장](adr/0003-0.3-transport.md), [ADR-0007 구조](adr/0007-0.3-structure.md).
@@ -37,11 +38,17 @@ npm run format:check
 
 ### 1. Render Web Service 생성 (승인 후 실행)
 
-Render 대시보드에서 외부 배포 설정을 변경하는 단계입니다.
+외부 효과를 만드는 단계이므로 승인 필요(외부 효과) — 대시보드 또는 CLI 중 하나로 실행합니다.
 
-- `New +` → `Web Service`; GitHub 저장소 `qus0in/the-great-dalmuti` 연결. ([Render web services](https://render.com/docs/web-services))
-- Runtime `Node`, Branch `main`, Build Command `npm ci`, Start Command `npm start`.
-- `healthCheckPath`는 `/healthz`로 지정.
+- 공통: Region `oregon`, Plan `free` — "리전은 오리건, free tier로 만들어야함. 이후 사용할 ai api 가 싱가포르 등에서 허용이 안됨".
+- 대시보드: `New +` → `Web Service`; GitHub 저장소 `qus0in/the-great-dalmuti` 연결. ([Render web services](https://render.com/docs/web-services))
+- 대시보드: Runtime `Node`, Branch `main`, Build Command `npm ci`, Start Command `npm start`.
+- 대시보드: `healthCheckPath`는 `/healthz`로 지정.
+- CLI (대안, 승인 필요(외부 효과), 플래그는 `render services create --help`에서 확인):
+
+```sh
+render services create --name <service-name> --type web_service --repo https://github.com/qus0in/the-great-dalmuti --runtime node --branch main --build-command "npm ci" --start-command "npm start" --health-check-path /healthz --region oregon --plan free --output json
+```
 
 ### 2. 환경 변수 등록 (승인 후 실행)
 
