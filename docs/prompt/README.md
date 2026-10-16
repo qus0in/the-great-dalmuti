@@ -47,3 +47,8 @@
 - [2026-10-15](2026-10-15-43-issue-close-with-work.md) — 이슈는 작업과 함께 닫기
 - [2026-10-15](2026-10-15-44-adr-tdd-bdd-layers.md) — TDD·BDD와 4레이어 도입 ADR
 - [2026-10-15](2026-10-15-45-adr-layer-feature-direction.md) — 레이어 아래 도메인/피처 방향 정정
+- [2026-10-15](2026-10-15-46-online-four-player-and-bot-single.md) — 온라인 4인 플레이 및 봇 싱글 플레이 범위 결정
+- [2026-10-15](2026-10-15-47-room-start-countdown-policy.md) — 방 시작 10초 카운트다운 정책 결정
+- [2026-10-15](2026-10-15-48-turn-inactivity-disconnect-policy.md) — 미행동 강제 퇴장 및 봇 대행 정책 결정
+- [2026-10-15](2026-10-15-49-supabase-realtime-and-spring-boot-redis-migration.md) — Supabase Realtime 채택 및 향후 Spring Boot Redis 이관 경계 고려
+- [2026-10-16](2026-10-16-01-spring-boot-backend-scope-and-supabase-delegation.md) — 백엔드 기능 위임 원칙 및 Spring Boot 이관 범위 결정
