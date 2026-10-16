@@ -62,7 +62,7 @@ export function syncAuthUI(user) {
   }
 }
 
-// 대기실(index.html)에 로그인 블록이 있으면 연결한다
+// 대기실(/)에 로그인 블록이 있으면 연결한다
 async function initHall() {
   if (!document.querySelector('[data-auth]')) {
     return;
