@@ -46,7 +46,7 @@
 
 ### 8. 브라우저 탑재 방식
 
-- 미결(ADR 필요): 번들러 없이 `supabase-js`를 싣는 방식은 정하지 않았다 ([ADR-0002](adr/0002-0.3-rendering.md)).
+- 브라우저 탑재 방식은 [ADR-0010](adr/0010-0.3-browser-supabase-js.md)에 따라 ESM CDN import로 싣는다.
 
 ## 어떻게
 
