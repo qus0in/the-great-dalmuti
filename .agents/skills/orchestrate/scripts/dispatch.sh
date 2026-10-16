@@ -60,9 +60,9 @@ if [ "$NOTIFY_SET" -eq 0 ]; then
 fi
 
 if [ "$THEN_SET" -eq 1 ]; then
-  msg="Read $BRIEF, follow AGENTS.md, write report to the path stated in the brief. On completion: if done, dispatch review via '.agents/skills/orchestrate/scripts/dispatch.sh --notify $NOTIFY $THEN_TARGET $THEN_BRIEF' (if reviewer busy: '.agents/skills/orchestrate/scripts/notify.sh $NOTIFY <report-path> \"reviewer busy\"'); if blocked/failed: '.agents/skills/orchestrate/scripts/notify.sh --status <status> $NOTIFY <report-path>'."
+  msg="Read $BRIEF, follow AGENTS.md, write report to the path stated in the brief. On completion: if done, dispatch review via '.agents/skills/orchestrate/scripts/dispatch.sh --notify $NOTIFY $THEN_TARGET $THEN_BRIEF' (if reviewer busy: '.agents/skills/orchestrate/scripts/notify.sh $NOTIFY <report-path> \"reviewer busy\"'); if blocked/failed: '.agents/skills/orchestrate/scripts/notify.sh --status <status> $NOTIFY <report-path>' (records to tmp/<task>/callbacks.log)."
 else
-  msg="Read $BRIEF, follow AGENTS.md, write report to the path stated in the brief. When done, blocked, or failed: run .agents/skills/orchestrate/scripts/notify.sh $NOTIFY <report-path>."
+  msg="Read $BRIEF, follow AGENTS.md, write report to the path stated in the brief. When done, blocked, or failed: run .agents/skills/orchestrate/scripts/notify.sh $NOTIFY <report-path> (records to tmp/<task>/callbacks.log)."
 fi
 
 herdr agent prompt "$TARGET" "$msg" >/dev/null || die 1 "prompt failed: $TARGET"

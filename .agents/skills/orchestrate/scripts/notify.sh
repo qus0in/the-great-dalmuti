@@ -1,6 +1,7 @@
 #!/bin/sh
 # Usage: notify.sh [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] <target-pane> <report-path> [msg]
-# Send completion/blocked/failure callback to target pane via herdr. Exit 0 ok; 1 failure; 2 usage.
+# Write durable callback record to tmp/<task>/callbacks.log and prompt target pane via herdr.
+# Exit 0 on delivery or when queued (target blocked); 1 if log unwritable; 2 on bad args.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 die() { rc=$1; shift; echo "notify.sh: $*" >&2; exit "$rc"; }
@@ -23,9 +24,6 @@ TARGET=$1; REPORT=$2; shift 2
 MSG="$*"
 
 [ "${HERDR_ENV:-}" = 1 ] || die 2 "HERDR_ENV is not 1: run inside a herdr pane"
-command -v herdr >/dev/null 2>&1 || die 1 "herdr not found in PATH"
-
-herdr agent get "$TARGET" >/dev/null 2>&1 || herdr pane get "$TARGET" >/dev/null 2>&1 || die 1 "target not found: $TARGET"
 
 if [ -z "$SELF" ]; then
   SELF="${HERDR_PANE_ID:-}"
@@ -44,17 +42,39 @@ case "$STATUS" in
   *) die 2 "invalid status: '$STATUS' (must be done, blocked, or failed)";;
 esac
 
-if [ -z "$UNIT" ]; then
-  DIR=$(dirname "$REPORT")
-  case "$DIR" in
-    tmp/*) UNIT=$(basename "$DIR");;
-    .) UNIT=$(basename "$REPORT" .md);;
-    *) UNIT=$(basename "$DIR");;
-  esac
-fi
+case "$REPORT" in
+  */tmp/*) rest=${REPORT#*tmp/}; TASK=${rest%%/*};;
+  tmp/*) rest=${REPORT#tmp/}; TASK=${rest%%/*};;
+  *) TASK=${UNIT:-task};;
+esac
+[ -n "$UNIT" ] || UNIT="$TASK"
+
+LOG_DIR="$ROOT/tmp/$TASK"
+mkdir -p "$LOG_DIR" 2>/dev/null || die 1 "cannot create log directory: $LOG_DIR"
+LOG_FILE="$LOG_DIR/callbacks.log"
+TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+# Durable callback record written first
+RECORD="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT${MSG:+ msg=\"$MSG\"}"
+printf '%s\n' "$RECORD" >> "$LOG_FILE" 2>/dev/null || die 1 "cannot write callback log: $LOG_FILE"
 
 BODY="[callback] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT"
 [ -z "$MSG" ] || BODY="$BODY msg=\"$MSG\""
 
-herdr agent prompt "$TARGET" "$BODY" >/dev/null 2>&1 || die 1 "failed to prompt target: $TARGET"
-echo "notified $TARGET: $BODY"
+# Attempt herdr delivery with backoff (e.g. NOTIFY_BACKOFFS="5 15 30" or test override)
+NOTIFY_BACKOFFS=${NOTIFY_BACKOFFS:-"5 15 30"}
+sent=0
+for delay in 0 $NOTIFY_BACKOFFS; do
+  [ "$delay" -eq 0 ] || sleep "$delay"
+  if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$TARGET" "$BODY" >/dev/null 2>&1; then
+    sent=1
+    break
+  fi
+done
+
+if [ "$sent" -eq 1 ]; then
+  echo "notified $TARGET: $BODY"
+else
+  echo "queued (target blocked): logged to $LOG_FILE"
+fi
+exit 0
