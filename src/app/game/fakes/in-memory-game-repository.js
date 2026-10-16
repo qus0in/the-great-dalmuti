@@ -1,15 +1,13 @@
 import { ConflictError } from '../room-errors.js';
 
 const clone = (data) => JSON.parse(JSON.stringify(data));
-const openTrick = (state, gameId) => {
-  const trick = state.tricks.get(state.currentTricks.get(gameId));
-  return trick && trick.winnerSeat === null ? clone(trick) : null;
+const latestOf = (state, gameId) => {
+  const found = [...state.tricks.values()].filter((t) => t.gameId === gameId);
+  found.sort((a, b) => b.seq - a.seq);
+  return found[0] ? clone(found[0]) : null;
 };
 
-const storeTrick = (state, gameId, trick) => {
-  state.currentTricks.set(gameId, trick.id);
-  state.tricks.set(trick.id, clone(trick));
-};
+const openOf = (trick) => (trick && trick.winnerSeat === null ? trick : null);
 function findByCode(state, joinCode) {
   for (const game of state.games.values()) {
     if (game.joinCode === joinCode) {
@@ -80,9 +78,11 @@ function buildSaveMethods(state) {
       await Promise.resolve();
       updateGameAndPublic(state, params);
     },
-    findCurrentTrick: (gameId) => Promise.resolve(openTrick(state, gameId)),
+    findCurrentTrick: (gameId) =>
+      Promise.resolve(openOf(latestOf(state, gameId))),
+    findLatestTrick: (gameId) => Promise.resolve(latestOf(state, gameId)),
     saveTrick: (gameId, trick) =>
-      Promise.resolve(storeTrick(state, gameId, trick)),
+      Promise.resolve(state.tricks.set(trick.id, clone(trick))),
   };
 }
 
@@ -94,7 +94,6 @@ export function createInMemoryGameRepository() {
     hands: new Map(),
     public: new Map(),
     tricks: new Map(),
-    currentTricks: new Map(),
   };
   return { ...buildFindMethods(state), ...buildSaveMethods(state) };
 }

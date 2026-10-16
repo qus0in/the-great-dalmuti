@@ -60,6 +60,7 @@
  * @property {(gameId: string, hands: Record<number, any[]>) => Promise<void>} saveHands
  * @property {(gameId: string) => Promise<Record<number, any[]>|null>} findHands
  * @property {(gameId: string) => Promise<TrickEntity|null>} findCurrentTrick
+ * @property {(gameId: string) => Promise<TrickEntity|null>} findLatestTrick
  * @property {(gameId: string, trick: TrickEntity) => Promise<void>} saveTrick
  * @property {(params: { game: GameEntity, publicState: PublicStateEntity, expectedVersion: number }) => Promise<void>} saveGameAndPublic
  */
