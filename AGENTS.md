@@ -24,7 +24,7 @@ Ambiguous -> skill `codify`.
 - New durable knowledge, repeated work, or request to record rules/skills/docs -> run skill `codify`.
 - Design/implementation decision to make or change -> run skill `adr`; record user-chosen decisions only, never invent them.
 - After any change under .agents/skills or docs -> `.agents/skills/codify/scripts/check.sh` must pass.
-- User prompt that sets durable rules/structure/workflow -> log via skill `prompt-log` after the work.
+- User prompt/decision that sets durable rules, structure, workflow, or scope -> record verbatim in `tmp/<task>/decisions.md` immediately and promote via skill `prompt-log`/`adr` as part of unit completion (unit is incomplete until promoted).
 - Scripts w/ outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run). Reviewers verify the real path (validate payload bytes, e.g. `jq`), not dry-run text alone.
 - Missing/empty Herdr caller IDs -> skill `handoff`: identity from live evidence only, never focus/cwd; `HERDR_ENV=1` alone proves nothing.
 - Non-doc, non-binary code files <= 100 lines (split by responsibility; dist/*.html exempt until 0.3 SSR); verify via skill codify lines.sh.
@@ -62,7 +62,7 @@ Ambiguous -> skill `codify`.
 - Progress tracked/reported per semver patch only (table: version · issues/scope · status 계획/작업 중/PR 열림/머지됨/릴리스됨, canonical docs/0.3-patch-plan.md); no speed/date estimates.
 
 ## UI prototype (0.2)
-- UI work under dist/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
+- UI work under dist/ or src/ui/public/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
 - Visual/headless verification is worker-only: never run headless Chrome as orchestrator; assign to a worker and read its report/PNGs.
 
 ## Structure (0.3)
@@ -81,5 +81,5 @@ Ambiguous -> skill `codify`.
 - layers: Lint layer dependency rules and 100-line limit for src features
 - orchestrate: Automatically delegate non-trivial tasks via Herdr without a separate user request; orchestrator dispatches and does final review, workers implement and independently review.
 - prompt-log: Record meaningful user prompts verbatim into docs/prompt with intent and outcome. Use when a user prompt sets durable rules, structure, workflow, or design decisions, or when asked to log prompts.
-- ui-prototype: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.
+- ui-prototype: Building or reviewing HTML/CSS prototype screens in dist/ or 0.3 src/ui/public. Use when implementing or reviewing screens, styles, or design-token compliance.
 <!-- skills:end -->

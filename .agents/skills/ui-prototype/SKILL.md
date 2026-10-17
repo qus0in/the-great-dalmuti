@@ -1,6 +1,6 @@
 ---
 name: ui-prototype
-description: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.
+description: Building or reviewing HTML/CSS prototype screens in dist/ or 0.3 src/ui/public. Use when implementing or reviewing screens, styles, or design-token compliance.
 ---
 # ui-prototype
 Paths relative to repo root. DESIGN.md is the source of truth for file structure, tokens, and constraints. Targets: `dist/` (0.2 prototype, frozen rules) and `src/ui/public/` (0.3 browser screens).

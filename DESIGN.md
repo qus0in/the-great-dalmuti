@@ -2,7 +2,7 @@
 
 ## 1. Why: 배경 및 설계 철학
 
-`더 그레이트 달무티(The Great Dalmuti)`는 신분 계급의 불평등과 권력의 순환을 다루는 중세 테마 카드 게임입니다. 이 디자인 시스템은 게임의 핵심 테마인 <strong>중세 봉건 계급 구조</strong>를 현대적인 웹 인터페이스로 시각화하면서도, 순수 HTML·CSS만으로 가볍고 직관적인 사용자 경험을 전달하기 위해 설계되었습니다.
+`더 그레이트 달무티(The Great Dalmuti)`는 신분 계급의 불평등과 권력의 순환을 다루는 중세 테마 카드 게임입니다. 이 디자인 시스템은 게임의 핵심 테마인 <strong>중세 봉건 계급 구조</strong>를 현대적인 웹 인터페이스로 시각화하면서도, 순수 HTML·CSS만으로 가볍고 직관적인 사용자 경험을 전달하기 위해 설계되었습니다. 본 디자인 시스템은 0.2 정적 프로토타입(`dist/`)과 0.3 서비스 화면(`src/ui/public/`) 둘 다에 동일하게 적용됩니다.
 
 ### 핵심 설계 원칙
 1. **신분 격차의 시각적 계층화 (Feudal Hierarchy)**
@@ -56,7 +56,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 #### What
 
-`dist/css/tokens.css`는 허용된 원천 팔레트와 폰트 선언을 보유합니다. `tokens/`, `base/`, `components/`, `play/`의 모듈은 페이지 HTML에서 직접 연결합니다. 두 페이지는 같은 기반 모듈을 공유하고, 마지막에 화면별 스타일을 연결합니다.
+`dist/css/tokens.css` 및 `src/ui/public/css/tokens.css`는 허용된 원천 팔레트와 폰트 선언을 보유합니다. `tokens/`, `base/`, `components/`, `hall/`, `play/`의 모듈 디렉터리는 페이지 HTML에서 직접 연결합니다. 대기실과 플레이룸은 공통 기반 모듈(`tokens/`, `base/`, `components/`)을 공유하고, 마지막에 화면별 모듈(`hall/` 또는 `play/`)을 연결합니다.
 
 #### How
 
@@ -81,7 +81,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 17. `css/components/button.css`
 18. `css/components/panel.css`
 
-그 뒤 대기실은 `css/hall.css`를 연결합니다. 플레이룸 모듈은 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
+그 뒤 대기실은 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸 모듈은 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
 
 #### 연결 방식 선택 (SWOT)
 
@@ -92,7 +92,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 ### 3.1 색상 시스템 및 검증된 WCAG 명도 대비
 
-CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 ColorHunt 4색과 필수 뉴트럴 다크 잉크·화이트뿐이며, 나머지 색은 이 변수들을 `color-mix()`로 조합해 파생합니다. 다른 CSS 파일에는 색상 리터럴을 두지 않습니다.
+CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/css/tokens.css`)에만 둡니다. 허용 원천은 ColorHunt 4색과 필수 뉴트럴 다크 잉크·화이트뿐이며, 나머지 색은 이 변수들을 `color-mix()`로 조합해 파생합니다. 다른 CSS 파일에는 색상 리터럴을 두지 않습니다.
 
 #### 1) 기본 팔레트 (ColorHunt 원천 4색 + 필수 뉴트럴)
 - `--color-cream`: `#FDF4D2` (기본 배경 양피지)
@@ -208,10 +208,10 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
 
 ### 3.5 대기실(Hall, #11) 및 플레이룸(Play, #12) 화면 연계
 
-- **대기실 (dist/index.html & hall.css)**:
+- **대기실 (dist/index.html, src/ui/public/index.html & css/hall/ 모듈)**:
   - 방 만들기 폼, 공개 방 목록, 플레이어 신분 표시, 빠른 입장
   - 공통 파운데이션의 버튼, 패널, 배지 토큰을 100% 재사용
-- **플레이룸 (dist/play.html & play.css)**:
+- **플레이룸 (dist/play.html, src/ui/public/play.html & css/play/ 모듈)**:
   - 4인 대전 아레나 (상단 1위 대달무티 민우, 동쪽 2위 소달무티 지은, 서쪽 4위 대농노 철수, 하단 3위 소농노 본인)
   - 80장 수학적 카드 분배 정합성 준수 (남은 덱 0장, 필드 3장, 버린 카드 20장, 4인 손패 57장 = 총 80장)
   - 반응형 전환: 데스크톱 십자형 배치 → 모바일(390px) 3열 컴팩트 좌석 + 중앙 필드 + 하단 손패 트레이
