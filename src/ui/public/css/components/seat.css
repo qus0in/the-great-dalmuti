@@ -70,6 +70,10 @@
   color: var(--color-ink-muted);
 }
 
+.seat__status {
+  white-space: nowrap;
+}
+
 .seat__count {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
