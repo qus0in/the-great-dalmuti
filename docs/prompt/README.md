@@ -74,3 +74,4 @@
 - [2026-10-16](2026-10-16-21-anonymous-test-accounts.md) — 테스트 전용 Anonymous 계정 허용
 - [2026-10-17](2026-10-17-01-0-3-3-browser-e2e-and-module-placement.md) — 0.3.3 브라우저 E2E 로그인·모듈 배치 결정
 - [2026-10-17](2026-10-17-02-tutorial-mode.md) — 0.3.4 튜토리얼 모드 결정
+- [2026-10-17](2026-10-17-03-tutorial-common-strategy.md) — 힌트와 봇의 공통 달무티 전략 변경
