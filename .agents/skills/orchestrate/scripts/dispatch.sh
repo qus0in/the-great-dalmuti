@@ -35,15 +35,20 @@ if [ "$THEN_SET" -eq 1 ]; then
   [ -f "$THEN_BRIEF" ] || die 1 "then-brief missing: $THEN_BRIEF"
 fi
 REPORT_RE='tmp/[[:alnum:]_.-]+/(report|review)-[[:alnum:]_.-]+\.md'
-REPORT_PATH=$(grep -Eo "$REPORT_RE" "$BRIEF" | head -n 1 || true)
-THEN_REPORT_PATH=
-if [ "$THEN_SET" -eq 1 ]; then THEN_REPORT_PATH=$(grep -Eo "$REPORT_RE" "$THEN_BRIEF" | head -n 1 || true); fi
-for report in "$REPORT_PATH" "$THEN_REPORT_PATH"; do
+report_paths() {
+  awk '/^[[:space:]]*-[[:space:]]*Owned:/ { print; next } /notify\.sh/ && /(완료|done|blocked|failed)/ { print }' "$1" |
+    grep -Eo "$REPORT_RE" | awk '!seen[$0]++'
+}
+REPORT_PATHS=$(report_paths "$BRIEF")
+THEN_REPORT_PATHS=
+if [ "$THEN_SET" -eq 1 ]; then THEN_REPORT_PATHS=$(report_paths "$THEN_BRIEF"); fi
+for report in $REPORT_PATHS $THEN_REPORT_PATHS; do
   [ -n "$report" ] || continue
   if [ "$FORCE_EXISTING_REPORT" -eq 0 ] && [ -e "$ROOT/$report" ]; then
     die 1 "report already exists: $report (use --force-existing-report to override)"
   fi
 done
+REPORT_PATH=$(printf '%s\n' "$REPORT_PATHS" | head -n 1)
 if [ -n "$REPORT_PATH" ]; then REPORT_ARG=$REPORT_PATH; else REPORT_ARG='<report-path>'; fi
 set -- "${DISPATCH_CTX_CMD:-$HERE/context.sh}"
 if [ "$WS_SET" -eq 1 ] || [ "$SELF_SET" -eq 1 ]; then
