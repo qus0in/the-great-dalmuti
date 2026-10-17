@@ -79,3 +79,5 @@
 - [2026-10-17](2026-10-17-05-hall-footer-dist-frozen.md) — 대기실 프로토타입 안내 문구 제거 및 dist 동결 유지
 - [2026-10-17](2026-10-17-06-harness-resilience-and-effort-policy.md) — 하네스 유실 대비 및 워커 모델·effort 운영 정책
 - [2026-10-17](2026-10-17-07-audit-system-and-harness-review.md) — 탈맥락 규칙·배치·ADR·하네스 자기개선 검토 감사 요청
+- [2026-10-17](2026-10-17-08-scope-04-into-03.md) — 0.4 기능 0.3 포섭 결정
+- [2026-10-17](2026-10-17-09-milestone-030-description-expansion.md) — 0.3.0 마일스톤 설명 확장

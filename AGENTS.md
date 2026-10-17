@@ -56,7 +56,7 @@ Ambiguous -> skill `codify`.
 
 ## Issues
 - Skill `gh-issues`. FIT framework: focus = milestone core work; instant = small, finish right away; tuck = deferred/parked. Domain labels: frontend, design.
-- Milestones: semver + Korean stage description. Current: 0.3.0 = Express 정적 서빙·Supabase 로그인과 게임 로직.
+- Milestones: semver + Korean stage description. Current: 0.3.0 = Express 정적 서빙·Supabase 로그인과 게임 로직·프로필(이미지·가리기·채팅).
 - Every issue: exactly 1 milestone + exactly 1 FIT label + optional domain labels.
 - Issues close with their work: `Closes #N` in the shipping PR body, or verify acceptance against main right after merge and close citing that evidence.
 - Progress tracked/reported per semver patch only (table: version · issues/scope · status 계획/작업 중/PR 열림/머지됨/릴리스됨, canonical docs/0.3-patch-plan.md); no speed/date estimates.
