@@ -37,19 +37,17 @@ function appendCardBody(doc, article, labels) {
 }
 
 function resolveCardMeta(card, index, selected) {
-  const isJester = Boolean(card.isJester) || card.rank === 13;
-  const rankText = isJester ? '★' : String(card.rank);
-  const nameText = card.name ?? rankLabel(card.rank);
-  const rankClass = isJester ? 'card--jester' : `card--rank-${card.rank}`;
+  const rank = Number(card.rank);
+  const isJester = Boolean(card.isJester) || rank === 13;
+  const rankText = isJester ? '★' : String(rank);
+  const nameText = card.name ?? rankLabel(rank);
+  const rankClass = isJester ? 'card--jester' : `card--rank-${rank}`;
   const fan = index > 0 ? ` hand-fan__card--${index}` : '';
   const sel = selected ? ' is-selected' : '';
   const baseLabel = `${rankText} ${nameText}`;
-  return {
-    rankText,
-    nameText,
-    className: `card ${rankClass}${fan}${sel}`,
-    ariaLabel: selected ? `${baseLabel} (선택됨)` : baseLabel,
-  };
+  const ariaLabel = selected ? `${baseLabel} (선택됨)` : baseLabel;
+  const className = `card ${rankClass}${fan}${sel}`;
+  return { rankText, nameText, className, ariaLabel };
 }
 
 export function createCardElement(doc, card, opts = {}) {
@@ -76,25 +74,27 @@ export function renderHandCards(doc, { hand = [], selected = [] }) {
   });
 }
 
+function updateTrickTarget(doc, rank, count) {
+  const el = doc.querySelector('[data-play="trick-target"]');
+  const r = rank === 13 ? '★' : String(rank);
+  const text = count ? `${count}장 조합 (${r} ${rankLabel(rank)})` : '새 트릭';
+  if (el) el.textContent = text;
+}
+
 export function renderTrickCards(doc, lastPlay) {
-  const targetEl = doc.querySelector('[data-play="trick-target"]');
-  if (targetEl) {
-    const r = lastPlay && (lastPlay.rank === 13 ? '★' : String(lastPlay.rank));
-    targetEl.textContent =
-      lastPlay && lastPlay.count
-        ? `${lastPlay.count}장 조합 (${r} ${rankLabel(lastPlay.rank)})`
-        : '새 트릭';
-  }
+  const count = Number(lastPlay?.count || 0);
+  const rank = Number(lastPlay?.rank || 0);
+  updateTrickTarget(doc, rank, count);
   const trickEl = doc.querySelector('[data-play="trick"]');
-  if (!trickEl) return;
+  const key = `${rank}:${count}`;
+  if (!trickEl || trickEl._trickKey === key) return;
+  trickEl._trickKey = key;
   trickEl.textContent = '';
-  if (!lastPlay || !lastPlay.count) return;
-  for (let i = 1; i <= lastPlay.count; i += 1) {
+  for (let i = 1; i <= count; i += 1) {
     const wrap = doc.createElement('div');
     wrap.className = `table-felt__card-wrap table-felt__card-wrap--${i}`;
-    wrap.appendChild(
-      createCardElement(doc, { id: `trick-${i}`, rank: lastPlay.rank }),
-    );
+    const card = { id: `trick-${i}`, rank, isJester: rank === 13 };
+    wrap.appendChild(createCardElement(doc, card));
     trickEl.appendChild(wrap);
   }
 }
