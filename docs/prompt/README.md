@@ -72,3 +72,4 @@
 - [2026-10-16](2026-10-16-19-readme-pino-pr-rules.md) — README 최소 수정·Pino 도입과 PR 진행 규칙
 - [2026-10-16](2026-10-16-20-semver-patch-tracking-c-stage.md) — semver patch 추적·공개배포 승인·C단계 기준 확정
 - [2026-10-16](2026-10-16-21-anonymous-test-accounts.md) — 테스트 전용 Anonymous 계정 허용
+- [2026-10-17](2026-10-17-01-0-3-3-browser-e2e-and-module-placement.md) — 0.3.3 브라우저 E2E 로그인·모듈 배치 결정
