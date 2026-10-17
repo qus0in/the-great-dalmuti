@@ -68,21 +68,12 @@
       <div class="play-hud__left">
         <h1 class="play-hud__brand"><a href="/">The Great Dalmuti</a></h1>
         <div class="play-hud__round" data-play="round">
-          <span class="badge badge--gold">진행 중</span>
-          <span class="play-hud__round-number">제 2라운드</span>
+          <span class="badge">대기 중</span>
         </div>
-        <div class="play-hud__tribute" data-play="tribute">
-          세금 징수 완료 (대달무티 ↔ 대농노 2장, 소달무티 ↔ 소농노 1장)
-        </div>
+        <div class="play-hud__tribute" data-play="tribute" hidden></div>
       </div>
       <div class="play-hud__right">
-        <div class="play-hud__deck-stat cluster cluster--sm" data-play="deck-stat">
-          <span>남은 덱 0장</span>
-          <span class="text-muted" aria-hidden="true">·</span>
-          <span>버린 카드 20장</span>
-          <span class="text-muted" aria-hidden="true">·</span>
-          <span>총 80장</span>
-        </div>
+        <div class="play-hud__deck-stat cluster cluster--sm" data-play="deck-stat" hidden></div>
         <a href="/" class="play-hud__exit-link">로비로 나가기</a>
       </div>
     </header>
@@ -90,62 +81,46 @@
     <!-- 2. Action Banner -->
     <section class="play-action-banner" aria-label="최근 플레이 안내" data-play="banner">
       <h2 class="sr-only">최근 플레이 안내</h2>
-      <div class="play-action-banner__lead">
-        <span class="badge badge--sky">현재 선(Lead)</span>
-        <span class="play-action-banner__text">동쪽 <strong>소달무티(지은)</strong>님이 <strong>7 재봉사 3장</strong>을 냈습니다.</span>
-      </div>
-      <div class="play-action-banner__beat-rule">
-        다음 플레이 조건: 1~6 계급 3장 (또는 어릿광대 조합)
-      </div>
+      게임을 불러오는 중…
     </section>
 
     <!-- 3. Card Room Arena (4 Seats + Felt Game Table) -->
     <main class="play-arena" aria-label="달무티 게임 대전 화면">
       <h2 class="sr-only">게임 대전 공간</h2>
 
-      <!-- North Seat (대달무티 / 민우) -->
+      <!-- North Seat -->
       <section class="play-arena__seat--north" aria-label="북쪽 좌석 정보">
-        <h3 class="sr-only">북쪽 좌석 - 대달무티</h3>
+        <h3 class="sr-only">북쪽 좌석</h3>
         <div class="seat" data-play="seat" data-seat="0">
-          <div class="seat__avatar">민</div>
+          <div class="seat__avatar">-</div>
           <div class="seat__content">
             <div class="seat__name-row">
-              <span class="seat__name">민우</span>
-              <span class="badge badge--gold" data-play="seat-rank">1위 대달무티</span>
+              <span class="seat__name">대기 중</span>
+              <span class="badge" data-play="seat-rank" hidden></span>
             </div>
             <div class="seat__status-row">
               <span class="seat__status" data-play="seat-status">대기 중</span>
-              <div class="card-stack" aria-hidden="true">
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-              </div>
-              <span class="seat__count">12장</span>
+              <div class="card-stack" aria-hidden="true"></div>
+              <span class="seat__count">0장</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- West Seat (대농노 / 철수 - 패스 상태) -->
+      <!-- West Seat -->
       <section class="play-arena__seat--west" aria-label="서쪽 좌석 정보">
-        <h3 class="sr-only">서쪽 좌석 - 대농노</h3>
-        <div class="seat is-passed" data-play="seat" data-seat="3">
-          <div class="seat__avatar">철</div>
+        <h3 class="sr-only">서쪽 좌석</h3>
+        <div class="seat" data-play="seat" data-seat="3">
+          <div class="seat__avatar">-</div>
           <div class="seat__content">
             <div class="seat__name-row">
-              <span class="seat__name">철수</span>
-              <span class="badge badge--rose" data-play="seat-rank">4위 대농노</span>
+              <span class="seat__name">대기 중</span>
+              <span class="badge" data-play="seat-rank" hidden></span>
             </div>
             <div class="seat__status-row">
-              <span class="badge badge--pass" data-play="seat-status">패스(Pass)</span>
-              <div class="card-stack" aria-hidden="true">
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-              </div>
-              <span class="seat__count">16장</span>
+              <span class="seat__status" data-play="seat-status">대기 중</span>
+              <div class="card-stack" aria-hidden="true"></div>
+              <span class="seat__count">0장</span>
             </div>
           </div>
         </div>
@@ -156,90 +131,29 @@
         <h3 class="sr-only">게임 테이블 필드</h3>
         <div class="table-felt__status">
           <span class="table-felt__status-label">현재 트릭</span>
-          <span class="table-felt__status-target" data-play="trick-target">3장 조합 (7 재봉사)</span>
+          <span class="table-felt__status-target" data-play="trick-target">대기 중</span>
         </div>
 
         <!-- Played Trick Cards on Table -->
-        <div class="table-felt__trick" aria-label="현재 필드에 나온 카드 3장" data-play="trick">
-          <!-- Card 1 -->
-          <div class="table-felt__card-wrap table-felt__card-wrap--1">
-            <article class="card card--rank-7" aria-label="7 재봉사">
-              <div class="card__corner card__corner--top-left" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-              <div class="card__crest" aria-hidden="true">
-                <span class="card__crest-inner">7</span>
-              </div>
-              <span class="card__title" aria-hidden="true">재봉사</span>
-              <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-            </article>
-          </div>
+        <div class="table-felt__trick" aria-label="현재 필드에 나온 카드" data-play="trick"></div>
 
-          <!-- Card 2 -->
-          <div class="table-felt__card-wrap table-felt__card-wrap--2">
-            <article class="card card--rank-7" aria-label="7 재봉사">
-              <div class="card__corner card__corner--top-left" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-              <div class="card__crest" aria-hidden="true">
-                <span class="card__crest-inner">7</span>
-              </div>
-              <span class="card__title" aria-hidden="true">재봉사</span>
-              <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-            </article>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="table-felt__card-wrap table-felt__card-wrap--3">
-            <article class="card card--rank-7" aria-label="7 재봉사">
-              <div class="card__corner card__corner--top-left" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-              <div class="card__crest" aria-hidden="true">
-                <span class="card__crest-inner">7</span>
-              </div>
-              <span class="card__title" aria-hidden="true">재봉사</span>
-              <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-                <span class="card__rank">7</span>
-                <span class="card__name-subtle">재봉사</span>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <div class="table-felt__discard-ghost" data-play="previous-trick">
-          <span>이전 트릭: 9 요리사 3장 (덮임)</span>
-        </div>
+        <div class="table-felt__discard-ghost" data-play="previous-trick" hidden></div>
       </section>
 
-      <!-- East Seat (소달무티 / 지은 - 현재 턴) -->
+      <!-- East Seat -->
       <section class="play-arena__seat--east" aria-label="동쪽 좌석 정보">
-        <h3 class="sr-only">동쪽 좌석 - 소달무티</h3>
-        <div class="seat is-turn" data-play="seat" data-seat="1">
-          <div class="seat__avatar">지</div>
+        <h3 class="sr-only">동쪽 좌석</h3>
+        <div class="seat" data-play="seat" data-seat="1">
+          <div class="seat__avatar">-</div>
           <div class="seat__content">
             <div class="seat__name-row">
-              <span class="seat__name">지은</span>
-              <span class="badge badge--lavender" data-play="seat-rank">2위 소달무티</span>
+              <span class="seat__name">대기 중</span>
+              <span class="badge" data-play="seat-rank" hidden></span>
             </div>
             <div class="seat__status-row">
-              <span class="badge badge--turn" data-play="seat-status">차례(Turn)</span>
-              <div class="card-stack" aria-hidden="true">
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-                <div class="card-stack__item"></div>
-              </div>
-              <span class="seat__count">14장</span>
+              <span class="seat__status" data-play="seat-status">대기 중</span>
+              <div class="card-stack" aria-hidden="true"></div>
+              <span class="seat__count">0장</span>
             </div>
           </div>
         </div>
@@ -254,274 +168,32 @@
         <div class="play-hand-header__meta">
           <div class="seat seat--me" data-play="seat" data-seat="2">
             <h3 class="sr-only">내 정보 및 상태</h3>
-            <div class="seat__avatar">나</div>
+            <div class="seat__avatar">-</div>
             <div class="seat__content">
               <div class="seat__name-row">
-                <span class="play-hand-header__title">플레이어 (나)</span>
-                <span class="badge badge--rose" data-play="seat-rank">3위 소농노</span>
+                <span class="play-hand-header__title">대기 중</span>
+                <span class="badge" data-play="seat-rank" hidden></span>
               </div>
               <div class="seat__status-row">
-                <span class="seat__status" data-play="seat-status">다음 차례 대기 중</span>
-                <span class="seat__count">남은 카드 15장</span>
+                <span class="seat__status" data-play="seat-status">대기 중</span>
+                <span class="seat__count">남은 카드 0장</span>
               </div>
             </div>
           </div>
-          <span class="play-hand-header__selection-hint" data-play="selection-hint">선택된 카드: 6 기사 3장 (낼 수 있음)</span>
+          <span class="play-hand-header__selection-hint" data-play="selection-hint" hidden></span>
           <div id="play-hint" class="play-hand-header__selection-hint" data-play="hint" aria-live="polite" hidden></div>
         </div>
 
         <div class="play-hand-controls">
-          <button type="button" class="btn btn--gold" data-play="submit">카드 내기 (3장 선택)</button>
-          <button type="button" class="btn btn--secondary" data-play="pass">패스(Pass)</button>
+          <button type="button" class="btn btn--gold" data-play="submit" disabled>카드 내기</button>
+          <button type="button" class="btn btn--secondary" data-play="pass" disabled>패스(Pass)</button>
         </div>
         <div class="sr-only" aria-live="polite" data-play="message"></div>
       </div>
 
-      <!-- Fanned Hand Cards (15 Cards) -->
-      <div class="hand-tray" aria-label="내 카드 15장 목록">
-        <div class="hand-fan" data-play="hand">
-
-          <!-- Card 1: 1 대달무티 -->
-          <article class="card card--rank-1 hand-fan__card--1" aria-label="1 대달무티" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">1</span>
-              <span class="card__name-subtle">대달무티</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">1</span>
-            </div>
-            <span class="card__title" aria-hidden="true">대달무티</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">1</span>
-              <span class="card__name-subtle">대달무티</span>
-            </div>
-          </article>
-
-          <!-- Card 2: 9 요리사 -->
-          <article class="card card--rank-9 hand-fan__card--2" aria-label="9 요리사" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">9</span>
-              <span class="card__name-subtle">요리사</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">9</span>
-            </div>
-            <span class="card__title" aria-hidden="true">요리사</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">9</span>
-              <span class="card__name-subtle">요리사</span>
-            </div>
-          </article>
-
-          <!-- Card 3: 10 양치기 -->
-          <article class="card card--rank-10 hand-fan__card--3" aria-label="10 양치기" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">10</span>
-              <span class="card__name-subtle">양치기</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">10</span>
-            </div>
-            <span class="card__title" aria-hidden="true">양치기</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">10</span>
-              <span class="card__name-subtle">양치기</span>
-            </div>
-          </article>
-
-          <!-- Card 4: 11 광부 -->
-          <article class="card card--rank-11 hand-fan__card--4" aria-label="11 광부" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">11</span>
-              <span class="card__name-subtle">광부</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">11</span>
-            </div>
-            <span class="card__title" aria-hidden="true">광부</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">11</span>
-              <span class="card__name-subtle">광부</span>
-            </div>
-          </article>
-
-          <!-- Card 5: 12 농노 -->
-          <article class="card card--rank-12 hand-fan__card--5" aria-label="12 농노" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">12</span>
-              <span class="card__name-subtle">농노</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">12</span>
-            </div>
-            <span class="card__title" aria-hidden="true">농노</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">12</span>
-              <span class="card__name-subtle">농노</span>
-            </div>
-          </article>
-
-          <!-- Card 6: 어릿광대 (Jester) -->
-          <article class="card card--jester hand-fan__card--6" aria-label="어릿광대" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">★</span>
-              <span class="card__name-subtle">어릿광대</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">★</span>
-            </div>
-            <span class="card__title" aria-hidden="true">어릿광대</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">★</span>
-              <span class="card__name-subtle">어릿광대</span>
-            </div>
-          </article>
-
-          <!-- Card 7: 6 기사 (Selected, Playable) -->
-          <article class="card card--rank-6 is-selected is-playable hand-fan__card--7" aria-label="6 기사 (선택됨, 낼 수 있음)" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">6</span>
-            </div>
-            <span class="card__title" aria-hidden="true">기사</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-          </article>
-
-          <!-- Card 8: 6 기사 (Selected, Playable) -->
-          <article class="card card--rank-6 is-selected is-playable hand-fan__card--8" aria-label="6 기사 (선택됨, 낼 수 있음)" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">6</span>
-            </div>
-            <span class="card__title" aria-hidden="true">기사</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-          </article>
-
-          <!-- Card 9: 6 기사 (Selected, Playable) -->
-          <article class="card card--rank-6 is-selected is-playable hand-fan__card--9" aria-label="6 기사 (선택됨, 낼 수 있음)" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">6</span>
-            </div>
-            <span class="card__title" aria-hidden="true">기사</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">6</span>
-              <span class="card__name-subtle">기사</span>
-            </div>
-          </article>
-
-          <!-- Card 10: 3 시종장 -->
-          <article class="card card--rank-3 hand-fan__card--10" aria-label="3 시종장" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">3</span>
-              <span class="card__name-subtle">시종장</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">3</span>
-            </div>
-            <span class="card__title" aria-hidden="true">시종장</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">3</span>
-              <span class="card__name-subtle">시종장</span>
-            </div>
-          </article>
-
-          <!-- Card 11: 4 남작부인 -->
-          <article class="card card--rank-4 hand-fan__card--11" aria-label="4 남작부인" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">4</span>
-              <span class="card__name-subtle">남작부인</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">4</span>
-            </div>
-            <span class="card__title" aria-hidden="true">남작부인</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">4</span>
-              <span class="card__name-subtle">남작부인</span>
-            </div>
-          </article>
-
-          <!-- Card 12: 5 수녀원장 -->
-          <article class="card card--rank-5 hand-fan__card--12" aria-label="5 수녀원장" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">5</span>
-              <span class="card__name-subtle">수녀원장</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">5</span>
-            </div>
-            <span class="card__title" aria-hidden="true">수녀원장</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">5</span>
-              <span class="card__name-subtle">수녀원장</span>
-            </div>
-          </article>
-
-          <!-- Card 13: 5 수녀원장 -->
-          <article class="card card--rank-5 hand-fan__card--13" aria-label="5 수녀원장" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">5</span>
-              <span class="card__name-subtle">수녀원장</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">5</span>
-            </div>
-            <span class="card__title" aria-hidden="true">수녀원장</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">5</span>
-              <span class="card__name-subtle">수녀원장</span>
-            </div>
-          </article>
-
-          <!-- Card 14: 8 석공 -->
-          <article class="card card--rank-8 hand-fan__card--14" aria-label="8 석공" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">8</span>
-              <span class="card__name-subtle">석공</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">8</span>
-            </div>
-            <span class="card__title" aria-hidden="true">석공</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">8</span>
-              <span class="card__name-subtle">석공</span>
-            </div>
-          </article>
-
-          <!-- Card 15: 10 양치기 -->
-          <article class="card card--rank-10 hand-fan__card--15" aria-label="10 양치기" tabindex="0" data-play="card">
-            <div class="card__corner card__corner--top-left" aria-hidden="true">
-              <span class="card__rank">10</span>
-              <span class="card__name-subtle">양치기</span>
-            </div>
-            <div class="card__crest" aria-hidden="true">
-              <span class="card__crest-inner">10</span>
-            </div>
-            <span class="card__title" aria-hidden="true">양치기</span>
-            <div class="card__corner card__corner--bottom-right" aria-hidden="true">
-              <span class="card__rank">10</span>
-              <span class="card__name-subtle">양치기</span>
-            </div>
-          </article>
-
-        </div>
+      <!-- Fanned Hand Cards -->
+      <div class="hand-tray" aria-label="내 카드 목록">
+        <div class="hand-fan" data-play="hand"></div>
       </div>
     </footer>
 
