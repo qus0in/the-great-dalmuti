@@ -30,7 +30,7 @@ Run full pass on user request (e.g. "하네스 업데이트"). Automatic light p
 Covers skills, AGENTS.md rules, docs/, scripts, and handoff records. Check all five every full pass.
 
 ## Scripts
-- Signals: `scripts/signals.sh [--since <git-rev|date>]` -> stdout candidate signals (blocking findings, failed gates, repeated how-lines, stale pointers).
+- Signals: `scripts/signals.sh [--since <git-rev|date>]` -> stdout candidate signals (blocking findings, failed gates, triage events, blocked callbacks, BLOCK verdicts, repeated how-lines, stale pointers; `--since` keeps only files with mtime or rev commit time >= the given value).
 - Ledger: `scripts/ledger.sh [<task>]` -> scaffold `tmp/<task>/signals.md` (default `harness-<today>`).
 
 Signals are candidates only. Nothing is applied without classification, a dispatched unit, review, and a green gate.

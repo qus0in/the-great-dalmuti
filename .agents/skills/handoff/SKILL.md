@@ -15,7 +15,7 @@ Backend rule: delegation transport is strictly Herdr worker panes. Never use pla
 ## Procedures
 1. Takeover incoming:
    - Run `scripts/takeover.sh <task> [--session ID] [--repo PATH]... [--workspace ID --self-pane ID]`.
-   - Verifies caller identity against pane metadata and checks live drift (workers, HEAD, pending units) against `tmp/<task>/handoff.md`.
+   - Verifies caller identity against pane metadata, checks live drift (workers, HEAD, pending units) against `tmp/<task>/handoff.md`, and prints recent `tmp/<task>/state.md` events with in-progress units.
    - Never redispatch to busy workers; inspect active briefs/reports before acting.
 2. Snapshot current state:
    - Run `scripts/snapshot.sh <task> [--repo PATH]... [--dry-run] [--workspace ID --self-pane ID]`.

@@ -4,6 +4,8 @@ set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 die() { rc=$1; shift; echo "dispatch.sh: $*" >&2; exit "$rc"; }
 usage() { die 2 "usage: $0 [--workspace ID --self-pane ID] [--notify PANE] [--wait-idle SEC] [--then TARGET BRIEF] [--dry-run] [--force-existing-report] <target> <brief-path>"; }
+# Helpers (report extraction, guard, contract logs) live in dispatch-lib.sh.
+. "$HERE/dispatch-lib.sh"
 WS=; SELF=; WS_SET=0; SELF_SET=0; NOTIFY=; NOTIFY_SET=0
 THEN_TARGET=; THEN_BRIEF=; THEN_SET=0; WAIT_IDLE=0; DRY_RUN=0; FORCE_EXISTING_REPORT=0
 TARGET=; BRIEF=; POS_COUNT=0
@@ -35,19 +37,12 @@ if [ "$THEN_SET" -eq 1 ]; then
   [ -f "$THEN_BRIEF" ] || die 1 "then-brief missing: $THEN_BRIEF"
 fi
 REPORT_RE='tmp/[[:alnum:]_.-]+/(report|review)-[[:alnum:]_.-]+\.md'
-report_paths() {
-  awk '/^[[:space:]]*-[[:space:]]*Owned:/ { print; next } /notify\.sh/ && /(완료|done|blocked|failed)/ { print }' "$1" |
-    grep -Eo "$REPORT_RE" | awk '!seen[$0]++'
-}
 REPORT_PATHS=$(report_paths "$BRIEF")
 THEN_REPORT_PATHS=
 if [ "$THEN_SET" -eq 1 ]; then THEN_REPORT_PATHS=$(report_paths "$THEN_BRIEF"); fi
-for report in $REPORT_PATHS $THEN_REPORT_PATHS; do
-  [ -n "$report" ] || continue
-  if [ "$FORCE_EXISTING_REPORT" -eq 0 ] && [ -e "$ROOT/$report" ]; then
-    die 1 "report already exists: $report (use --force-existing-report to override)"
-  fi
-done
+guard_reports $REPORT_PATHS $THEN_REPORT_PATHS
+# Contract: task = brief parent dir name, unit = brief filename minus brief- prefix and .md.
+BDIR=$(dirname "$BRIEF"); TASK=$(basename "$BDIR"); UNIT=$(basename "$BRIEF" .md); UNIT=${UNIT#brief-}
 REPORT_PATH=$(printf '%s\n' "$REPORT_PATHS" | head -n 1)
 if [ -n "$REPORT_PATH" ]; then REPORT_ARG=$REPORT_PATH; else REPORT_ARG='<report-path>'; fi
 set -- "${DISPATCH_CTX_CMD:-$HERE/context.sh}"
@@ -69,15 +64,17 @@ if [ "$NOTIFY_SET" -eq 0 ]; then
   [ -n "$NOTIFY" ] || die 2 "cannot determine notify pane (pass --notify <pane>)"
 fi
 CALLBACK="env -u HERDR_WORKSPACE_ID -u HERDR_TAB_ID -u HERDR_PANE_ID .agents/skills/orchestrate/scripts/notify.sh --self-pane $TARGET $NOTIFY $REPORT_ARG"
+FOOTER="Write 'status: in-progress' as the first line of $REPORT_ARG immediately (update it to done|blocked|failed when finished). Record at most 3 checkpoints (files done, verification done, before reporting) via .agents/skills/orchestrate/scripts/checkpoint.sh $TASK $UNIT \"<summary>\" \"<next>\"."
 if [ "$THEN_SET" -eq 1 ]; then
-  msg="Read $BRIEF, follow AGENTS.md, write report to $REPORT_ARG. On completion: if done, dispatch review via '.agents/skills/orchestrate/scripts/dispatch.sh --notify $NOTIFY $THEN_TARGET $THEN_BRIEF' (if reviewer busy: '$CALLBACK \"reviewer busy\"'); if blocked/failed: run '$CALLBACK' (records to tmp/<task>/callbacks.log)."
+  msg="Read $BRIEF, follow AGENTS.md, write report to $REPORT_ARG. $FOOTER On completion: if done, dispatch review via '.agents/skills/orchestrate/scripts/dispatch.sh --notify $NOTIFY $THEN_TARGET $THEN_BRIEF' (if reviewer busy: '$CALLBACK \"reviewer busy\"'); if blocked/failed: run '$CALLBACK' (records to tmp/<task>/callbacks.log)."
 else
-  msg="Read $BRIEF, follow AGENTS.md, write report to $REPORT_ARG. When done, blocked, or failed: run $CALLBACK (records to tmp/<task>/callbacks.log)."
+  msg="Read $BRIEF, follow AGENTS.md, write report to $REPORT_ARG. $FOOTER When done, blocked, or failed: run $CALLBACK (records to tmp/<task>/callbacks.log)."
 fi
 if [ "$DRY_RUN" -eq 1 ]; then
   printf '[dry-run] target=%s\n%s\n' "$TARGET" "$msg"
 else
   herdr agent prompt "$TARGET" "$msg" >/dev/null || die 1 "prompt failed: $TARGET"
   TS=$(date -u +%Y-%m-%dT%H:%M:%SZ); EPOCH=$(date +%s)
+  append_dispatch_logs "$TS" "$TARGET" "$UNIT" "$BDIR"
   echo "dispatched $TARGET at $TS ($EPOCH)"
 fi
