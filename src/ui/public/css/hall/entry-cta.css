@@ -21,3 +21,9 @@
 .hall__footer {
   padding-bottom: var(--space-4);
 }
+
+/* Login page shell: keeps the entry panel off the viewport top edge
+   (same top rhythm as .hall__hero, page-shell.css). */
+.login {
+  padding-top: var(--space-6);
+}
