@@ -18,3 +18,4 @@
 | [0012](0012-pino-http-logging.md) | [Pino HTTP 요청 로깅](0012-pino-http-logging.md) | accepted | 2026-10-16 |
 | [0013](0013-0.3.3-browser-e2e-and-module-placement.md) | [0.3.3 브라우저 E2E 로그인과 모듈 배치](0013-0.3.3-browser-e2e-and-module-placement.md) | accepted | 2026-10-17 |
 | [0014](0014-0.3.4-tutorial-mode.md) | [0.3.4 튜토리얼 모드 — 봇 3석 고정과 서버 추천·이유](0014-0.3.4-tutorial-mode.md) | accepted | 2026-10-17 |
+| [0015](0015-0.3.5-turn-delegation-and-tutorial-timer.md) | [0.3.5 턴 대행은 한 차례만, 튜토리얼은 타이머 없음](0015-0.3.5-turn-delegation-and-tutorial-timer.md) | accepted | 2026-10-18 |
