@@ -18,7 +18,8 @@ async function postData(http, url, body) {
 // 서버 게임 라우트(/api/rooms*, /api/stats)를 호출하는 브라우저 API 어댑터
 export function createGameApi(http) {
   return {
-    createRoom: () => postData(http, '/api/rooms'),
+    createRoom: ({ mode } = {}) =>
+      postData(http, '/api/rooms', mode ? { mode } : undefined),
     joinRoom: (code) => postData(http, roomPath(code, '/join')),
     getRoom: (code) => getData(http, roomPath(code)),
     startGame: (code) => postData(http, roomPath(code, '/start')),

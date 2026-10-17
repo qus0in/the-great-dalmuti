@@ -1,16 +1,20 @@
 import { createRoom } from '../../app/game/room-create.js';
 import { joinRoom } from '../../app/game/room-join.js';
+import { getRoomHint } from '../../app/game/room-hint.js';
 import { startGame } from '../../app/game/room-start.js';
 import { ForbiddenError, NotFoundError } from '../../app/game/room-errors.js';
 import { wrap } from './wrap.js';
 import { applyRuntime } from './runtime-response.js';
+import { parseBody } from './parse-body.js';
+import { roomBodySchema } from './schemas.js';
 
 // POST /api/rooms — 호스트가 대기실을 만든다 (201)
 export function createRoomHandler({ repository, clock, rng }) {
   return wrap(async (req, res) => {
+    const { mode } = parseBody(roomBodySchema, req.body);
     const result = await createRoom(
       { gameRepository: repository, clock, rng },
-      { hostUser: req.authUser },
+      { hostUser: req.authUser, mode },
     );
     res.status(201).json({
       game: result.game,
@@ -43,9 +47,14 @@ export function getRoomHandler({ repository }) {
     const seat = agg.seats.find((s) => s.userId === req.authUser.id);
     if (!seat) throw new ForbiddenError('Not seated', 'FORBIDDEN');
     const hands = await repository.findHands(agg.game.id);
+    const hint = await getRoomHint(
+      { gameRepository: repository },
+      { ...agg, hands, seat: seat.seat },
+    );
     res.json({
       publicState: agg.publicState,
       hand: (hands && hands[seat.seat]) || [],
+      hint,
     });
   });
 }

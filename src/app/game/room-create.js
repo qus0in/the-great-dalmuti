@@ -41,7 +41,7 @@ function buildInitialPublic(gameId, hostName, nowIso) {
 // 방 생성 유스케이스: 호스트를 0번 좌석에 배정하고 대기실 방을 만든다
 export async function createRoom(
   { gameRepository, clock = { now: () => new Date() }, rng = {} },
-  { hostUser },
+  { hostUser, mode = 'normal' },
 ) {
   const gameId = randomUUID();
   const joinCode = rng.generateJoinCode
@@ -51,6 +51,7 @@ export async function createRoom(
 
   const game = {
     id: gameId,
+    mode,
     joinCode,
     phase: 'waiting',
     version: 1,
@@ -65,6 +66,7 @@ export async function createRoom(
     hostUser.name ?? '호스트',
     nowIso,
   );
+  publicState.mode = mode;
   await gameRepository.createGame({ game, seats, publicState });
 
   return { game, seats, publicState };

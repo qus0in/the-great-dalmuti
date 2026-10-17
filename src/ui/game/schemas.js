@@ -3,6 +3,10 @@ import { z } from 'zod';
 // 조공 반환 카드는 id만 있으면 되므로 나머지 필드는 제거한다
 const cardRef = z.object({ id: z.string() });
 
+export const roomBodySchema = z.object({
+  mode: z.enum(['normal', 'tutorial']).default('normal'),
+});
+
 export const playsBodySchema = z.object({
   version: z.number().int(),
   cards: z.array(z.string()).min(1),

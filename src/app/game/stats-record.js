@@ -8,6 +8,13 @@ function modeOf(seats) {
   return humans === 1 ? 'single' : 'multi';
 }
 
+function assertFinished(agg) {
+  if (!agg) throw new NotFoundError('Game not found', 'ROOM_NOT_FOUND');
+  if (agg.game.phase !== 'finished') {
+    throw new ConflictError('Game not finished', 'CONFLICT');
+  }
+}
+
 // 판 종료 시 참가자별 결과 행 저장 (봇 좌석·봇 대행 사용자는 제외 — ADR-0004 확정 4)
 // substitutedUserIds: 봇 대행을 한 번이라도 쓴 사용자 (U7·U8 이전이라 인자 경계로 받음)
 export async function recordGameResults(
@@ -15,10 +22,9 @@ export async function recordGameResults(
   { gameId, rankings, substitutedUserIds = [] },
 ) {
   const agg = await gameRepository.findGameById(gameId);
-  if (!agg) throw new NotFoundError('Game not found', 'ROOM_NOT_FOUND');
-  if (agg.game.phase !== 'finished') {
-    throw new ConflictError('Game not finished', 'CONFLICT');
-  }
+  assertFinished(agg);
+  if (agg.game.mode === 'tutorial')
+    return { gameId, mode: 'tutorial', rows: [] };
   const mode = modeOf(agg.seats);
   const substituted = new Set(substitutedUserIds);
   const playedAt = clock.now().toISOString();

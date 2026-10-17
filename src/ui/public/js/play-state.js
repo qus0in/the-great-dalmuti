@@ -1,4 +1,8 @@
 // 빈 방 상태 (code는 setRoom에서 채운다)
+function copyHint(hint) {
+  return hint ? { ...hint, cards: [...(hint.cards ?? [])] } : null;
+}
+
 function emptyRoom() {
   return {
     code: null,
@@ -7,6 +11,7 @@ function emptyRoom() {
     publicState: null,
     hand: [],
     selected: [],
+    hint: null,
   };
 }
 
@@ -19,11 +24,15 @@ function copyRoom(room) {
       : null,
     hand: room.hand.map((card) => ({ ...card })),
     selected: [...room.selected],
+    hint: copyHint(room.hint),
   };
 }
 
 // 새 방 상태로 교체하고 손패에 없는 선택은 버린다
-function nextRoom(room, { code = room.code, publicState, hand = [] }) {
+function nextRoom(
+  room,
+  { code = room.code, publicState, hand = [], hint = null },
+) {
   const ids = hand.map((card) => card.id);
   return {
     code,
@@ -32,6 +41,7 @@ function nextRoom(room, { code = room.code, publicState, hand = [] }) {
     publicState: publicState ?? null,
     hand,
     selected: room.selected.filter((id) => ids.indexOf(id) !== -1),
+    hint: copyHint(hint),
   };
 }
 

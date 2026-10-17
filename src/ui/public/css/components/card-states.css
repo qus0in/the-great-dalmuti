@@ -27,6 +27,11 @@
   box-shadow: var(--shadow-1), 0 0 8px color-mix(in srgb, var(--color-sky) 50%, transparent);
 }
 
+.card.is-hinted {
+  outline: var(--space-0-25) solid var(--color-gold);
+  outline-offset: var(--space-0-25);
+}
+
 .card.is-disabled {
   opacity: 0.45;
   cursor: not-allowed;

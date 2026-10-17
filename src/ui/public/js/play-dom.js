@@ -1,8 +1,8 @@
 import * as cards from './play-dom-cards.js';
+import { renderHint } from './play-dom-hint.js';
 import { mapSeatToSlot, renderSeats } from './play-dom-seats.js';
 
 export { mapSeatToSlot, renderSeats };
-
 const PHASES = {
   waiting: '대기 중',
   playing: '진행 중',
@@ -72,6 +72,7 @@ export function renderPlay(doc, view = {}) {
   renderSeats(doc, publicState, mySeat);
   cards.renderTrickCards(doc, publicState ? publicState.lastPlay : null);
   cards.renderHandCards(doc, { hand, selected });
+  renderHint(doc, view);
 }
 
 export function showMessage(doc, text) {

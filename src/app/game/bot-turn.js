@@ -1,4 +1,4 @@
-import { chooseBotAction } from './bot-choose.js';
+import { chooseBotPlay } from '../../domain/game/hint.js';
 import { passTurnAsSeat, playCardsAsSeat } from './play-actions.js';
 import { loadTrickContext } from './play-shared.js';
 
@@ -47,9 +47,7 @@ export async function runBotTurn(
     publicState: agg.publicState,
     hands,
   });
-  const choice = chooseBotAction(hands[turnSeat], {
-    lastPlay: state.trick.lastPlay,
-  });
+  const choice = chooseBotPlay(hands[turnSeat], state.trick.lastPlay);
   return executeChoice(
     { gameRepository },
     { code, seat: turnSeat, choice, version: agg.game.version },
