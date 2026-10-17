@@ -1,8 +1,6 @@
-// 빈 방 상태 (code는 setRoom에서 채운다)
-function copyHint(hint) {
-  return hint ? { ...hint, cards: [...(hint.cards ?? [])] } : null;
-}
+import { copyHint, copyRoom, copySubstitution } from './play-state-copy.js';
 
+// 빈 방 상태 (code는 setRoom에서 채운다)
 function emptyRoom() {
   return {
     code: null,
@@ -12,26 +10,20 @@ function emptyRoom() {
     hand: [],
     selected: [],
     hint: null,
-  };
-}
-
-// 상태 사본을 만들어 외부에서 내부 참조를 바꾸지 못하게 한다
-function copyRoom(room) {
-  return {
-    ...room,
-    publicState: room.publicState
-      ? JSON.parse(JSON.stringify(room.publicState))
-      : null,
-    hand: room.hand.map((card) => ({ ...card })),
-    selected: [...room.selected],
-    hint: copyHint(room.hint),
+    lastSubstitution: null,
   };
 }
 
 // 새 방 상태로 교체하고 손패에 없는 선택은 버린다
 function nextRoom(
   room,
-  { code = room.code, publicState, hand = [], hint = null },
+  {
+    code = room.code,
+    publicState,
+    hand = [],
+    hint = null,
+    lastSubstitution = null,
+  },
 ) {
   const ids = hand.map((card) => card.id);
   return {
@@ -42,6 +34,7 @@ function nextRoom(
     hand,
     selected: room.selected.filter((id) => ids.indexOf(id) !== -1),
     hint: copyHint(hint),
+    lastSubstitution: copySubstitution(lastSubstitution),
   };
 }
 
