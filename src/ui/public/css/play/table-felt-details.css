@@ -16,8 +16,8 @@
 }
 
 .table-felt__trick { padding-block: var(--space-1); z-index: var(--z-base); }
-.table-felt__card-wrap { animation: trick-drop 400ms var(--ease-out) both; transform-origin: center; }
-.table-felt__card-wrap--1 { animation-delay: 50ms; transform: rotate(-3deg) scale(0.8); }
-.table-felt__card-wrap--2 { animation-delay: 120ms; transform: rotate(1deg) scale(0.8); }
-.table-felt__card-wrap--3 { animation-delay: 190ms; transform: rotate(4deg) scale(0.8); }
+.table-felt__card-wrap { transform: scale(0.8); transform-origin: center; }
+.table-felt__card-wrap--1 { transform: rotate(-3deg) scale(0.8); }
+.table-felt__card-wrap--2 { transform: rotate(1deg) scale(0.8); }
+.table-felt__card-wrap--3 { transform: rotate(4deg) scale(0.8); }
 .table-felt__discard-ghost { display: flex; align-items: center; gap: var(--space-1); }

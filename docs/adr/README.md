@@ -16,3 +16,4 @@
 | [0010](0010-0.3-browser-supabase-js.md) | [브라우저 supabase-js 탑재 방식](0010-0.3-browser-supabase-js.md) | accepted | 2026-10-16 |
 | [0011](0011-0.3-game-progress.md) | [0.3 게임 진행: 상태 저장·Realtime·봇·전적](0011-0.3-game-progress.md) | accepted | 2026-10-16 |
 | [0012](0012-pino-http-logging.md) | [Pino HTTP 요청 로깅](0012-pino-http-logging.md) | accepted | 2026-10-16 |
+| [0013](0013-0.3.3-browser-e2e-and-module-placement.md) | [0.3.3 브라우저 E2E 로그인과 모듈 배치](0013-0.3.3-browser-e2e-and-module-placement.md) | accepted | 2026-10-17 |

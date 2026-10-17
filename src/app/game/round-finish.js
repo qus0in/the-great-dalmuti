@@ -86,6 +86,7 @@ export async function persistAdvance({
     phase: nextGame.phase,
     version: publicState.version + 1,
     currentTurnSeat: turnSeat,
+    lastPlay: roundEnded ? publicState.lastPlay : null,
     updatedAt: nowIso,
   };
   await gameRepository.saveGameAndPublic({
