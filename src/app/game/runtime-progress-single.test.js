@@ -50,13 +50,26 @@ async function makeSingleRoom() {
   return { repository, scheduler, errors, savedResults, runtime, started };
 }
 
-it('single user timeout delegates the full game without HTTP actions', async () => {
+it('single user timeout delegates 1 turn, re-arms, and finishes on repeated timeouts', async () => {
   const { repository, scheduler, errors, savedResults, runtime, started } =
     await makeSingleRoom();
   try {
     await runtime.afterAction(CODE, started);
     assert.deepEqual(scheduler.delays(), [30000]);
+    // 1회 만료: 해당 턴만 대행하고 다음 내 차례에 다시 30초 타이머 예약
     scheduler.fire(scheduler.pending()[0]);
+    await new Promise(setImmediate);
+    const agg = await repository.findGameByCode(CODE);
+    assert.equal(agg.game.phase, 'playing');
+    assert.equal(scheduler.pending().length, 1);
+    assert.equal(scheduler.setCount(), 2);
+    assert.deepEqual(scheduler.delays(), [30000]);
+
+    // 반복 만료로 판 종료까지 진행
+    for (let i = 0; i < 200 && scheduler.pending().length > 0; i += 1) {
+      scheduler.fire(scheduler.pending()[0]);
+      await new Promise(setImmediate);
+    }
     const finished = await waitForEnd(repository, errors);
     assert.equal(finished.game.phase, 'finished');
     assert.deepEqual(errors, []);

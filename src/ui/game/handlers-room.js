@@ -40,7 +40,7 @@ export function joinRoomHandler({ repository, clock }) {
 }
 
 // GET /api/rooms/:code — 공개 상태 + 요청자 본인 손패만
-export function getRoomHandler({ repository }) {
+export function getRoomHandler({ repository, runtime }) {
   return wrap(async (req, res) => {
     const agg = await repository.findGameByCode(req.params.code);
     if (!agg) throw new NotFoundError('Room not found', 'ROOM_NOT_FOUND');
@@ -55,6 +55,7 @@ export function getRoomHandler({ repository }) {
       publicState: agg.publicState,
       hand: (hands && hands[seat.seat]) || [],
       hint,
+      lastSubstitution: runtime?.getLastSubstitution?.(req.params.code) ?? null,
     });
   });
 }

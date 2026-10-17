@@ -4,8 +4,7 @@ import * as flow from './game-flow.helper.js';
 async function prepare(app) {
   await flow.createRoom(app.baseUrl);
   for (const id of ['u1', 'u2', 'u3']) await flow.joinRoom(app.baseUrl, id);
-  const started = await flow.startRoom(app.baseUrl);
-  return { state: started.body.publicState };
+  return (await flow.startRoom(app.baseUrl)).body.publicState;
 }
 
 async function takeTurn(app, state, trickEnded) {
@@ -35,7 +34,7 @@ async function driveRound(app, maxRequests = 500) {
       `${turn.userId} ${turn.action} -> ${status} ${body?.code ?? ''}`,
     );
   };
-  let { state } = await prepare(app);
+  let state = await prepare(app);
   let trickEnded = false;
   while (log.requests < maxRequests) {
     const turn = await takeTurn(app, state, trickEnded);
@@ -73,7 +72,7 @@ it('Given four humans, When round played, Then finished with ranks 1-4', async (
 it('Given started room, When off-turn or reading, Then 409 and own hand only', async () => {
   const app = await flow.startFlowApp();
   try {
-    const { state } = await prepare(app);
+    const state = await prepare(app);
     const { body: roomBody } = await flow.getRoom(app.baseUrl, 'u1');
     const offTurn = await flow.playCards(app.baseUrl, 'u1', {
       version: state.version,
@@ -92,6 +91,7 @@ it('Given started room, When off-turn or reading, Then 409 and own hand only', a
         publicState: agg.publicState,
         hand: hands[seat],
         hint: null,
+        lastSubstitution: null,
       });
     }
   } finally {

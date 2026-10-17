@@ -38,7 +38,8 @@ it('Given timer expiry, When fired, Then seat substituted and bots advance', asy
   const [handle] = scheduler.pending();
   scheduler.fire(handle);
   const result = await runtime.afterAction('ROOM1', {});
-  assert.equal(substitutions.isSubstituted('ROOM1', 0), true);
+  assert.equal(substitutions.isSubstituted('ROOM1', 0), false);
+  assert.deepEqual(substitutions.seatsIn('ROOM1'), [0]);
   assert.equal(result.publicState.currentTurnSeat, 3);
   assert.equal(scheduler.pending().length, 1);
   runtime.dispose();

@@ -7,13 +7,13 @@ const defaultScheduler = {
   clearTimer: (handle) => clearTimeout(handle),
 };
 
-export function resolveScheduler(scheduler) {
-  return scheduler ?? defaultScheduler;
-}
+export const resolveScheduler = (scheduler) => scheduler ?? defaultScheduler;
 
 // 방별 타이머: 같은 차례(version+seat)에는 다시 걸지 않는다 (조회로 연장 금지)
 export function createRoomTimer(scheduler, onExpire) {
-  const timer = createTurnTimer({ clock: scheduler, onExpire });
+  const onTimerExpire = (code, seat, ver) =>
+    onExpire(code, { seat, version: ver }, ver);
+  const timer = createTurnTimer({ clock: scheduler, onExpire: onTimerExpire });
   let lastKey = null;
 
   function cancel() {
@@ -25,23 +25,19 @@ export function createRoomTimer(scheduler, onExpire) {
     const key = `${version}:${seat}`;
     if (key === lastKey) return false;
     lastKey = key;
-    timer.start(code, seat);
+    timer.start(code, seat, version);
     return true;
   }
 
   return { arm, cancel };
 }
 
+const noop = () => {};
+
 function enqueue(state, code, task) {
   const prev = state.chains.get(code) ?? Promise.resolve();
   const next = prev.then(task, task);
-  state.chains.set(
-    code,
-    next.then(
-      () => {},
-      () => {},
-    ),
-  );
+  state.chains.set(code, next.then(noop, noop));
   return next;
 }
 
@@ -80,7 +76,7 @@ export function createRoomRegistry({ scheduler, onExpire }) {
   };
 }
 
-// 만료: 현재 차례가 맞을 때만 대행 표시 후 봇을 실행한다 (U8 재사용)
+// 만료: 현재 차례와 버전이 맞을 때만 대행 표시 후 봇을 실행한다 (ADR-0015)
 export function createExpiry({ gameRepository, substitutions, runBotTurn }) {
   const expire = createTurnExpiryHandler({
     substitutions,
@@ -88,10 +84,15 @@ export function createExpiry({ gameRepository, substitutions, runBotTurn }) {
       runBotTurn({ gameRepository, substitutions }, { code }),
   });
 
-  return async function onExpire(code, seat) {
+  return async function onExpire(code, target, versionArg) {
+    const isObj = typeof target === 'object' && target !== null;
+    const seat = isObj ? target.seat : target;
+    const version = isObj ? target.version : versionArg;
     const agg = await gameRepository.findGameByCode(code);
-    if (!agg || agg.game.phase !== 'playing') return;
-    if (agg.publicState.currentTurnSeat !== seat) return;
-    await expire(code, seat);
+    if (!agg || agg.game.phase !== 'playing') return false;
+    if (agg.publicState.currentTurnSeat !== seat) return false;
+    if (version !== undefined && agg.game.version !== version) return false;
+    await expire(code, seat, version);
+    return true;
   };
 }

@@ -4,7 +4,7 @@ import { resolveRankings } from './runtime-stats.js';
 const MAX_STEPS = 64;
 function isControlled(seat, code, substitutions) {
   return (
-    seat.isBot === true ||
+    Boolean(seat.isBot) ||
     seat.userId === null ||
     substitutions.isSubstituted(code, seat.seat)
   );
@@ -25,7 +25,11 @@ async function advanceTribute(deps, code, agg) {
 }
 function armTimer(rooms, code, agg) {
   const { currentTurnSeat } = agg.publicState;
-  if (agg.game.phase !== 'playing' || currentTurnSeat === null) {
+  if (
+    agg.game.phase !== 'playing' ||
+    agg.game.mode === 'tutorial' ||
+    currentTurnSeat === null
+  ) {
     rooms.timerOf(code).cancel();
     return;
   }
@@ -89,9 +93,7 @@ async function expire(deps, code, seat) {
     deps.onError(err, { code, seat });
   }
 }
-export function createProgress(deps) {
-  return {
-    step: (code, result) => runStep(deps, code, result),
-    expire: (code, seat) => expire(deps, code, seat),
-  };
-}
+export const createProgress = (deps) => ({
+  step: (code, result) => runStep(deps, code, result),
+  expire: (code, seat) => expire(deps, code, seat),
+});
