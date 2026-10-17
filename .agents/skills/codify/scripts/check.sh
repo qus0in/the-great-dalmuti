@@ -3,10 +3,22 @@
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd); cd "$ROOT"
 E=0; err(){ echo "ERR $*"; E=1; }
+warn(){ echo "WARN $*"; }
+AGENTS_WARN_BYTES=${AGENTS_WARN_BYTES:-16384}
+AGENTS_MAX_BYTES=${AGENTS_MAX_BYTES:-24576}
+[ ! -f .agents/project.conf ] || . ./.agents/project.conf
 [ "$(readlink CLAUDE.md)" = AGENTS.md ] || err "CLAUDE.md must symlink AGENTS.md"
 [ "$(readlink .claude/skills)" = ../.agents/skills ] || err ".claude/skills must symlink ../.agents/skills"
 for d in tmp docs .agents/skills; do [ -d "$d" ] || err "missing dir $d"; done
 grep -q '<!-- skills:begin -->' AGENTS.md && grep -q '<!-- skills:end -->' AGENTS.md || err "AGENTS.md index markers missing"
+if [ -f AGENTS.md ]; then
+  agents_bytes=$(wc -c < AGENTS.md | tr -d ' ')
+  if [ "$agents_bytes" -gt "$AGENTS_MAX_BYTES" ]; then
+    err "AGENTS.md size ${agents_bytes}B > ${AGENTS_MAX_BYTES}B (truncation limit)"
+  elif [ "$agents_bytes" -gt "$AGENTS_WARN_BYTES" ]; then
+    warn "AGENTS.md size ${agents_bytes}B > ${AGENTS_WARN_BYTES}B (approaching 24KB limit)"
+  fi
+fi
 for dir in .agents/skills/*/; do
   [ -d "$dir" ] || continue
   n=$(basename "$dir"); s="$dir/SKILL.md"

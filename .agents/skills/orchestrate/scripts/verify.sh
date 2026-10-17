@@ -19,6 +19,9 @@ case "$GATES" in rules|ui|all) ;; *) usage;; esac
 TD="$ROOT/tmp/$TASK"
 [ -d "$TD" ] || { echo "verify.sh: no task dir: tmp/$TASK" >&2; exit 2; }
 cd "$ROOT" || exit 1
+CONF="$ROOT/.agents/project.conf"
+if [ -f "$CONF" ]; then . "$CONF"; fi
+UI_CHECK_TARGET=${UI_CHECK_TARGET:-}
 
 gate() { # $1 name; shift; run command, log, summarize; return the command's status
   g=$1; shift
@@ -38,7 +41,11 @@ case "$GATES" in
   rules|all) gate rules "$ROOT/.agents/skills/codify/scripts/check.sh" || fail=1;;
 esac
 case "$GATES" in
-  ui|all) gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/src/ui/public" || fail=1;;
+  ui|all) if [ -n "$UI_CHECK_TARGET" ]; then
+    gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/$UI_CHECK_TARGET" || fail=1
+  else
+    echo "verify: ui skip (no UI_CHECK_TARGET in .agents/project.conf, generic defaults)"
+  fi;;
 esac
 if [ "$fail" -eq 0 ]; then echo "verify: pass"; exit 0; fi
 echo "verify: FAIL"

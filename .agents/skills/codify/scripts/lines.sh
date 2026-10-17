@@ -2,12 +2,14 @@
 # Usage: lines.sh [--max N] [paths...]
 # Verify non-doc, non-binary code files do not exceed line limit (default: 100 lines).
 # paths may be files or directories (directories are walked); no paths = repo-wide scan.
-# Skips docs, markdown, binaries, assets, data, and dist/*.html (until 0.3 SSR).
+# Skips docs, markdown, binaries, assets, data, and conf-declared patterns (LINES_EXEMPT_PATTERNS; empty conf = none).
 # Exit 0 + "ok"; exit 1 with "<lines> <path>" on violations; exit 2 on usage error.
-set -eu
+set -euf
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../.." && pwd)
+CONF="$ROOT/.agents/project.conf"
+if [ -f "$CONF" ]; then . "$CONF"; fi
 
 MAX=100
 
@@ -48,10 +50,12 @@ is_exempt() {
     docs/*|*/docs/*) return 0 ;;
     *.png|*.ico|*.jpg|*.jpeg|*.gif|*.webp|*.woff|*.woff2|*.pdf) return 0 ;;
     *.svg|*.webmanifest|*.json) return 0 ;;
-    # Temporary exception until 0.3 SSR splits it into template partials (issue #19/#20)
-    dist/*.html|*/dist/*.html|src/ui/public/*.html|*/src/ui/public/*.html) return 0 ;;
-    *) return 1 ;;
+    *) ;;
   esac
+  for pat in ${LINES_EXEMPT_PATTERNS:-}; do
+    case "$1" in $pat) return 0 ;; esac
+  done
+  return 1
 }
 
 rc=0
@@ -60,7 +64,6 @@ check_file() {
   f=$1
   [ -f "$f" ] || return 0
   is_exempt "$f" && return 0
-  # Handle files without trailing newline correctly
   count=$(awk 'END {print NR+0}' "$f")
   if [ "$count" -gt "$MAX" ]; then
     printf '%d %s\n' "$count" "$f"

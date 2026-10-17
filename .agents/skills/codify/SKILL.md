@@ -26,12 +26,14 @@ Root README.md is user-authored and never a codify target: edit only on explicit
 - description = trigger, 1 line, no ": " (YAML).
 - SKILL.md body <= ~60 lines; overflow -> references/<topic>.md, loaded on demand.
 - Code limits: every non-doc, non-binary code file <= 100 lines (split by responsibility; dist/*.html exempt until 0.3 SSR); verify via `$S/lines.sh`.
+- Instruction file size budget: root AGENTS.md <= 24KB (warn > 16KB) to prevent truncation; verify via `$S/check.sh`.
 - Tool/agent-neutral wording; works for any agent.
 
 ## 4. Scriptify
 - Candidate: step run >=2x, or output fully determined by inputs/files.
 - scripts/<verb>.sh: POSIX sh, executable, idempotent, non-interactive, exit!=0 on fail, terse stdout.
 - scripts/lines.sh [--max N] [paths...]: check code file line limits (default 100; paths = files or directories, none = repo-wide).
+- Project values (extra line-gate exempt file globs) live in `.agents/project.conf`; empty/missing conf = generic defaults (no extra exemptions).
 - Outward-facing effects: build inputs once; `--dry-run` swaps only the executor (print vs run) — never a second code path.
 - Real path is what reviewers verify (validate payload bytes, e.g. `jq`), not dry-run text.
 - Resolve root from script path, not cwd.

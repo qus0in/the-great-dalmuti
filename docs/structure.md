@@ -96,6 +96,7 @@
 - **어떻게 (how)**:
   - 구현 전에 [ADR-0007](adr/0007-0.3-structure.md)(결정 원문)과 [ADR-0005](adr/0005-0.3-migration-boundaries.md)·[ADR-0006](adr/0006-0.3-tdd-bdd-and-layers.md)(레이어·테스트 규칙)을 확인합니다.
   - 레이어 의존 역행과 피처 100줄 초과는 `layers` 스킬(`.agents/skills/layers/SKILL.md`)로 검사합니다.
+  - 일반 스크립트(`codify/lines.sh`, `layers/check.sh`, `orchestrate/verify.sh`)의 프로젝트별 값(100줄 예외 경로, 레이어 집합·행렬·레이어 밖 파일, ui 검사 대상)은 저장소 루트 `.agents/project.conf`(KEY=VALUE)가 소유하고, 스크립트는 설정이 없으면 일반 기본값(예외 없음, 검사 생략)으로 동작합니다.
   - 구조를 바꾸는 결정은 ADR을 잇는 방식으로 기록하고(`adr` 스킬), 이 문서는 지도만 갱신합니다.
 
 ## 작업 분담 (orchestrate 스킬)

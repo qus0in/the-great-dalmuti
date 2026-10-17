@@ -29,6 +29,7 @@ Fix rounds (S1): carry blocking findings only (author fixes, max 2 rounds). Non-
 Non-owned gate block (S10): worker stops, notifies status=blocked with the proposed one-line change; never edits outside owned files; orchestrator dispatches it as its own unit.
 Final review: read machine gate output (`scripts/verify.sh <task> [rules|ui|all]`; logs `tmp/<task>/verify-<gate>.log`), reports/reviews, and the diff; accept or new brief. Never fix; never reproduce automated checks. Commit/push via skill `git-flow` after acceptance.
 Gates/reruns: `verify.sh <task> [rules|ui|all]` runs the applicable gates once per checkpoint (rules = codify check.sh, ui = ui-prototype check.sh) and logs under `tmp/<task>/`; reuse valid passed evidence by workflow policy — never reuse failures; rerun only on relevant input change, repair, or stated risk (AGENTS.md Verification).
+Project values (ui gate target path) live in `.agents/project.conf`; empty/missing conf = generic defaults (ui gate skipped).
 Parallel scope (S11): briefs scope gates to owned files while parallel units are in flight; repo-wide gates run at orchestrator checkpoints.
 Blocked worker: read pane/report then escalate — pane reads only for blocked/errored/stalled/triage work, not routine polling. No idle workers: ask user or `herdr agent start`. Never substitute native subagents.
 User-reported failure (S17): treat as our defect first — answer with a fix unit or proposal; never correct the user's behavior (state facts only alongside the fix).
