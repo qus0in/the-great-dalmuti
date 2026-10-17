@@ -3,6 +3,7 @@
 export function gameToRow(game) {
   return {
     id: game.id,
+    ...(game.mode === undefined ? {} : { mode: game.mode }),
     join_code: game.joinCode,
     phase: game.phase,
     version: game.version,
@@ -15,6 +16,7 @@ export function gameToRow(game) {
 export function rowToGame(row) {
   return {
     id: row.id,
+    ...(row.mode === undefined ? {} : { mode: row.mode }),
     joinCode: row.join_code,
     phase: row.phase,
     version: row.version,
@@ -50,6 +52,7 @@ export function rowToSeat(row) {
 export function publicToRow(pub) {
   return {
     game_id: pub.gameId,
+    ...(pub.mode === undefined ? {} : { mode: pub.mode }),
     phase: pub.phase,
     version: pub.version,
     current_turn_seat: pub.currentTurnSeat ?? null,
@@ -62,6 +65,7 @@ export function publicToRow(pub) {
 export function rowToPublic(row) {
   return {
     gameId: row.game_id,
+    ...(row.mode === undefined ? {} : { mode: row.mode }),
     phase: row.phase,
     version: row.version,
     currentTurnSeat: row.current_turn_seat ?? null,

@@ -5,6 +5,8 @@ Re-tier from observed results (failed briefs, review findings). Durable findings
 - fast mainstream (Gemini Flash, Claude Haiku, *-mini): instruction following, verification, tests, integration checks, mechanical edits.
 - free/preview/unknown: drafts, docs, isolated low-risk units; output always reviewed by a different, preferably stronger, model.
 - Unit sizing: all tiers sized for ~10 min; frontier handles broader architectural reasoning, fast mainstream handles bounded single-purpose edits/checks, free/preview handles small drafts.
+- Calibration (sandboxed workers): verify read-only `gh` access and headless Chrome/CDP startup before assignment; record each result.
+- Capability limits: no `gh` fact-checks without `gh` access; no browser E2E/headless captures without Chrome/CDP startup. Orchestrator may attach `gh` output to the brief for offline review.
 - Provider fragility: free/preview endpoints can vanish mid-task (retry loops). If a worker emits provider/endpoint errors for ~5 min, reassign its unit; do not wait indefinitely.
 - high/max reasoning effort: review, debugging. low effort: mechanical work.
 - reviewer should differ in model family from author when possible.

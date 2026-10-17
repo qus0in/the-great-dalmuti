@@ -12,6 +12,14 @@ let api = null;
 let mySeat = 0;
 let lastCommand = null;
 
+function createInitialRoom() {
+  return api.createRoom(
+    /(?:^|[?&])mode=tutorial(?:&|$)/.test(window.location.search)
+      ? { mode: 'tutorial' }
+      : undefined,
+  );
+}
+
 function render() {
   renderPlay(document, { ...state.get(), mySeat });
 }
@@ -70,7 +78,7 @@ async function init() {
       lastCommand = result;
     },
   );
-  const created = await api.createRoom();
+  const created = await createInitialRoom();
   const { joinCode } = created.game;
   const mine = created.seats.find((seat) => seat.userId === user.id);
   mySeat = mine ? mine.seat : 0;

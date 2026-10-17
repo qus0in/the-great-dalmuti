@@ -70,7 +70,6 @@ it('Given four humans, When round played, Then finished with ranks 1-4', async (
     await app.close();
   }
 });
-
 it('Given started room, When off-turn or reading, Then 409 and own hand only', async () => {
   const app = await flow.startFlowApp();
   try {
@@ -92,6 +91,7 @@ it('Given started room, When off-turn or reading, Then 409 and own hand only', a
       assert.deepEqual(body, {
         publicState: agg.publicState,
         hand: hands[seat],
+        hint: null,
       });
     }
   } finally {

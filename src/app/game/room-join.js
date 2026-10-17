@@ -1,4 +1,4 @@
-import { NotFoundError, ConflictError } from './room-errors.js';
+import { NotFoundError, ConflictError, ForbiddenError } from './room-errors.js';
 
 function buildSeatSummary(seats) {
   return seats
@@ -9,6 +9,11 @@ function buildSeatSummary(seats) {
       isBot: s.isBot,
       cardCount: 0,
     }));
+}
+
+function assertJoinAllowed(game) {
+  if (game.mode === 'tutorial')
+    throw new ForbiddenError('Tutorial is host only', 'TUTORIAL_ONLY_HOST');
 }
 
 // 방 참가 유스케이스: 빈 좌석(0~3)을 찾아 사용자를 배정하고 공개 상태를 갱신한다
@@ -25,6 +30,8 @@ export async function joinRoom(
   const existingSeat = seats.find((s) => s.userId === user.id);
   if (existingSeat)
     return { game, seat: existingSeat.seat, seats, publicState };
+
+  assertJoinAllowed(game);
 
   const emptySeat = seats.find((s) => s.userId === null && !s.isBot);
   if (!emptySeat) throw new ConflictError('Room is full', 'ROOM_FULL');
