@@ -1,5 +1,5 @@
 /* ==========================================================================
-   5. Entry CTA + footer
+   5. Entry CTA
    ========================================================================== */
 .hall__cta {
   display: flex;
@@ -16,10 +16,6 @@
 .hall__cta > h2,
 .hall__cta > p {
   width: 100%;
-}
-
-.hall__footer {
-  padding-bottom: var(--space-4);
 }
 
 /* Login page shell: keeps the entry panel off the viewport top edge
