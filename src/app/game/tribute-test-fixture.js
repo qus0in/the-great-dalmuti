@@ -37,6 +37,7 @@ function buildInitialEntities(seats, phase, version) {
     currentTurnSeat: 0,
     seatSummary: seats.map((s) => ({
       seat: s.seat,
+      userId: s.userId ?? null,
       userName: s.userName,
       isBot: s.isBot === true,
       cardCount: 3,

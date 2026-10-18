@@ -33,5 +33,6 @@ describe('Room create use case', () => {
     assert.equal(result.publicState.phase, 'waiting');
     assert.equal(result.publicState.seatSummary.length, 1);
     assert.equal(result.publicState.seatSummary[0].seat, 0);
+    assert.equal(result.publicState.seatSummary[0].userId, 'host-1');
   });
 });

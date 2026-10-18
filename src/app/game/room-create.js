@@ -26,13 +26,21 @@ function buildInitialSeats(gameId, hostUser) {
   return seats;
 }
 
-function buildInitialPublic(gameId, hostName, nowIso) {
+function buildInitialPublic(gameId, hostUser, nowIso) {
   return {
     gameId,
     phase: 'waiting',
     version: 1,
     currentTurnSeat: null,
-    seatSummary: [{ seat: 0, userName: hostName, isBot: false, cardCount: 0 }],
+    seatSummary: [
+      {
+        seat: 0,
+        userId: hostUser.id,
+        userName: hostUser.name ?? '호스트',
+        isBot: false,
+        cardCount: 0,
+      },
+    ],
     lastPlay: null,
     updatedAt: nowIso,
   };
@@ -61,11 +69,7 @@ export async function createRoom(
   };
 
   const seats = buildInitialSeats(gameId, hostUser);
-  const publicState = buildInitialPublic(
-    gameId,
-    hostUser.name ?? '호스트',
-    nowIso,
-  );
+  const publicState = buildInitialPublic(gameId, hostUser, nowIso);
   publicState.mode = mode;
   await gameRepository.createGame({ game, seats, publicState });
 

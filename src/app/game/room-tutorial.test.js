@@ -36,6 +36,10 @@ it('Given tutorial mode, When created and started, Then only host and three bots
     started.publicState.seatSummary.filter((s) => s.isBot).length,
     3,
   );
+  assert.deepEqual(
+    started.publicState.seatSummary.map((seat) => seat.userId),
+    ['host', null, null, null],
+  );
 });
 
 it('Given omitted mode, When guest joins and host starts, Then normal multiplayer remains', async () => {

@@ -5,6 +5,7 @@ function buildSeatSummary(seats) {
     .filter((s) => s.userId !== null || s.isBot)
     .map((s) => ({
       seat: s.seat,
+      userId: s.userId ?? null,
       userName: s.userName ?? (s.isBot ? `봇 ${s.seat}` : '참가자'),
       isBot: s.isBot,
       cardCount: 0,
