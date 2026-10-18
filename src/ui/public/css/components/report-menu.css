@@ -1,0 +1,84 @@
+/* 신고 메뉴 — 좌석·채팅 공용 대화상자 (색·간격·반경은 토큰만 사용) */
+.report-menu {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 320px;
+  max-width: calc(100% - var(--space-6));
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-2);
+  background-color: var(--color-surface-panel);
+  box-shadow: var(--shadow-2);
+}
+.report-menu__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.report-menu__reason {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--space-6);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+}
+.report-menu__reason input {
+  width: var(--space-3);
+  height: var(--space-3);
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+.report-menu__confirm,
+.report-menu__cancel {
+  min-height: var(--space-6);
+  min-width: var(--space-6);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-1);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-snug);
+}
+.report-menu__confirm {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-ink-inverse);
+}
+.report-menu__cancel {
+  border: 1px solid var(--color-line);
+  background-color: var(--color-surface-card);
+  color: var(--color-ink);
+}
+.report-menu__result {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+}
+.seat__report,
+.chat-panel__report {
+  min-height: var(--space-6);
+  min-width: var(--space-6);
+  padding: var(--space-0-5) var(--space-1-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-card);
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .seat__report:hover,
+  .chat-panel__report:hover {
+    border-color: var(--color-accent);
+  }
+  .report-menu__confirm:hover {
+    background-color: var(--color-accent-hover);
+  }
+}

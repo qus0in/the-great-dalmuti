@@ -1,33 +1,39 @@
 // profile-card 테스트 설비 — avatar.js(p7 소유)를 계약 2 상태로 대체(mock)한 모듈과 가짜 DOM·sb
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const FILE = join(ROOT, 'src', 'ui', 'public', 'js', 'profile-card.js');
-// avatar.js가 아직 없어도: 계약 2 함수만 내러 profile-card.js의 import를 대체한다.
 const IMPORT_LINE = /^import \{[^}]+\} from '\.\/avatar\.js';$/m;
-const STUB = [
-  'export const avatarPath = (userId) => `${userId}/avatar`;',
-  'export const avatarUrl = (_sb, userId, version) =>',
-  "  `https://avatars.test/${userId}/avatar${version ? `?v=${version}` : ''}`;",
-  'export const renderCalls = [];',
-  'export function renderAvatar(doc, view = {}) {',
-  '  renderCalls.push({ doc, view });',
-  "  return { className: `avatar avatar--${view.size ?? 'sm'}` };",
-  '}',
-].join('\n');
+const STUB = `export const avatarPath = (u) => \`\${u}/avatar\`;
+export const avatarUrl = (_s, u, v) => \`https://avatars.test/\${u}/avatar\${v ? \`?v=\${v}\` : ''}\`;
+export const renderCalls = [];
+export const renderAvatar = (doc, view = {}) => {
+  renderCalls.push({ doc, view });
+  return { className: \`avatar avatar--\${view.size ?? 'sm'}\` };
+};`;
 
 const SOURCE = readFileSync(FILE, 'utf8');
 if (!IMPORT_LINE.test(SOURCE)) throw new Error('avatar.js import line missing');
 const TMP = mkdtempSync(join(tmpdir(), 'dalmuti-profile-card-'));
 const LOCAL = join(TMP, 'profile-card.js');
+const JS_DIR = join(ROOT, 'src', 'ui', 'public', 'js');
+for (const f of ['profile-appeal.js', 'moderation-api.js', 'features.js']) {
+  const p = join(JS_DIR, f);
+  if (existsSync(p)) writeFileSync(join(TMP, f), readFileSync(p));
+}
 writeFileSync(LOCAL, SOURCE.replace(IMPORT_LINE, STUB));
 process.on('exit', () => rmSync(TMP, { recursive: true, force: true }));
 export const MOD = await import(`file://${LOCAL}`);
 
-// 셀렉터 → 가짜 노드인 카드 root (play-dom 계열 테스트와 같은 수형 DOM)
 const el = () => ({
   className: '',
   hidden: false,
@@ -42,37 +48,44 @@ function fakeRoot() {
   root.avatars = [];
   root.els = { box: el(), change: el(), input: el(), notice: el() };
   root.els.box.replaceChildren = (child) => root.avatars.push(child);
-  root.querySelector = (selector) =>
-    ({
-      '[data-profile="avatar"]': root.els.box,
-      '[data-profile="change"]': root.els.change,
-      '[data-profile="input"]': root.els.input,
-      '[data-profile="notice"]': root.els.notice,
-    })[selector] ?? null;
+  const map = {
+    '[data-profile="avatar"]': root.els.box,
+    '[data-profile="change"]': root.els.change,
+    '[data-profile="input"]': root.els.input,
+    '[data-profile="notice"]': root.els.notice,
+  };
+  root.querySelector = (selector) => map[selector] ?? null;
   return root;
 }
 
-function fakeSb(rpcData, uploadResult) {
+function makeStorage(uploads, res) {
+  return {
+    from: (bucket) => ({
+      upload: (path, file, options) => {
+        uploads.push({ bucket, path, file, options });
+        if (res instanceof Error) return Promise.reject(res);
+        return res instanceof Promise ? res : Promise.resolve(res);
+      },
+    }),
+  };
+}
+
+function fakeSb(rpcData, res) {
   const uploads = [];
   const rpc =
     typeof rpcData === 'function'
       ? rpcData
       : () => Promise.resolve({ data: rpcData });
   const sb = {
-    storage: {
-      from: (bucket) => ({
-        upload: (path, file, options) => {
-          uploads.push({ bucket, path, file, options });
-          // Error면 reject — 네트워크 오류 등 reject 경로를 흉내 낸다
-          // Promise면 그대로 반환 — Promise.reject(null) 같은 임의 이유 reject도 흉내 낸다
-          return uploadResult instanceof Error
-            ? Promise.reject(uploadResult)
-            : uploadResult instanceof Promise
-              ? uploadResult
-              : Promise.resolve(uploadResult);
-        },
+    storage: makeStorage(uploads, res),
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          order: () => ({ limit: () => Promise.resolve({ data: [] }) }),
+        }),
       }),
-    },
+      insert: () => Promise.resolve({ error: null }),
+    }),
     rpc,
   };
   return { sb, uploads };

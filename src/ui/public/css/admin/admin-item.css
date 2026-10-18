@@ -1,0 +1,87 @@
+/* Admin Item & List Styles for The Great Dalmuti */
+.admin-section {
+  margin-bottom: var(--space-4);
+}
+
+.admin-section__title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.admin-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: var(--radius-2);
+}
+
+.admin-item__content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.admin-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.admin-item__name {
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  color: var(--color-ink);
+  word-break: keep-all;
+}
+
+.admin-item__meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-ink-muted);
+  word-break: keep-all;
+}
+
+.admin-item__body {
+  margin: var(--space-0-5) 0 0;
+  padding: var(--space-1);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-surface-panel);
+  border-radius: var(--radius-1);
+  color: var(--color-ink);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.admin-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+@media (max-width: 599px) {
+  .admin-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-item__actions {
+    justify-content: flex-end;
+  }
+}

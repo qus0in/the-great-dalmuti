@@ -28,3 +28,26 @@
     gap: var(--space-1);
   }
 }
+
+@media (min-width: 1024px) {
+  .has-chat-open .play-container {
+    /* 320px panel + 2 gutters; 320 = 40 x 8px base unit */
+    padding-right: calc(var(--space-1) * 40 + var(--space-3) * 2);
+  }
+  .has-chat-open .play-arena {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'top-seat top-seat'
+      'left-seat right-seat'
+      'center-table center-table';
+  }
+  .has-chat-open .play-arena__seat--north {
+    max-width: 480px;
+  }
+  .has-chat-open .play-arena__seat--west,
+  .has-chat-open .play-arena__seat--east {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
