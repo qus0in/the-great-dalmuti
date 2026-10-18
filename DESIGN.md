@@ -288,6 +288,7 @@ CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/c
 - **How**:
   - HTML `<head>` 내 표준 5종 아이콘/매니페스트 링크 블록을 일관되게 선언합니다.
   - **순수 CSS 페이지 비주얼 (CSS-Only Page Visuals)**: HTML 본문 내 `<img>`, `<picture>`, `<svg>` 태그 및 CSS 파일 내 배경 이미지 `url()` 로딩은 엄격히 금지되며(폰트 선언 `src: url()` 제외), 12계급 카드 아트워크, 좌석 아바타, 테이블 펠트 텍스처 등 모든 시각 요소는 순수 CSS 그라디언트, 보더, 섀도우만으로 렌더링합니다.
+  - **0.3 아바타 예외**: [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md)에 따라 `src/ui/public/`에서만 avatars 버킷 공개 URL을 가리키는 `<img class="avatar__img">`(alt·크기 고정)와 `images/avatar-silhouette.svg`, `images/avatar-bot.svg` 2개 파일을 허용합니다(0.2 `dist/`는 불변).
 
 #### 7) 헤드리스 브라우저 실측 한계 및 iframe 하네스 검증 정책 (Headless 500px Clamp & Iframe Harness Policy)
 - **Why**: Headless Chrome CLI 환경(`--headless=new --window-size=390,844`) 실행 시, 브라우저 렌더러가 최소 레이아웃 너비를 500px로 클램프(clamp)하는 내부 사양이 존재합니다. 이로 인해 `--window-size=390`을 지정하더라도 실제 레이아웃은 500px 너비로 계산된 후 390px 영역만 크롭(crop)되어 캡처되므로, 360~390px 모바일 폰 밴드의 순수한 레이아웃 무오버플로우 여부를 단순 스크린샷만으로 판정하기 어렵습니다.
