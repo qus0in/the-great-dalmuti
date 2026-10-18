@@ -1,7 +1,7 @@
 #!/bin/sh
 # Sourced by test-dispatch.sh; uses its isolated mock fixture and runner.
 # Unknown agent warns once and still receives the brief.
-export TEST_AGENT=agy
+export TEST_AGENT=mystery
 set_statuses idle
 run_dispatch workerA "$BRIEF" > "$FIX/unknown.out" 2> "$FIX/unknown.err"
 [ "$(wc -l < "$FIX/unknown.err" | tr -d ' ')" -eq 1 ] || { cat "$FIX/unknown.err" >&2; exit 1; }
@@ -26,7 +26,24 @@ run_dispatch --continue --dry-run workerA "$BRIEF" > "$FIX/plan.out"
 grep -q 'command=/compact' "$FIX/plan.out"
 ! grep -q '^prompt:' "$FIX/events"
 
-unset TEST_AGENT
+# AGY uses its documented TUI commands: /clear for fresh, /compact for continued.
+export TEST_AGENT=agy
+set_statuses idle
+run_dispatch workerA "$BRIEF" > "$FIX/agy.out"
+grep -q '^prompt:/clear$' "$FIX/events"
+[ -s "$PROMPT_CAPTURE" ]
+set_statuses idle
+run_dispatch --continue workerA "$BRIEF" > "$FIX/agy-continue.out"
+grep -q '^prompt:/compact$' "$FIX/events"
+[ -s "$PROMPT_CAPTURE" ]
+# AGY's compaction progress label aborts before the brief is sent.
+export RESET_ERROR='Compacting conversation...'
+set_statuses idle
+if run_dispatch workerA "$BRIEF" > "$FIX/agy-progress.out" 2>&1; then echo 'agy compaction progress passed' >&2; exit 1; fi
+[ ! -s "$PROMPT_CAPTURE" ]
+grep -q 'context reset still running' "$FIX/agy-progress.out"
+unset RESET_ERROR TEST_AGENT
+
 # Shared workers footer parser detects changes in either model or effort.
 export TEST_AGENT=opencode MODEL_BEFORE='┃ Build auto · Model A OpenCode · max'
 for after in '┃ Build auto · Model B OpenCode · max' '┃ Build auto · Model A OpenCode · medium'; do

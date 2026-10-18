@@ -7,9 +7,9 @@ reset_model() {
 }
 reset_command() {
   case "$1:$2" in
-    claude:0) printf /clear;;
+    agy:0|claude:0) printf /clear;;
     opencode:0) printf /new;;
-    codex:0|codex:1|claude:1|opencode:1) printf /compact;;
+    agy:1|codex:0|codex:1|claude:1|opencode:1) printf /compact;;
     *) return 1;;
   esac
 }
@@ -35,7 +35,7 @@ reset_target_context() {
     *) [ "$reset_model_before" = "$reset_model_after" ] || die 1 "model changed: $TARGET before=$reset_model_before after=$reset_model_after";;
   esac
   reset_after=$(herdr pane read "$TARGET" --source visible 2>/dev/null) || die 1 "cannot verify context reset: $TARGET"
-  if printf '%s\n' "$reset_after" | grep -Eqi 'Compacting context|Compressing session|Summarizing session'; then
+  if printf '%s\n' "$reset_after" | grep -Eqi 'Compacting context|Compacting conversation|Compressing session|Summarizing session'; then
     die 1 "context reset still running: $TARGET"
   fi
   reset_errors=$(printf '%s\n' "$reset_after" | grep -Ei 'failed to compact|compaction failed|invalid.*(key|token)|expir.*(key|token)|(key|token).*expir|unknown command|unrecognized command|Error:|session.*expired' || true)
