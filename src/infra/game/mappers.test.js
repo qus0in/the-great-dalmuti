@@ -59,7 +59,15 @@ describe('Public state mappers', () => {
       phase: 'playing',
       version: 2,
       currentTurnSeat: 1,
-      seatSummary: [{ seat: 0, cardCount: 20 }],
+      seatSummary: [
+        {
+          seat: 0,
+          userId: 'u0',
+          userName: 'Dalmuti',
+          isBot: false,
+          cardCount: 20,
+        },
+      ],
       lastPlay: null,
       updatedAt: '2026-10-16T12:00:00Z',
     };

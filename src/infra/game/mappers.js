@@ -1,5 +1,9 @@
 // 정규화 DB 행(snake_case)과 도메인/앱 엔티티(camelCase) 간의 순수 매핑 함수
 
+function mapSeatSummary(seatSummary = []) {
+  return seatSummary.map((seat) => ({ ...seat, userId: seat.userId ?? null }));
+}
+
 export function gameToRow(game) {
   return {
     id: game.id,
@@ -56,7 +60,7 @@ export function publicToRow(pub) {
     phase: pub.phase,
     version: pub.version,
     current_turn_seat: pub.currentTurnSeat ?? null,
-    seat_summary: pub.seatSummary ?? [],
+    seat_summary: mapSeatSummary(pub.seatSummary),
     last_play: pub.lastPlay ?? null,
     updated_at: pub.updatedAt,
   };
@@ -69,7 +73,7 @@ export function rowToPublic(row) {
     phase: row.phase,
     version: row.version,
     currentTurnSeat: row.current_turn_seat ?? null,
-    seatSummary: row.seat_summary ?? [],
+    seatSummary: mapSeatSummary(row.seat_summary),
     lastPlay: row.last_play ?? null,
     updatedAt: row.updated_at,
   };

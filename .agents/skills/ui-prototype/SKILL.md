@@ -13,6 +13,7 @@ Paths relative to repo root. DESIGN.md is the source of truth for file structure
 - 0.3 exceptions (src/ui/public/ only; 0.2 dist/ rules remain unchanged):
   1. Browser module scripts: `<script type="module" src="...">` allowed; all inline `<script>` (including modules) are forbidden.
   2. External brand guidelines fixed styling: fixed brand colors, spacing, and brand logo mark (e.g. `/images/google-g.svg`) allowed only within a rule block or declaration preceded by `/* brand: <URL> */` (e.g. `/* brand: https://... */`); unannotated literals remain violations.
+  3. Avatar images: `<img class="avatar__img">` pointing to avatars bucket public URL (fixed alt, width, and height attributes required) and `images/avatar-silhouette.svg`, `images/avatar-bot.svg` allowed; other `<img>` and SVG assets remain violations.
 - Colors and spacing from tokens only: raw hex/rgb/hsl live only in tokens.css (except 0.3 brand guidelines); spacing via var(--space-*) (8px unit), raw px scale only in tokens.css.
 - Motion: use motion tokens; every animation/transition disabled or reduced under prefers-reduced-motion.
 - Per-element variation via BEM-ish classes, never inline values.

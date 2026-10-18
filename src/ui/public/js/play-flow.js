@@ -12,6 +12,28 @@ export function rankingText(result) {
   return `라운드 종료 — ${texts.join(', ')}`;
 }
 
+export function errorText(err) {
+  return err.title || err.detail || err.message;
+}
+
+export function announceRound(publicState, result, notify) {
+  const text = rankingText(result);
+  if (text) notify(text);
+  else if (publicState?.phase === 'finished') notify('라운드 종료');
+}
+
+export async function createStartedRoom(api, user, search) {
+  const options = /(?:^|[?&])mode=tutorial(?:&|$)/.test(search)
+    ? { mode: 'tutorial' }
+    : undefined;
+  const created = await api.createRoom(options);
+  const { joinCode } = created.game;
+  const mine = created.seats.find((seat) => seat.userId === user.id);
+  await api.startGame(joinCode);
+  const room = await api.getRoom(joinCode);
+  return { joinCode, room, seat: mine ? mine.seat : 0 };
+}
+
 // supabase-js 세션에서 매 요청마다 액세스 토큰을 읽는 함수를 만든다
 export function createTokenGetter(client) {
   return async () => {

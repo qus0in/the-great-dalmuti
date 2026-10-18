@@ -69,7 +69,7 @@ function renderChrome(doc, pub, { mySeat, count }) {
 export function renderPlay(doc, view = {}) {
   const { publicState = null, hand = [], selected = [], mySeat = 0 } = view;
   renderChrome(doc, publicState, { mySeat, count: selected.length });
-  renderSeats(doc, publicState, mySeat);
+  renderSeats(doc, publicState, view);
   cards.renderTrickCards(doc, publicState ? publicState.lastPlay : null);
   cards.renderHandCards(doc, { hand, selected });
   renderHint(doc, view);

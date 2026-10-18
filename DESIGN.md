@@ -60,7 +60,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 #### How
 
-두 페이지의 공통 CSS 링크 순서는 다음과 같습니다.
+두 페이지가 공유하는 앞부분 CSS 링크 순서는 다음과 같습니다.
 
 1. `css/reset.css`
 2. `css/tokens.css`
@@ -77,11 +77,8 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 13. `css/components/card-back.css`
 14. `css/components/card-states.css`
 15. `css/components/seat.css`
-16. `css/components/badge.css`
-17. `css/components/button.css`
-18. `css/components/panel.css`
 
-그 뒤 대기실은 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸 모듈은 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
+그 뒤 대기실(`index.html`)은 `css/components/badge.css`, `css/components/button.css`, `css/components/button-google.css`, `css/components/panel.css`, `css/components/top-nav.css`, `css/components/avatar.css` 순서로 연결한 뒤 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `profile-card.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸(`play.html`)은 `css/components/avatar.css`, `css/components/badge.css`, `css/components/button.css`, `css/components/panel.css` 순서로 연결한 뒤 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
 
 #### 연결 방식 선택 (SWOT)
 
@@ -204,6 +201,12 @@ CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/c
 - `.btn--outline`: 덱 정리 및 보조 버튼
 - 모든 버튼은 48px 이상의 터치 타깃(`min-height: var(--space-6)`, `min-width: var(--space-6)`)을 보장합니다.
 
+#### 5) 아바타 (`.avatar`)
+- 아바타(`.avatar`)는 원형 인라인 플렉스 컨테이너이며, `.avatar__img`를 `object-fit: cover`로 채우고 `.avatar--sm`·`.avatar--lg` 크기 변형을 둡니다. 기본·봇 이미지와 좌석·채팅 표시 방식은 [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md) 결정 8·33을 그대로 따릅니다.
+
+#### 6) 내 프로필 카드 (`.profile-card`)
+- 대기실 상단에 로그인 상태에서만 보이는 내 카드로, 아바타(`.profile-card__avatar`)·이름·'사진 바꾸기' 버튼·숨은 파일 입력과 가림 안내(`.profile-card__notice`)로 구성됩니다. 위치·형식·가림 문구와 가려진 동안 업로드 차단은 [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md) 결정 2·11·17·24·26을 그대로 따릅니다.
+
 ---
 
 ### 3.5 대기실(Hall, #11) 및 플레이룸(Play, #12) 화면 연계
@@ -288,6 +291,7 @@ CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/c
 - **How**:
   - HTML `<head>` 내 표준 5종 아이콘/매니페스트 링크 블록을 일관되게 선언합니다.
   - **순수 CSS 페이지 비주얼 (CSS-Only Page Visuals)**: HTML 본문 내 `<img>`, `<picture>`, `<svg>` 태그 및 CSS 파일 내 배경 이미지 `url()` 로딩은 엄격히 금지되며(폰트 선언 `src: url()` 제외), 12계급 카드 아트워크, 좌석 아바타, 테이블 펠트 텍스처 등 모든 시각 요소는 순수 CSS 그라디언트, 보더, 섀도우만으로 렌더링합니다.
+  - **0.3 아바타 예외**: [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md)에 따라 `src/ui/public/`에서만 avatars 버킷 공개 URL을 가리키는 `<img class="avatar__img">`(alt·크기 고정)와 `images/avatar-silhouette.svg`, `images/avatar-bot.svg` 2개 파일을 허용합니다(0.2 `dist/`는 불변).
 
 #### 7) 헤드리스 브라우저 실측 한계 및 iframe 하네스 검증 정책 (Headless 500px Clamp & Iframe Harness Policy)
 - **Why**: Headless Chrome CLI 환경(`--headless=new --window-size=390,844`) 실행 시, 브라우저 렌더러가 최소 레이아웃 너비를 500px로 클램프(clamp)하는 내부 사양이 존재합니다. 이로 인해 `--window-size=390`을 지정하더라도 실제 레이아웃은 500px 너비로 계산된 후 390px 영역만 크롭(crop)되어 캡처되므로, 360~390px 모바일 폰 밴드의 순수한 레이아웃 무오버플로우 여부를 단순 스크린샷만으로 판정하기 어렵습니다.

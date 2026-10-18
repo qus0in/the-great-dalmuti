@@ -1,14 +1,15 @@
 #!/bin/sh
-# Usage: dispatch.sh [--workspace ID --self-pane ID] [--notify PANE] [--wait-idle SEC] [--replace OLD-UNIT] [--then TARGET BRIEF] [--dry-run] [--force-existing-report] <target> <brief-path>
+# Usage: dispatch.sh [--workspace ID --self-pane ID] [--notify PANE] [--wait-idle SEC] [--continue] [--replace OLD-UNIT] [--then TARGET BRIEF] [--dry-run] [--force-existing-report] <target> <brief-path>
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 die() { rc=$1; shift; echo "dispatch.sh: $*" >&2; exit "$rc"; }
-usage() { die 2 "usage: $0 [--workspace ID --self-pane ID] [--notify PANE] [--wait-idle SEC] [--replace OLD-UNIT] [--then TARGET BRIEF] [--dry-run] [--force-existing-report] <target> <brief-path>"; }
+usage() { die 2 "usage: $0 [--workspace ID --self-pane ID] [--notify PANE] [--wait-idle SEC] [--continue] [--replace OLD-UNIT] [--then TARGET BRIEF] [--dry-run] [--force-existing-report] <target> <brief-path>"; }
 # Helpers (report extraction, guard, contract logs) live in dispatch-lib.sh.
 . "$HERE/dispatch-lib.sh"
+. "$HERE/dispatch-reset.sh"
 WS=; SELF=; WS_SET=0; SELF_SET=0; NOTIFY=; NOTIFY_SET=0
 THEN_TARGET=; THEN_BRIEF=; THEN_SET=0; WAIT_IDLE=0; WAIT_IDLE_SET=0; REPLACE_UNIT=; REPLACE_SET=0
-DRY_RUN=0; FORCE_EXISTING_REPORT=0
+DRY_RUN=0; FORCE_EXISTING_REPORT=0; CONTINUE_UNIT=0
 TARGET=; BRIEF=; POS_COUNT=0
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -18,6 +19,7 @@ while [ $# -gt 0 ]; do
     --wait-idle) [ $# -ge 2 ] || usage; WAIT_IDLE=$2; WAIT_IDLE_SET=1; shift 2;;
     --replace) [ $# -ge 2 ] || usage; REPLACE_UNIT=$2; REPLACE_SET=1; shift 2;;
     --then) [ $# -ge 3 ] || usage; THEN_TARGET=$2; THEN_BRIEF=$3; THEN_SET=1; shift 3;;
+    --continue) CONTINUE_UNIT=1; shift;;
     --dry-run) DRY_RUN=1; shift;;
     --force-existing-report) FORCE_EXISTING_REPORT=1; shift;;
     --)
@@ -33,6 +35,7 @@ done
 [ "$POS_COUNT" -eq 2 ] || usage
 case "$WAIT_IDLE" in ''|*[!0-9]*) usage;; esac
 [ "$REPLACE_SET" -eq 0 ] || [ -n "$REPLACE_UNIT" ] || usage
+[ "$REPLACE_SET" -eq 0 ] || CONTINUE_UNIT=1
 IDLE_CONFIRMATIONS=${DISPATCH_IDLE_CONFIRMATIONS:-3}
 case "$IDLE_CONFIRMATIONS" in ''|*[!0-9]*) usage;; esac
 [ "$IDLE_CONFIRMATIONS" -gt 0 ] || usage
@@ -59,6 +62,7 @@ fi
 set -- "$@" --target "$TARGET"
 [ "$THEN_SET" -eq 0 ] || set -- "$@" --target "$THEN_TARGET"
 ctx=$(wait_for_target "$WAIT_IDLE" "$WAIT_IDLE_SET" "$REPLACE_SET" "$IDLE_CONFIRMATIONS" "${DISPATCH_WAIT_INTERVAL:-5}" "$TARGET" "$@") || exit $?
+reset_target_context "$@" || exit $?
 if [ "$NOTIFY_SET" -eq 0 ]; then
   NOTIFY=$(printf '%s\n' "$ctx" | jq -r '.self_pane // empty')
   [ -n "$NOTIFY" ] || die 2 "cannot determine notify pane (pass --notify <pane>)"

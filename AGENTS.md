@@ -61,6 +61,9 @@ Ambiguous -> skill `codify`.
 - Issues close with their work: `Closes #N` in the shipping PR body, or verify acceptance against main right after merge and close citing that evidence.
 - Progress tracked/reported per semver patch only (table: version · issues/scope · status 계획/작업 중/PR 열림/머지됨/릴리스됨, canonical docs/0.3-patch-plan.md); no speed/date estimates.
 
+## Wiki
+- 위키 표현: patch별 나열 금지, 응집도(기능·관심사) 단위로 묶어 표현.
+
 ## UI prototype (0.2)
 - UI work under dist/ or src/ui/public/ → read `DESIGN.md` + skill `ui-prototype` (placement, tokens, check/shot scripts) before starting; cite its paths, don't restate it.
 - Visual/headless verification is worker-only: never run headless Chrome as orchestrator; assign to a worker and read its report/PNGs.

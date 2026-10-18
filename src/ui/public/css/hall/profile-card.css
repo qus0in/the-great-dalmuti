@@ -1,0 +1,55 @@
+/* ==========================================================================
+   4. My profile card (index 상단 — ADR-0016 결정 11·17·24·26, 계약 4)
+   ========================================================================== */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.profile-card > * {
+  margin: 0;
+}
+
+.profile-card__user {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.profile-card__avatar {
+  flex: none;
+}
+
+.profile-card__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.profile-card__name {
+  min-width: 0;
+  font-size: var(--font-size-md);
+  line-height: var(--leading-snug);
+}
+
+.profile-card__notice {
+  max-width: 40em;
+  color: var(--color-ink-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+}
+
+/* Phone (360–599): notice takes the full row, user block keeps a tight gap. */
+@media (max-width: 599px) {
+  .profile-card {
+    gap: var(--space-1-5);
+  }
+
+  .profile-card__notice {
+    max-width: none;
+  }
+}

@@ -1,12 +1,12 @@
 #!/bin/sh
 # Usage: check.sh [dist-dir]   (default: <repo>/dist)
-# Lint prototype HTML; CSS via check-css.sh, warns via check-warn.sh. Exit 0 + "ok"; 1 violations; 2 usage.
+# Lint prototype HTML; images via check-img.sh, CSS via check-css.sh, warns via check-warn.sh. Exit 0 + "ok"; 1 violations; 2 usage.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 [ $# -le 1 ] || { echo "usage: $0 [dist-dir]" >&2; exit 2; }
 DIST=${1:-"$ROOT/dist"}
 [ -d "$DIST" ] || { echo "no such dir: $DIST" >&2; exit 2; }
-IS_03=0; case "$DIST" in *src/ui/public*|*src/ui*|*s23-probe*) IS_03=1;; esac
+IS_03=0; case "$DIST" in *src/ui/public*|*s23-probe*) IS_03=1;; esac
 VF=$(mktemp) || { echo "mktemp failed" >&2; exit 1; }
 trap 'rm -f "$VF"' EXIT INT TERM
 v() { printf '%s:%s: %s\n' "$1" "$2" "$3" >> "$VF"; }
@@ -33,14 +33,8 @@ for f in "$DIST"/*.html; do
     done <<EOF
 $(hits '<script([[:space:]>])' "$f")
 EOF
-    while IFS= read -r h; do [ -n "$h" ] || continue; ln=${h%%:*}; rest=${h#*:}
-      case "$rest" in *google-g.svg*) ;; *) v "$f" "$ln" 'image element not allowed';; esac
-    done <<EOF
-$(hits '<(img|picture|image)([[:space:]>])' "$f")
-EOF
   else
     report "$f" '(^|[^A-Za-z0-9_-])<(script|style)([[:space:]>])' 'inline <script>/<style> not allowed'
-    report "$f" '<(img|picture|image)([[:space:]>])' 'image element not allowed'
   fi
   report "$f" '(^|[^A-Za-z0-9_-])style[[:space:]]*=' 'style= attribute not allowed'
   report "$f" '(^|[^A-Za-z0-9_-])on[a-z]+[[:space:]]*=' 'on*= attribute not allowed'
@@ -89,8 +83,15 @@ if [ -d "$DIST/css" ]; then
   CSS_OUT=$(printf '%s\n' "$CSS_TMP_OUT" | grep -v '^ok$' || true)
   WARN_OUT=$("$HERE/check-warn.sh" "$DIST/css" 2>&1 || true)
 fi
-if [ -s "$VF" ] || [ "$CSS_RC" -ne 0 ]; then
-  [ -s "$VF" ] && sort -u "$VF"; [ -n "$CSS_OUT" ] && printf '%s\n' "$CSS_OUT"; [ -n "$WARN_OUT" ] && printf '%s\n' "$WARN_OUT"; exit 1
+IMG_OUT=""; IMG_RC=0
+IMG_TMP_OUT=$("$HERE/check-img.sh" "$DIST" 2>&1) || IMG_RC=1
+IMG_OUT=$(printf '%s\n' "$IMG_TMP_OUT" | grep -v '^ok$' || true)
+if [ -s "$VF" ] || [ "$CSS_RC" -ne 0 ] || [ "$IMG_RC" -ne 0 ]; then
+  [ -s "$VF" ] && sort -u "$VF"
+  [ -n "$IMG_OUT" ] && printf '%s\n' "$IMG_OUT"
+  [ -n "$CSS_OUT" ] && printf '%s\n' "$CSS_OUT"
+  [ -n "$WARN_OUT" ] && printf '%s\n' "$WARN_OUT"
+  exit 1
 fi
 [ -n "$WARN_OUT" ] && printf '%s\n' "$WARN_OUT"
 echo ok

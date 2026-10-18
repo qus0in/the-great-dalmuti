@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+  <!-- Colors: cream (#FDF4D2), rose (#946D6D). -->
+  <defs>
+    <clipPath id="avatar-silhouette-clip">
+      <circle cx="32" cy="32" r="32" />
+    </clipPath>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="#FDF4D2" />
+  <g clip-path="url(#avatar-silhouette-clip)">
+    <circle cx="32" cy="24" r="12" fill="#946D6D" />
+    <path d="M12 58 C12 44 20 40 32 40 C44 40 52 44 52 58 Z" fill="#946D6D" />
+  </g>
+</svg>

@@ -50,6 +50,7 @@ function buildGame({ code, gameId, phase, turnSeat, seats }) {
       currentTurnSeat: turnSeat,
       seatSummary: seats.map((s) => ({
         seat: s.seat,
+        userId: s.userId ?? null,
         userName: s.userId ?? `seat ${s.seat}`,
         isBot: s.isBot,
         cardCount: 20,

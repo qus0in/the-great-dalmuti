@@ -85,7 +85,6 @@ describe('Room start execution and card distribution', () => {
     assert.equal(result.hands[1].length, 20);
     assert.equal(result.publicState.phase, 'playing');
     assert.equal(result.publicState.seatSummary[0].cardCount, 20);
-
     const savedHands = await gameRepository.findHands(result.game.id);
     assert.ok(savedHands);
     assert.equal(savedHands[0].length, 20);

@@ -69,6 +69,7 @@ export function buildNextTributeEntities({ agg, nextHands, nowIso }) {
     version: agg.game.version + 1,
     seatSummary: agg.seats.map((s) => ({
       seat: s.seat,
+      userId: s.userId ?? null,
       userName: s.userName ?? (s.isBot ? `봇 ${s.seat}` : `참가자 ${s.seat}`),
       isBot: s.isBot,
       cardCount: (nextHands[s.seat] ?? nextHands[resolveSeatRank(s)] ?? [])

@@ -65,6 +65,16 @@ describe('Room join empty seat assignment', () => {
     assert.equal(result.seat, 1);
     assert.equal(result.seats[1].userId, 'guest-2');
     assert.equal(result.publicState.seatSummary.length, 2);
+    assert.deepEqual(
+      result.publicState.seatSummary.map(({ seat, userId }) => ({
+        seat,
+        userId,
+      })),
+      [
+        { seat: 0, userId: 'host-1' },
+        { seat: 1, userId: 'guest-2' },
+      ],
+    );
   });
 });
 

@@ -23,12 +23,21 @@
  */
 
 /**
+ * @typedef {Object} SeatSummary
+ * @property {number} seat
+ * @property {string|null} userId
+ * @property {string} userName
+ * @property {boolean} isBot
+ * @property {number} cardCount
+ */
+
+/**
  * @typedef {Object} PublicStateEntity
  * @property {string} gameId
  * @property {'waiting'|'playing'|'finished'} phase
  * @property {number} version
  * @property {number|null} currentTurnSeat
- * @property {Array<{ seat: number, userName: string, isBot: boolean, cardCount: number }>} seatSummary
+ * @property {SeatSummary[]} seatSummary
  * @property {Object|null} lastPlay
  * @property {string} updatedAt
  */
