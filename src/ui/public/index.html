@@ -46,6 +46,7 @@
   <link rel="stylesheet" href="css/components/button-google.css">
   <link rel="stylesheet" href="css/components/panel.css">
   <link rel="stylesheet" href="css/components/top-nav.css">
+  <link rel="stylesheet" href="css/components/avatar.css">
   <link rel="stylesheet" href="css/hall/page-shell.css">
   <link rel="stylesheet" href="css/hall/waiting-room.css">
   <link rel="stylesheet" href="css/hall/rank-ladder.css">
@@ -53,6 +54,7 @@
   <link rel="stylesheet" href="css/hall/entry-cta.css">
   <link rel="stylesheet" href="css/hall/entrance-stagger.css">
   <link rel="stylesheet" href="css/hall/hover-affordances.css">
+  <link rel="stylesheet" href="css/hall/profile-card.css">
   <link rel="stylesheet" href="css/hall/responsive.css">
   <link rel="stylesheet" href="css/hall/reduced-motion.css">
 </head>
@@ -79,6 +81,34 @@
     </header>
 
     <main class="grid hall__main">
+      <!-- My profile card — signed-in only (decided 11, upload lock 26) -->
+      <section
+        class="col-span-12 panel anim-fade-up profile-card"
+        data-profile="card"
+        data-auth="signed-in"
+        hidden
+        aria-labelledby="profile-card-title"
+      >
+        <h2 class="sr-only" id="profile-card-title">내 프로필</h2>
+        <div class="profile-card__user">
+          <div class="profile-card__avatar" data-profile="avatar"></div>
+          <div class="profile-card__meta">
+            <span class="profile-card__name" data-auth="user-name"></span>
+            <button type="button" class="btn btn--secondary btn--sm" data-profile="change">
+              사진 바꾸기
+            </button>
+            <input
+              type="file"
+              class="profile-card__input"
+              data-profile="input"
+              accept="image/png,image/jpeg,image/webp"
+              hidden
+            >
+          </div>
+        </div>
+        <p class="profile-card__notice" data-profile="notice" aria-live="polite" hidden></p>
+      </section>
+
       <!-- 4-seat waiting room on the table felt -->
       <section class="col-span-12 panel panel--table hall__room anim-fade-up hall__delay-1" aria-labelledby="room-title">
         <div class="hall__room-head">
@@ -223,5 +253,6 @@
 
   </div>
   <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/profile-card.js"></script>
 </body>
 </html>

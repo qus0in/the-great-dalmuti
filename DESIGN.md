@@ -60,7 +60,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 #### How
 
-두 페이지의 공통 CSS 링크 순서는 다음과 같습니다.
+두 페이지가 공유하는 앞부분 CSS 링크 순서는 다음과 같습니다.
 
 1. `css/reset.css`
 2. `css/tokens.css`
@@ -77,11 +77,8 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 13. `css/components/card-back.css`
 14. `css/components/card-states.css`
 15. `css/components/seat.css`
-16. `css/components/badge.css`
-17. `css/components/button.css`
-18. `css/components/panel.css`
 
-그 뒤 대기실은 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸 모듈은 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
+그 뒤 대기실(`index.html`)은 `css/components/badge.css`, `css/components/button.css`, `css/components/button-google.css`, `css/components/panel.css`, `css/components/top-nav.css`, `css/components/avatar.css` 순서로 연결한 뒤 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `profile-card.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸(`play.html`)은 `css/components/avatar.css`, `css/components/badge.css`, `css/components/button.css`, `css/components/panel.css` 순서로 연결한 뒤 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
 
 #### 연결 방식 선택 (SWOT)
 
@@ -203,6 +200,12 @@ CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/c
 - `.btn--secondary`: 패스(Pass) 및 취소 버튼
 - `.btn--outline`: 덱 정리 및 보조 버튼
 - 모든 버튼은 48px 이상의 터치 타깃(`min-height: var(--space-6)`, `min-width: var(--space-6)`)을 보장합니다.
+
+#### 5) 아바타 (`.avatar`)
+- 아바타(`.avatar`)는 원형 인라인 플렉스 컨테이너이며, `.avatar__img`를 `object-fit: cover`로 채우고 `.avatar--sm`·`.avatar--lg` 크기 변형을 둡니다. 기본·봇 이미지와 좌석·채팅 표시 방식은 [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md) 결정 8·33을 그대로 따릅니다.
+
+#### 6) 내 프로필 카드 (`.profile-card`)
+- 대기실 상단에 로그인 상태에서만 보이는 내 카드로, 아바타(`.profile-card__avatar`)·이름·'사진 바꾸기' 버튼·숨은 파일 입력과 가림 안내(`.profile-card__notice`)로 구성됩니다. 위치·형식·가림 문구와 가려진 동안 업로드 차단은 [ADR-0016](docs/adr/0016-0.3.6-profile-admin-chat.md) 결정 2·11·17·24·26을 그대로 따릅니다.
 
 ---
 
