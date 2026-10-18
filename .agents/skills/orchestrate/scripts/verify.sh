@@ -1,7 +1,8 @@
 #!/bin/sh
-# Usage: verify.sh <task> [rules|ui|all]   (default: all)
+# Usage: verify.sh <task> [rules|ui|format|lint|test|all]   (default: all)
 # Checkpoint gate runner for tmp/<task>/: runs the applicable deterministic gates and
-# saves concise per-gate results. rules = codify check; ui = lines + layers + UI contract.
+# saves concise per-gate results. rules = codify check; ui = lines + layers + UI contract;
+# format = npm run format:check; lint = npm run lint; test = npm test.
 # No caching: every invocation runs its requested gates. Reuse valid passed evidence by
 # workflow policy (AGENTS.md Verification); never reuse failures. Rerun only on relevant
 # input change, failure repair, or stated unresolved risk.
@@ -10,12 +11,12 @@
 # Writes only under tmp/<task>/; no browser, network, or new dependencies.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
-usage() { echo "usage: $0 <task> [rules|ui|all]" >&2; exit 2; }
+usage() { echo "usage: $0 <task> [rules|ui|format|lint|test|all]" >&2; exit 2; }
 [ $# -ge 1 ] && [ $# -le 2 ] || usage
 TASK=$1
 GATES=${2:-all}
 case "$TASK" in ''|*/*|.*) echo "verify.sh: invalid task name: $TASK" >&2; exit 2;; esac
-case "$GATES" in rules|ui|all) ;; *) usage;; esac
+case "$GATES" in rules|ui|format|lint|test|all) ;; *) usage;; esac
 TD="$ROOT/tmp/$TASK"
 [ -d "$TD" ] || { echo "verify.sh: no task dir: tmp/$TASK" >&2; exit 2; }
 cd "$ROOT" || exit 1
@@ -45,10 +46,19 @@ case "$GATES" in
     gate lines "$ROOT/.agents/skills/codify/scripts/lines.sh" || fail=1
     gate layers "$ROOT/.agents/skills/layers/scripts/check.sh" || fail=1
     if [ -n "$UI_CHECK_TARGET" ]; then
-    gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/$UI_CHECK_TARGET" || fail=1
-  else
-    echo "verify: ui skip (no UI_CHECK_TARGET in .agents/project.conf, generic defaults)"
-  fi;;
+      gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/$UI_CHECK_TARGET" || fail=1
+    else
+      echo "verify: ui skip (no UI_CHECK_TARGET in .agents/project.conf, generic defaults)"
+    fi;;
+esac
+case "$GATES" in
+  format|all) gate format npm run format:check || fail=1;;
+esac
+case "$GATES" in
+  lint|all) gate lint npm run lint || fail=1;;
+esac
+case "$GATES" in
+  test|all) gate test npm test || fail=1;;
 esac
 if [ "$fail" -eq 0 ]; then echo "verify: pass"; exit 0; fi
 echo "verify: FAIL"
