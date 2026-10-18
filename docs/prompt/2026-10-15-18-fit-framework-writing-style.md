@@ -1,7 +1,7 @@
 # FIT 프레임워크와 why-what-how 서술 및 SWOT/STAR 구조 반영
 
 - 날짜: 2026-10-15
-- 결과: AGENTS.md, .agents/skills/gh-issues/SKILL.md, .agents/skills/gh-issues/scripts/issue.sh, .agents/skills/orchestrate/SKILL.md, .agents/skills/codify/SKILL.md, docs/structure.md, tmp/wiki-0.1/repo/0.1.md
+- 결과: AGENTS.md, .agents/skills/gh-issues/SKILL.md, .agents/skills/gh-issues/scripts/issue.sh, .agents/skills/orchestrate/SKILL.md, .agents/skills/codify/SKILL.md, docs/structure.md
 
 ## 원문
 

@@ -58,8 +58,9 @@ fi
 if git rev-parse --git-dir >/dev/null 2>&1; then
   t=$(git ls-files tmp | grep -v '\.gitkeep$' || true)
   [ -z "$t" ] || err "tracked files in tmp/: $t"
-  r=$(grep -rln --exclude-dir=prompt 'tmp/[A-Za-z0-9_-]' docs .agents/skills 2>/dev/null | grep -v '/codify/' || true)
-  [ -z "$r" ] || err "references to tmp/ paths: $r"
+fi
+if ! refs=$("$HERE/tmp-refs.sh" 2>&1); then
+  err "temporary references: $refs"
 fi
 if ! lo=$("$HERE/lines.sh" 2>&1); then
   while IFS= read -r l; do

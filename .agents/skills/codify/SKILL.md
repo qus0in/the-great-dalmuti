@@ -42,5 +42,5 @@ Root README.md is user-authored and never a codify target: edit only on explicit
 
 ## 5. Finish
 - `$S/index.sh` (sync AGENTS.md skills index)
-- `$S/check.sh` must print `ok` (includes the repo-wide 100-line gate).
+- `$S/check.sh` must print `ok` (includes lines and `$S/tmp-refs.sh [paths...]`; reject concrete temporary task paths, allow directory/template/glob notation).
 - Gates after changes: `orchestrate/scripts/verify.sh <task> [rules|ui|all]` once per checkpoint; failures must be fixed or reported, not exempted.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Usage: verify.sh <task> [rules|ui|all]   (default: all)
 # Checkpoint gate runner for tmp/<task>/: runs the applicable deterministic gates and
-# saves concise per-gate results. rules = codify/scripts/check.sh; ui = ui-prototype/check.sh <dist>.
+# saves concise per-gate results. rules = codify check; ui = lines + layers + UI contract.
 # No caching: every invocation runs its requested gates. Reuse valid passed evidence by
 # workflow policy (AGENTS.md Verification); never reuse failures. Rerun only on relevant
 # input change, failure repair, or stated unresolved risk.
@@ -41,7 +41,10 @@ case "$GATES" in
   rules|all) gate rules "$ROOT/.agents/skills/codify/scripts/check.sh" || fail=1;;
 esac
 case "$GATES" in
-  ui|all) if [ -n "$UI_CHECK_TARGET" ]; then
+  ui|all)
+    gate lines "$ROOT/.agents/skills/codify/scripts/lines.sh" || fail=1
+    gate layers "$ROOT/.agents/skills/layers/scripts/check.sh" || fail=1
+    if [ -n "$UI_CHECK_TARGET" ]; then
     gate ui "$ROOT/.agents/skills/ui-prototype/scripts/check.sh" "$ROOT/$UI_CHECK_TARGET" || fail=1
   else
     echo "verify: ui skip (no UI_CHECK_TARGET in .agents/project.conf, generic defaults)"
