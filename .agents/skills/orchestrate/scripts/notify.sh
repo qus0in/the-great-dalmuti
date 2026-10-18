@@ -60,11 +60,12 @@ if [ "$DRY_RUN" -eq 1 ]; then
   exit 0
 fi
 mkdir -p "$LOG_DIR" 2>/dev/null || die 1 "cannot create log directory: $LOG_DIR"
+command -v herdr >/dev/null 2>&1 || echo "herdr unavailable during initial delivery (PATH=$PATH)" >> "$LOG_DIR/redeliver.log"
 SENT=0
-if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$TARGET" "$BODY" >/dev/null 2>&1; then
+if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$TARGET" "$BODY" >/dev/null 2>>"$LOG_DIR/redeliver.log"; then
   N=0; LIM=${NOTIFY_VERIFY_TRIES:-3}; SLP=${NOTIFY_VERIFY_SLEEP:-0.3}
   while [ "$N" -lt "$LIM" ]; do
-    if herdr pane read "$TARGET" --source visible 2>/dev/null | grep -Fq "$TOKEN"; then SENT=1; break; fi
+    if herdr pane read "$TARGET" --source visible 2>>"$LOG_DIR/redeliver.log" | grep -Fq "$TOKEN"; then SENT=1; break; fi
     [ "$SLP" = "0" ] || sleep "$SLP"
     N=$((N + 1))
   done
@@ -77,8 +78,21 @@ if [ "$SENT" -eq 1 ]; then
 fi
 printf '%s\n' "$RPEND" >> "$LOG_FILE" 2>/dev/null || die 1 "cannot write callback log: $LOG_FILE"
 printf '%s\n' "$SPEND" >> "$STATE_FILE" 2>/dev/null || die 1 "cannot write state log: $STATE_FILE"
+LAUNCHED=0
 if [ "${NOTIFY_DETACH:-1}" = 1 ] && [ -x "$HERE/redeliver.sh" ]; then
-  nohup "$HERE/redeliver.sh" "$LOG_DIR" --resend >/dev/null 2>&1 &
+  if command -v python3 >/dev/null 2>&1; then
+    if python3 -c 'import subprocess,sys; log=open(sys.argv[1],"ab",buffering=0); subprocess.Popen(sys.argv[2:],stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True,close_fds=True)' \
+      "$LOG_DIR/redeliver.log" "$HERE/redeliver.sh" "$LOG_DIR" --resend 2>>"$LOG_DIR/redeliver.log"; then LAUNCHED=1
+    else echo "failed to start detached redelivery" >> "$LOG_DIR/redeliver.log"; fi
+  elif command -v setsid >/dev/null 2>&1; then
+    nohup setsid "$HERE/redeliver.sh" "$LOG_DIR" --resend </dev/null >>"$LOG_DIR/redeliver.log" 2>&1 & LAUNCHED=1
+  else
+    echo "detached redelivery unavailable: python3 and setsid are missing" >> "$LOG_DIR/redeliver.log"
+  fi
 fi
-echo "delivery pending to $TARGET: logged delivered=pending to $LOG_FILE (background retry detached)"
+if [ "$LAUNCHED" -eq 1 ]; then
+  echo "delivery pending to $TARGET: logged delivered=pending to $LOG_FILE (background retry detached)"
+else
+  echo "delivery pending to $TARGET: retry launch failed; see $LOG_DIR/redeliver.log"
+fi
 exit 0

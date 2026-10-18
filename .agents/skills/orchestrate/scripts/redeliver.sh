@@ -24,8 +24,9 @@ case "$TASK" in
   tmp/*) TASK_DIR="$ROOT/$TASK";;
   *) [ -d "$ROOT/tmp/$TASK" ] && TASK_DIR="$ROOT/tmp/$TASK" || TASK_DIR="$TASK";;
 esac
-LOG="$TASK_DIR/callbacks.log"; STATE="$TASK_DIR/state.md"
+LOG="$TASK_DIR/callbacks.log"; STATE="$TASK_DIR/state.md"; DIAG="$TASK_DIR/redeliver.log"
 [ -f "$LOG" ] || { echo "redeliver.sh: no callbacks in $TASK_DIR"; exit 0; }
+command -v herdr >/dev/null 2>&1 || echo "herdr unavailable in retry environment (PATH=$PATH)" >> "$DIAG"
 list() { grep -E "delivered=(no|pending)" "$LOG" 2>/dev/null | { [ -z "$ONLY" ] && cat || grep -F "unit=$ONLY "; } || true; }
 latest() {
   awk -v only="$ONLY" '
@@ -62,10 +63,10 @@ latest | while IFS= read -r line; do
   sent=0
   for d in 0 $BACKS; do
     [ "$d" -eq 0 ] || sleep "$d"
-    if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$tgt" "$body" >/dev/null 2>&1; then
+    if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$tgt" "$body" >/dev/null 2>>"$DIAG"; then
       n=0
       while [ "$n" -lt "$LIM" ]; do
-        if herdr pane read "$tgt" --source visible 2>/dev/null | grep -Fq "$tok"; then sent=1; break 2; fi
+        if herdr pane read "$tgt" --source visible 2>>"$DIAG" | grep -Fq "$tok"; then sent=1; break 2; fi
         [ "$SLP" = "0" ] || sleep "$SLP"
         n=$((n + 1))
       done
