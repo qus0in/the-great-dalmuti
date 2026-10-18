@@ -13,37 +13,59 @@ function seatKey(publicState) {
 }
 
 function userIds(publicState) {
-  return [...new Set(
-    seats(publicState)
-      .filter(([, userId, isBot]) => userId && !isBot)
-      .map(([, userId]) => userId),
-  )];
+  return [
+    ...new Set(
+      seats(publicState)
+        .filter(([, userId, isBot]) => userId && !isBot)
+        .map(([, userId]) => userId),
+    ),
+  ];
+}
+
+function updatePrivacy({ sb, publicState, state, setState }) {
+  const key = seatKey(publicState);
+  if (key === state.requestedKey) return state.pending;
+  const ids = userIds(publicState);
+  const request = state.generation + 1;
+  const result = ids.length
+    ? fetchHiddenIds(sb, ids)
+    : Promise.resolve(new Set());
+  const pending = result.then((next) => {
+    setState((current) => {
+      if (request !== current.generation) return current;
+      return { ...current, hiddenIds: next, loadedKey: key };
+    });
+  });
+  setState((current) => ({
+    ...current,
+    requestedKey: key,
+    loadedKey: null,
+    generation: request,
+    pending,
+  }));
+  return pending;
 }
 
 export function createSeatPrivacy() {
-  let requestedKey = null, loadedKey = null, generation = 0;
-  let hiddenIds = new Set(), pending = Promise.resolve();
-
+  let state = {
+    requestedKey: null,
+    loadedKey: null,
+    generation: 0,
+    hiddenIds: new Set(),
+    pending: Promise.resolve(),
+  };
+  const setState = (update) => {
+    state = update(state);
+  };
   return {
     update(sb, publicState) {
-      const key = seatKey(publicState);
-      if (key === requestedKey) return pending;
-      requestedKey = key;
-      loadedKey = null;
-      const ids = userIds(publicState);
-      const request = ++generation;
-      const result = ids.length ? fetchHiddenIds(sb, ids) : Promise.resolve(new Set());
-      pending = result.then((next) => {
-        if (request === generation) {
-          hiddenIds = next;
-          loadedKey = key;
-        }
-      });
-      return pending;
+      return updatePrivacy({ sb, publicState, state, setState });
     },
     hiddenIdsFor(publicState) {
       const key = seatKey(publicState);
-      return key === loadedKey ? hiddenIds : new Set(userIds(publicState));
+      return key === state.loadedKey
+        ? state.hiddenIds
+        : new Set(userIds(publicState));
     },
     context(publicState, mySeat, sb) {
       return { mySeat, sb, hiddenIds: this.hiddenIdsFor(publicState) };

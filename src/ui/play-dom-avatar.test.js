@@ -10,9 +10,12 @@ function node(sub = {}) {
     children,
     setAttribute() {},
     appendChild: (child) => children.push(child),
-    replaceChildren: (...items) => children.splice(0, children.length, ...items),
+    replaceChildren: (...items) =>
+      children.splice(0, children.length, ...items),
     querySelector: (selector) =>
-      sub[selector] ?? children.find((child) => child.className?.includes('avatar')) ?? null,
+      sub[selector] ??
+      children.find((child) => child.className?.includes('avatar')) ??
+      null,
   };
 }
 
@@ -53,8 +56,8 @@ it('renders public avatar URLs and hides photos for profiles marked hidden', () 
     },
   });
   const image = (slot) =>
-    doc.nodes[slot].querySelector('.seat__avatar')
-      .querySelector('.avatar').children[0];
+    doc.nodes[slot].querySelector('.seat__avatar').querySelector('.avatar')
+      .children[0];
   assert.equal(
     image(2).src,
     'https://storage.test/avatars/visible-user/avatar',
