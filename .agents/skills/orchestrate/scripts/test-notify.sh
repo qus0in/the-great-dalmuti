@@ -12,7 +12,7 @@ printf '%s\n' "$out" | grep -Fq "[dry-run] prompt w16:p2:" || exit 1
 printf '%s\n' "$out" | grep -Fq "[dry-run] record:" || exit 1
 [ ! -f "$FIX/callbacks.log" ] || exit 1
 
-# 2. CLI success but pane read has no token (B1 failure -> delivered=no)
+# 2. CLI success but pane read has no token (failure -> pending, exit 0, retry detached)
 cat << 'EOF' > "$FIX/bin/herdr"
 #!/bin/sh
 [ "$1 $2" = "agent prompt" ] && exit 0
@@ -20,12 +20,16 @@ cat << 'EOF' > "$FIX/bin/herdr"
 exit 2
 EOF
 chmod +x "$FIX/bin/herdr"
-rc=0; NOTIFY_BACKOFFS="" NOTIFY_VERIFY_TRIES=1 NOTIFY_VERIFY_SLEEP=0 PATH="$FIX/bin:$PATH" HERDR_ENV=1 \
+rc=0; NOTIFY_DETACH=0 NOTIFY_VERIFY_TRIES=1 NOTIFY_VERIFY_SLEEP=0 PATH="$FIX/bin:$PATH" HERDR_ENV=1 \
   "$NOTIFY" --self-pane w16:p7 w16:p2 "$FIX/report-p7-t2.md" "unverified" >/dev/null 2>&1 || rc=$?
-[ "$rc" -eq 1 ] || exit 1
-grep -q "unit=p7-t2 .* delivered=no" "$FIX/callbacks.log" || exit 1
+[ "$rc" -eq 0 ] || exit 1
+grep -q "unit=p7-t2 .* delivered=pending" "$FIX/callbacks.log" || exit 1
 
-# 3. CLI success AND pane read reflects token (B1 success -> delivered=yes)
+# 2b. redeliver lists pending; failing mock appends no, success mock appends yes
+[ -f "$HERE/redeliver.sh" ] && RED="$HERE/redeliver.sh" || RED="$ORCH_DIR/redeliver.sh"
+"$RED" "$FIX" | grep -q "unit=p7-t2 .* delivered=pending" || exit 1
+REDELIVER_BACKOFFS="" REDELIVER_VERIFY_TRIES=1 REDELIVER_VERIFY_SLEEP=0 PATH="$FIX/bin:$PATH" "$RED" "$FIX" --resend --unit p7-t2 >/dev/null 2>&1
+grep -q "unit=p7-t2 .* delivered=no" "$FIX/callbacks.log" || exit 1
 cat << 'EOF' > "$FIX/bin/herdr"
 #!/bin/sh
 [ "$1 $2" = "agent prompt" ] && { echo "$4" > "$HERDR_CAPTURE"; exit 0; }
@@ -34,13 +38,22 @@ exit 2
 EOF
 chmod +x "$FIX/bin/herdr"
 export HERDR_CAPTURE="$FIX/pane.txt"
-PATH="$FIX/bin:$PATH" NOTIFY_BACKOFFS="" NOTIFY_VERIFY_TRIES=1 NOTIFY_VERIFY_SLEEP=0 HERDR_ENV=1 \
+REDELIVER_BACKOFFS="" REDELIVER_VERIFY_TRIES=1 REDELIVER_VERIFY_SLEEP=0 PATH="$FIX/bin:$PATH" "$RED" "$FIX" --resend --unit p7-t2 >/dev/null 2>&1
+grep -q "unit=p7-t2 .* delivered=yes" "$FIX/callbacks.log" || exit 1
+n1=$(wc -l < "$FIX/callbacks.log")
+REDELIVER_BACKOFFS="" REDELIVER_VERIFY_TRIES=1 REDELIVER_VERIFY_SLEEP=0 PATH="$FIX/bin:$PATH" "$RED" "$FIX" --resend --unit p7-t2 >/dev/null 2>&1
+n2=$(wc -l < "$FIX/callbacks.log")
+[ "$n1" -eq "$n2" ] || exit 1
+
+# 3. CLI success AND pane read reflects token (B1 success -> delivered=yes)
+PATH="$FIX/bin:$PATH" NOTIFY_DETACH=0 NOTIFY_VERIFY_TRIES=1 NOTIFY_VERIFY_SLEEP=0 HERDR_ENV=1 \
   "$NOTIFY" --self-pane w16:p7 w16:p2 "$FIX/report-p7-t3.md" "verified" >/dev/null
 grep -q "unit=p7-t3 .* delivered=yes" "$FIX/callbacks.log" || exit 1
 
 # 4. health.sh detects delivered=no
 echo "status: done" > "$FIX/report-p7-t2.md"
 printf '2026-10-18T00:00:00Z dispatched w16:p7 p7-t2 model=M e\n' > "$FIX/dispatch.log"
+printf '[2026-10-18T00:00:00Z] worker=w16:p7 unit=p7-t4 status=done report=%s target=w16:p2 token=cb-seed delivered=no\n' "$FIX/report-p7-t4.md" >> "$FIX/callbacks.log"
 "$HEALTH" "$FIX" | grep -Fq "[미수신 콜백]" || exit 1
 
 # 5. B4: legacy unknown with unrelated review (pE-review-build vs pD-ui) or earlier review is RETAINED
