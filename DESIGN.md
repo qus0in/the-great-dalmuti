@@ -77,8 +77,9 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 13. `css/components/card-back.css`
 14. `css/components/card-states.css`
 15. `css/components/seat.css`
+16. `css/components/report-menu.css`
 
-그 뒤 대기실(`index.html`)은 `css/components/badge.css`, `css/components/button.css`, `css/components/button-google.css`, `css/components/panel.css`, `css/components/top-nav.css`, `css/components/avatar.css` 순서로 연결한 뒤 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `profile-card.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸(`play.html`)은 `css/components/avatar.css`, `css/components/badge.css`, `css/components/button.css`, `css/components/panel.css` 순서로 연결한 뒤 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
+그 뒤 대기실(`index.html`)은 `css/components/badge.css`, `css/components/button.css`, `css/components/button-google.css`, `css/components/panel.css`, `css/components/top-nav.css`, `css/components/avatar.css` 순서로 연결한 뒤 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `profile-card.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸(`play.html`)은 `css/components/avatar.css`, `css/components/badge.css`, `css/components/button.css`, `css/components/panel.css`, `css/components/report-menu.css` 순서로 연결한 뒤 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css`, `chat-panel.css`, `lobby.css` 순서로 연결합니다. 관리자 페이지(`admin.html`)는 `css/components/badge.css`, `css/components/button.css`, `css/components/panel.css`, `css/components/top-nav.css`, `css/components/avatar.css` 순서로 연결한 뒤 `css/admin/` 모듈(`admin.css`, `admin-item.css`)을 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
 
 #### 연결 방식 선택 (SWOT)
 
@@ -218,6 +219,9 @@ CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/c
   - 4인 대전 아레나 (상단 1위 대달무티 민우, 동쪽 2위 소달무티 지은, 서쪽 4위 대농노 철수, 하단 3위 소농노 본인)
   - 80장 수학적 카드 분배 정합성 준수 (남은 덱 0장, 필드 3장, 버린 카드 20장, 4인 손패 57장 = 총 80장)
   - 반응형 전환: 데스크톱 십자형 배치 → 모바일(390px) 3열 컴팩트 좌석 + 중앙 필드 + 하단 손패 트레이
+- **관리자 페이지 (src/ui/public/admin.html & css/admin/ 모듈)**:
+  - 처리 대기(의심·이의제기), 전체 유저(검색·차단), 처리 기록 3탭 및 403 화면
+  - 공통 파운데이션의 패널, 버튼, 배지, 아바타 토큰을 재사용
 
 ---
 

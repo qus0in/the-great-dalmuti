@@ -9,7 +9,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PUBLIC_DIR = join(__dirname, 'public');
 
-// 없는 주소: 화면은 404 안내 페이지, API는 Problem Details 유지
 function handleNotFound(req, res, next) {
   if (req.path.startsWith('/api/')) {
     notFoundHandler(req, res, next);
@@ -18,11 +17,7 @@ function handleNotFound(req, res, next) {
   res.status(404).sendFile(join(PUBLIC_DIR, '404.html'));
 }
 
-export function createApp({ config, gameRouter, requestLogging } = {}) {
-  const app = express();
-  app.use(requestLogging ?? createRequestLogging());
-  registerHealth(app);
-  // 파일명 없는 깔끔한 주소로 보낸다 (쿼리스트링 유지)
+function registerPublicRoutes(app, config) {
   app.use((req, res, next) => {
     if (req.path === '/index.html') {
       res.redirect(301, `/${req.url.slice('/index.html'.length)}`);
@@ -32,8 +27,10 @@ export function createApp({ config, gameRouter, requestLogging } = {}) {
       next();
     }
   });
+  app.get('/admin', (_req, res) =>
+    res.sendFile(join(PUBLIC_DIR, 'admin.html')),
+  );
   app.use(express.static(PUBLIC_DIR, { extensions: ['html'] }));
-
   app.get('/api/config', (_req, res) => {
     const publicConfig = config?.publicConfig ?? {
       supabaseUrl: process.env.SUPABASE_URL,
@@ -42,16 +39,28 @@ export function createApp({ config, gameRouter, requestLogging } = {}) {
     res.set('Cache-Control', 'public, max-age=300');
     res.json(publicConfig);
   });
+}
 
-  // U11a 게임 라우터(있을 때만): 내부에 /api/... 전체 경로가 들어 있어 root에 mount한다
-  if (gameRouter) {
-    app.use(gameRouter);
-  }
-
-  // 없는 주소: 화면은 404 안내 페이지, API는 Problem Details 유지
+function registerApiRoutes(app, { gameRouter, reportRouter, adminRouter }) {
+  if (reportRouter) app.use('/api/reports', reportRouter);
+  if (adminRouter) app.use('/api/admin', adminRouter);
+  if (gameRouter) app.use(gameRouter);
   app.use(handleNotFound);
   app.use(errorMiddleware);
+}
 
+export function createApp({
+  config,
+  gameRouter,
+  reportRouter,
+  adminRouter,
+  requestLogging,
+} = {}) {
+  const app = express();
+  app.use(requestLogging ?? createRequestLogging());
+  registerHealth(app);
+  registerPublicRoutes(app, config);
+  registerApiRoutes(app, { gameRouter, reportRouter, adminRouter });
   return app;
 }
 
@@ -62,7 +71,6 @@ export function startServer(
   const isOptions = typeof portOrOptions === 'object' && portOrOptions !== null;
   const port = isOptions ? (portOrOptions.port ?? 3000) : portOrOptions;
   const config = isOptions ? portOrOptions.config : optionsConfig;
-
   const app = createApp({ config });
   return new Promise((resolve, reject) => {
     const server = app.listen(port, () => resolve(server));

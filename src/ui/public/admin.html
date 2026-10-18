@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>달무티 · 관리자</title>
+  <meta name="description" content="달무티 운영 관리자 페이지">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FDF4D2">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="달무티">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="달무티 · 관리자">
+  <meta property="og:description" content="달무티 운영 관리자 페이지">
+  <meta property="og:url" content="https://the-great-dalmuti.onrender.com/admin">
+  <meta property="og:image" content="https://the-great-dalmuti.onrender.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="달무티 · 관리자">
+  <meta name="twitter:description" content="달무티 운영 관리자 페이지">
+  <meta name="twitter:image" content="https://the-great-dalmuti.onrender.com/og.png">
+  <meta name="twitter:image:alt" content="달무티 카드와 제목이 담긴 미리보기">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/tokens/typography.css">
+  <link rel="stylesheet" href="/css/tokens/spacing.css">
+  <link rel="stylesheet" href="/css/tokens/elevation.css">
+  <link rel="stylesheet" href="/css/base/typography.css">
+  <link rel="stylesheet" href="/css/base/layout.css">
+  <link rel="stylesheet" href="/css/base/utilities.css">
+  <link rel="stylesheet" href="/css/components/badge.css">
+  <link rel="stylesheet" href="/css/components/button.css">
+  <link rel="stylesheet" href="/css/components/panel.css">
+  <link rel="stylesheet" href="/css/components/top-nav.css">
+  <link rel="stylesheet" href="/css/components/avatar.css">
+  <link rel="stylesheet" href="/css/admin/admin.css">
+  <link rel="stylesheet" href="/css/admin/admin-item.css">
+</head>
+<body data-page="admin">
+  <header class="top-nav">
+    <div class="top-nav__inner">
+      <a href="/" class="top-nav__brand">달무티 관리자</a>
+      <div class="top-nav__auth" data-auth="signed-in" hidden>
+        <span class="badge top-nav__chip" data-auth="user-name"></span>
+        <button type="button" class="btn btn--outline top-nav__btn" data-auth="logout">로그아웃</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin" data-admin="root">
+    <div class="panel admin-forbidden" data-admin="forbidden" hidden>
+      <h1 class="admin-forbidden__title">접근 제한</h1>
+      <p class="admin-forbidden__msg" data-admin="forbidden-message">관리자만 볼 수 있어요.</p>
+    </div>
+
+    <main class="panel admin__main" data-admin="app">
+      <nav class="admin__tabs" role="tablist" aria-label="관리자 메뉴">
+        <button type="button" class="admin__tab" role="tab" aria-selected="true" aria-controls="panel-queue" id="tab-queue" data-tab="queue">처리 대기</button>
+        <button type="button" class="admin__tab" role="tab" aria-selected="false" aria-controls="panel-users" id="tab-users" data-tab="users">전체 유저</button>
+        <button type="button" class="admin__tab" role="tab" aria-selected="false" aria-controls="panel-history" id="tab-history" data-tab="history">처리 기록</button>
+      </nav>
+
+      <div class="admin__panels">
+        <section class="admin-panel" role="tabpanel" id="panel-queue" aria-labelledby="tab-queue" data-panel="queue">
+          <div class="admin-section">
+            <h2 class="admin-section__title">의심 목록</h2>
+            <div data-admin="suspects-list"></div>
+          </div>
+          <div class="admin-section">
+            <h2 class="admin-section__title">이의제기 목록</h2>
+            <div data-admin="appeals-list"></div>
+          </div>
+        </section>
+
+        <section class="admin-panel" role="tabpanel" id="panel-users" aria-labelledby="tab-users" data-panel="users" hidden>
+          <form class="admin-search" data-admin="search-form">
+            <input type="search" class="admin-search__input" data-admin="search-input" placeholder="이름 검색" aria-label="이름 검색">
+            <button type="submit" class="btn btn--primary" data-admin="search-submit">검색</button>
+          </form>
+          <div data-admin="users-list"></div>
+        </section>
+
+        <section class="admin-panel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" data-panel="history" hidden>
+          <div data-admin="history-list"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/auth.js"></script>
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 #!/bin/sh
-# Unreceived callbacks reporting helper for health.sh (S17, S26).
-# Lists callbacks marked delivered=no, or legacy/unknown callbacks without orchestrator processing.
+# Unreceived callbacks reporting helper for health.sh (S17, S26, S30).
+# Lists failed/legacy callbacks and pending retries older than ten minutes.
 health_unreceived_lines() {
   task_dir=$1; clog="$task_dir/callbacks.log"
   [ -f "$clog" ] || return 0
-  awk -v td="$task_dir" '
+  rows=$(awk -v td="$task_dir" '
     function canon(name,   c) {
       c = name
       while (c ~ /^p[0-9A-Za-z]+-/ || c ~ /^review[-_]/) {
@@ -30,7 +30,7 @@ health_unreceived_lines() {
       }
       close(df)
       for (j=1; j<=n; j++) {
-        u = order[j]; d = u_del[u]; un = (d == "no")
+        u = order[j]; d = u_del[u]; un = (d == "no" || d == "pending")
         if (d == "unknown") {
           pr = 0; uc = canon(u)
           for (k=1; k<=dc; k++) {
@@ -42,8 +42,20 @@ health_unreceived_lines() {
           }
           if (!pr) un = 1
         }
-        if (un) printf "%-16.16s %-11.11s %-11.11s %-8.8s %s\n", u, u_w[u], d, u_st[u], u_rep[u]
+        if (un) printf "%s\t%s\t%s\t%s\t%s\t%s\n", u, u_w[u], d, u_st[u], u_rep[u], u_ts[u]
       }
     }
-  ' "$clog"
+  ' "$clog")
+  [ -n "$rows" ] || return 0
+  now=$(date +%s)
+  printf '%s\n' "$rows" | while IFS="$(printf '\t')" read -r u w d st rep ts; do
+    [ -n "$u" ] || continue
+    if [ "$d" = pending ]; then
+      started=$(health_ts_epoch "$ts")
+      case "$started" in ''|*[!0-9]*) started=0;; esac
+      [ $((now - started)) -gt 600 ] || continue
+      d='pending>10m'
+    fi
+    printf "%-16.16s %-11.11s %-11.11s %-8.8s %s\n" "$u" "$w" "$d" "$st" "$rep"
+  done
 }

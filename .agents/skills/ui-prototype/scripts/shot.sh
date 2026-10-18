@@ -44,12 +44,28 @@ start_http() {
 }
 rc=0
 for p in $PAGES; do
-  if [ ! -f "$p" ]; then echo "page not found: $p" >&2; rc=1; continue; fi
-  abs=$(cd "$(dirname "$p")" && pwd)/$(basename "$p")
-  name=$(basename "$p" .html); page_url="file://$abs"
-  case "$abs" in "$ROOT/src/ui/public/"*)
-    if [ -z "$server_pid" ]; then start_http || exit 1; fi
-    page_url="http://127.0.0.1:$port/${abs#"$ROOT/src/ui/public/"}";;
+  case "$p" in
+    http://*|https://*)
+      page_url="$p"; name=$(basename "$p" .html | sed 's/[?#].*//')
+      [ -n "$name" ] || name="page";;
+    *)
+      if [ ! -f "$p" ]; then echo "page not found: $p" >&2; rc=1; continue; fi
+      abs=$(cd "$(dirname "$p")" && pwd)/$(basename "$p")
+      name=$(basename "$p" .html); page_url="file://$abs"
+      case "$abs" in "$ROOT/src/ui/public/"*)
+        if [ -z "$server_pid" ]; then start_http || exit 1; fi
+        page_url="http://127.0.0.1:$port/${abs#"$ROOT/src/ui/public/"}";;
+      esac;;
+  esac
+  case "$page_url" in http://*|https://*)
+    code=$(curl -s -L --connect-timeout 5 --max-time 10 -o /dev/null -w "%{http_code}" "$page_url" 2>/dev/null)
+    curl_rc=$?
+    if [ "$curl_rc" -ne 0 ]; then
+      echo "http request failed ($curl_rc): $p ($page_url)" >&2; rc=1; continue
+    fi
+    case "$code" in 4*|5*|000)
+      echo "http check failed ($code): $p ($page_url)" >&2; rc=1; continue;;
+    esac;;
   esac
   for size in 390,844 360,780 820,1180 1180,820 1440,900; do
     w=${size%,*}; h=${size#*,}; out="$OUT/$name-${w}x${h}.png"

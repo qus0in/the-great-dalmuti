@@ -1,4 +1,5 @@
 import { renderAvatar, resolveSeatAvatar, mountAvatar } from './avatar.js';
+import { syncSeatButton } from './report-entry.js';
 
 const SEAT_TITLES = ',1위 대달무티,2위 소달무티,3위 소농노,4위 대농노'.split(
   ',',
@@ -50,6 +51,7 @@ function resetSeatSlots(doc, isFinished) {
       el.className = slot === 2 ? 'seat seat--me' : 'seat';
       updateSeatRank(el, {});
       updateSeatStatus(el, { isFinished, isTurn: false, isPassed: false });
+      syncSeatButton(el, {}, {});
     }
   }
 }
@@ -66,20 +68,16 @@ function updateSeatSlot(doc, item, flags) {
   setText(el, '.seat__count', `${item.cardCount || 0}장`);
   updateSeatRank(el, item);
   updateSeatStatus(el, flags);
+  syncSeatButton(el, item, flags.ctx);
 }
 
 function buildSeatFlags(pub, item, { mySeat, ctx }) {
-  const isTurn = Boolean(
-    pub && pub.phase === 'playing' && item.seat === pub.currentTurnSeat,
-  );
-  const isPassed = Boolean(
-    pub && pub.phase === 'playing' && !isTurn && item.passed,
-  );
+  const live = pub && pub.phase === 'playing';
   return {
     slot: mapSeatToSlot(item.seat, mySeat),
     isFinished: Boolean(pub && pub.phase === 'finished'),
-    isTurn,
-    isPassed,
+    isTurn: Boolean(live && item.seat === pub.currentTurnSeat),
+    isPassed: Boolean(live && item.passed && item.seat !== pub.currentTurnSeat),
     ctx,
   };
 }

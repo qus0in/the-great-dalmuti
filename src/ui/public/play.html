@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="css/components/badge.css">
   <link rel="stylesheet" href="css/components/button.css">
   <link rel="stylesheet" href="css/components/panel.css">
+  <link rel="stylesheet" href="css/components/report-menu.css">
   <link rel="stylesheet" href="css/play/layout.css">
   <link rel="stylesheet" href="css/play/hud.css">
   <link rel="stylesheet" href="css/play/hud-mobile.css">
@@ -60,6 +61,8 @@
   <link rel="stylesheet" href="css/play/hand-fan.css">
   <link rel="stylesheet" href="css/play/animations.css">
   <link rel="stylesheet" href="css/play/responsive-tablet.css">
+  <link rel="stylesheet" href="css/play/chat-panel.css">
+  <link rel="stylesheet" href="css/play/lobby.css">
 </head>
 <body class="play-page" data-page="play">
   <div class="play-container">
@@ -85,6 +88,21 @@
       게임을 불러오는 중…
     </section>
     <p class="play-action-banner" data-play="substitution" role="status" hidden></p>
+
+    <!-- 2-1. Waiting Room (Join Code) -->
+    <section class="panel lobby" data-play="lobby" aria-label="참가 대기실" hidden>
+      <h2 class="lobby__title">친구를 초대하세요</h2>
+      <p class="lobby__code-row">참가 코드 <strong class="lobby__code" data-play="lobby-code">----</strong></p>
+      <div class="lobby__link-row">
+        <span class="lobby__link" data-play="lobby-link"></span>
+        <button type="button" class="btn btn--secondary lobby__copy" data-play="lobby-copy">링크 복사</button>
+      </div>
+      <ul class="lobby__seats" data-play="lobby-seats" aria-label="참가자 목록"></ul>
+      <div class="lobby__actions" data-play="lobby-actions">
+        <button type="button" class="btn btn--gold lobby__start" data-play="lobby-start" hidden>시작</button>
+        <p class="lobby__wait" data-play="lobby-wait" role="status" hidden>방장이 시작하기를 기다리는 중</p>
+      </div>
+    </section>
 
     <!-- 3. Card Room Arena (4 Seats + Felt Game Table) -->
     <main class="play-arena" aria-label="달무티 게임 대전 화면">

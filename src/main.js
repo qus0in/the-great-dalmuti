@@ -1,23 +1,22 @@
+import { createRuntime } from './main-runtime.js';
 import { loadConfig } from './infra/config/env.js';
 import { createSupabaseServerClient } from './infra/supabase-server-client.js';
 import { createSupabaseGameRepository } from './infra/game/supabase-game-repository.js';
 import { createSupabaseTokenVerifier } from './infra/auth/supabase-token-verifier.js';
 import { requireAuth } from './ui/http/require-auth.js';
+import { createReportRouterFor } from './main-reporting.js';
+import { createAdminRouterFor } from './main-admin-api.js';
 import { createGameRouter } from './ui/game/router.js';
 import { createApp } from './ui/server.js';
 
-// 런타임 모듈이 아직 없어도 서버는 그대로 뜬다 (미주입 시 기존 동작)
-async function createRuntime(deps) {
-  try {
-    const mod = await import('./app/game/runtime-controller.js');
-    return mod.createGameRuntime(deps);
-  } catch (err) {
-    if (err?.code === 'ERR_MODULE_NOT_FOUND') return undefined;
-    throw err;
-  }
-}
-
-// 저장소·인증·시계 묶음: 두 조립 함수가 같은 부품으로 만든다
+const gameRouterFor = (deps, runtime) =>
+  createGameRouter({
+    repository: deps.repository,
+    clock: deps.clock,
+    rng: { random: Math.random },
+    requireAuth: deps.authMiddleware,
+    runtime,
+  });
 function baseDeps(config) {
   const client = createSupabaseServerClient({
     url: config.publicConfig.supabaseUrl,
@@ -26,25 +25,29 @@ function baseDeps(config) {
   const repository = createSupabaseGameRepository({ client });
   const tokenVerifier = createSupabaseTokenVerifier({ client });
   const authMiddleware = requireAuth({ tokenVerifier });
-  return { repository, clock: { now: () => new Date() }, authMiddleware };
-}
-
-// 기존 계약: 동기적으로 Express app 반환 (runtime은 선택 주입)
-export function buildApp({ config, runtime } = {}) {
-  const { repository, clock, authMiddleware } = baseDeps(config);
-  const gameRouter = createGameRouter({
+  const reportRouter = createReportRouterFor(config, client, authMiddleware);
+  const adminRouter = createAdminRouterFor(config, client, authMiddleware);
+  return {
     repository,
-    clock,
-    rng: { random: Math.random },
-    requireAuth: authMiddleware,
+    clock: { now: () => new Date() },
+    authMiddleware,
+    reportRouter,
+    adminRouter,
+  };
+}
+export function buildApp({ config, runtime } = {}) {
+  const { repository, clock, authMiddleware, reportRouter, adminRouter } =
+    baseDeps(config);
+  const gameRouter = gameRouterFor(
+    { repository, clock, authMiddleware },
     runtime,
-  });
-  return createApp({ config, gameRouter });
+  );
+  return createApp({ config, gameRouter, reportRouter, adminRouter });
 }
 
-// 실제 런타임 배선: 같은 저장소·시계를 런타임과 라우터가 공유한다
 export async function buildAppWithRuntime({ config }) {
-  const { repository, clock, authMiddleware } = baseDeps(config);
+  const { repository, clock, authMiddleware, reportRouter, adminRouter } =
+    baseDeps(config);
   const runtime = await createRuntime({
     gameRepository: repository,
     clock,
@@ -57,14 +60,14 @@ export async function buildAppWithRuntime({ config }) {
       console.error(`[runtime] ${err?.code ?? 'ERROR'} ${err?.message ?? ''}`);
     },
   });
-  const gameRouter = createGameRouter({
-    repository,
-    clock,
-    rng: { random: Math.random },
-    requireAuth: authMiddleware,
+  const gameRouter = gameRouterFor(
+    { repository, clock, authMiddleware },
     runtime,
-  });
-  return { app: createApp({ config, gameRouter }), runtime };
+  );
+  return {
+    app: createApp({ config, gameRouter, reportRouter, adminRouter }),
+    runtime,
+  };
 }
 
 export async function startApp(
@@ -92,7 +95,4 @@ export async function startApp(
   });
 }
 
-const isMain = process.argv[1] && process.argv[1].endsWith('src/main.js');
-if (isMain) {
-  await startApp();
-}
+if (process.argv[1]?.endsWith('src/main.js')) await startApp();

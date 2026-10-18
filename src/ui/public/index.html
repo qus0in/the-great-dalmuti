@@ -107,6 +107,29 @@
           </div>
         </div>
         <p class="profile-card__notice" data-profile="notice" aria-live="polite" hidden></p>
+        <div class="profile-card__appeal" data-appeal="root" hidden>
+          <button type="button" class="btn btn--secondary btn--sm" data-appeal="open" hidden>
+            이의제기
+          </button>
+          <form class="profile-card__appeal-form" data-appeal="form" hidden>
+            <label class="sr-only" for="profile-appeal-text">이의제기 사유</label>
+            <textarea
+              id="profile-appeal-text"
+              class="profile-card__appeal-input"
+              data-appeal="textarea"
+              maxlength="500"
+              rows="3"
+              placeholder="이의제기 사유를 적어 주세요 (최대 500자)"
+            ></textarea>
+            <div class="profile-card__appeal-actions">
+              <span class="profile-card__appeal-count" data-appeal="count">500자 남음</span>
+              <button type="submit" class="btn btn--primary btn--sm" data-appeal="submit">
+                제출
+              </button>
+            </div>
+          </form>
+          <p class="profile-card__appeal-status" data-appeal="status" aria-live="polite" hidden></p>
+        </div>
       </section>
 
       <!-- 4-seat waiting room on the table felt -->

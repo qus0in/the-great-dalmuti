@@ -1,42 +1,46 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.20.0/+esm';
 import { currentUser, getClient } from './auth.js';
-import { createHttpClient } from './http-client.js';
-import { createGameApi } from './game-api.js';
+import { createPlayApi } from './play-api.js';
 import { createPlayState, passTurn, submitSelected } from './play-state.js';
-import { bindPlay, renderPlay, showMessage } from './play-dom.js';
+import { bindPlay, showMessage } from './play-dom.js';
 import { subscribeGame } from './realtime.js';
 import {
   announceRound,
+  connectPlayChat,
   createStartedRoom,
-  createTokenGetter,
   errorText,
-  withRecorder,
 } from './play-flow.js';
 import { createSeatPrivacy } from './play-seat-privacy.js';
+import { startWaitingRoom } from './play-lobby.js';
+import { renderRoomView } from './play-view.js';
+import { createRoomReportContext } from './play-report.js';
 
 const state = createPlayState();
 const seatPrivacy = createSeatPrivacy();
-let api = null;
-let client = null;
-let mySeat = 0;
-let lastCommand = null;
-
+let api = null,
+  client = null;
+let mySeat = 0,
+  lastCommand = null;
+let reportContext = {};
 function render() {
-  const view = state.get();
-  renderPlay(document, {
-    ...view,
-    ...seatPrivacy.context(view.publicState, mySeat, client),
+  renderRoomView(document, state.get(), {
+    mySeat,
+    client,
+    seatPrivacy,
+    reportContext,
+    origin: `${window.location.protocol}//${window.location.host}`,
+    onStart: startLobby,
   });
 }
 
 const updateSeatPrivacy = () =>
   seatPrivacy.update(client, state.get().publicState);
-
-function message(text) {
-  showMessage(document, text ?? '');
-}
-
-// 명령 성공 뒤 재렌더, 실패는 메시지로 알리고 선택을 유지한다
+const message = (text) => showMessage(document, text ?? '');
+const startLobby = () =>
+  startWaitingRoom(api, state)
+    .then(updateSeatPrivacy)
+    .then(render)
+    .catch((err) => message(errorText(err)));
 async function run(command) {
   lastCommand = null;
   try {
@@ -48,8 +52,6 @@ async function run(command) {
   render();
   announceRound(state.get().publicState, lastCommand, message);
 }
-
-// Realtime 알림이 오면 방 상태를 다시 읽어 화면을 맞춘다
 async function sync() {
   const { code } = state.get();
   try {
@@ -62,26 +64,23 @@ async function sync() {
     message(errorText(err));
   }
 }
-
-// 세션 확인 → 방 생성·시작 → 첫 렌더 → 조작·Realtime 연결
 async function init() {
   const user = await currentUser();
   if (!user) return;
   client = await getClient();
-  const getToken = createTokenGetter(client);
-  api = withRecorder(
-    createGameApi(createHttpClient({ axios, getToken })),
-    (result) => {
-      lastCommand = result;
-    },
-  );
-  const { joinCode, room, seat } = await createStartedRoom(
-    api,
-    user,
-    window.location.search,
-  );
-  mySeat = seat;
-  state.setRoom({ code: joinCode, ...room });
+  api = createPlayApi({
+    client,
+    axios,
+    onResult: (result) => (lastCommand = result),
+  });
+  const started = await createStartedRoom(api, user, {
+    search: window.location.search,
+    replaceUrl: (url) => window.history.replaceState(null, '', url),
+  });
+  mySeat = started.seat;
+  const { room } = started;
+  state.setRoom({ code: started.joinCode, ...room });
+  reportContext = createRoomReportContext(document, { client, user, room });
   await updateSeatPrivacy();
   render();
   bindPlay(document, {
@@ -93,6 +92,6 @@ async function init() {
     onPass: () => run(passTurn),
   });
   subscribeGame(client, state.get().gameId, sync);
+  connectPlayChat({ client, user, state, seatPrivacy, ...reportContext });
 }
-
 init().catch((err) => message(errorText(err)));
