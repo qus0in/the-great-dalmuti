@@ -10,6 +10,29 @@ report_paths() {
     grep -Eo "$REPORT_RE" | awk '!seen[$0]++'
 }
 
+# Return the last validated context; replacements may target a busy worker.
+wait_for_target() {
+  dispatch_wait_seconds=$1; dispatch_wait_set=$2; dispatch_replace_set=$3
+  dispatch_required=$4; dispatch_interval=$5; dispatch_target=$6; shift 6
+  dispatch_deadline=$(( $(date +%s) + dispatch_wait_seconds )); dispatch_confirmed=0
+  while :; do
+    dispatch_ctx=$("$@") || return $?
+    dispatch_status=$(printf '%s\n' "$dispatch_ctx" | jq -r '.targets[0].agent_status // empty')
+    if [ "$dispatch_wait_set" -eq 0 ]; then
+      case "$dispatch_status" in idle|done) printf '%s\n' "$dispatch_ctx"; return 0;; esac
+      [ "$dispatch_replace_set" -eq 1 ] && { printf '%s\n' "$dispatch_ctx"; return 0; }
+      die 1 "target not idle/done: $dispatch_target ($dispatch_status)"
+    fi
+    case "$dispatch_status" in
+      idle|done) dispatch_confirmed=$((dispatch_confirmed + 1));;
+      *) dispatch_confirmed=0;;
+    esac
+    if [ "$dispatch_confirmed" -ge "$dispatch_required" ]; then printf '%s\n' "$dispatch_ctx"; return 0; fi
+    [ "$(date +%s)" -lt "$dispatch_deadline" ] || die 1 "target not idle/done: $dispatch_target ($dispatch_status)"
+    sleep "$dispatch_interval"
+  done
+}
+
 # Dispatch report guard: an existing report blocks dispatch unless forced
 # or its first line is exactly "status: in-progress" (restartable unit, contract line 5).
 guard_reports() {
