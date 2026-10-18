@@ -20,3 +20,4 @@
 | [0014](0014-0.3.4-tutorial-mode.md) | [0.3.4 튜토리얼 모드 — 봇 3석 고정과 서버 추천·이유](0014-0.3.4-tutorial-mode.md) | accepted | 2026-10-17 |
 | [0015](0015-0.3.5-turn-delegation-and-tutorial-timer.md) | [0.3.5 턴 대행은 한 차례만, 튜토리얼은 타이머 없음](0015-0.3.5-turn-delegation-and-tutorial-timer.md) | accepted | 2026-10-18 |
 | [0016](0016-0.3.6-profile-admin-chat.md) | [0.3.6–0.3.8 프로필 이미지·방 채팅·관리자 가리기·신고·이의제기](0016-0.3.6-profile-admin-chat.md) | accepted | 2026-10-18 |
+| [0017](0017-0.3.7-join-code-and-moderation-flag.md) | [0.3.7 참가 코드 대기실과 운영 기능 숨김 배포](0017-0.3.7-join-code-and-moderation-flag.md) | accepted | 2026-10-18 |
