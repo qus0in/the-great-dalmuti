@@ -83,3 +83,4 @@
 - [2026-10-17](2026-10-17-09-milestone-030-description-expansion.md) — 0.3.0 마일스톤 설명 확장
 - [2026-10-17](2026-10-17-10-pd-handrow-layout.md) — 손패 일자 겹침 배열 적용
 - [2026-10-18](2026-10-18-01-worker-context-reset.md) — 워커 컨텍스트 정리 및 Codex compact 규칙
+- [2026-10-18](2026-10-18-02-wiki-expression-cohesion.md) — 위키 표현을 patch별 나열 대신 응집도 단위로 묶음
