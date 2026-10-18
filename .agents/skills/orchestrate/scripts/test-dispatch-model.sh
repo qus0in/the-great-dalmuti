@@ -10,12 +10,12 @@ run_dispatch workerA "$BRIEF" > "$FIX/unknown.out" 2> "$FIX/unknown.err"
 # Send failure, failed cleanup result, or missing idle confirmation never sends a brief.
 for failure in send result idle; do
   set_statuses idle working
-  export RESET_FAIL=0 RESET_ERROR='' TEST_RESET_TIMEOUT=5
-  case "$failure" in send) RESET_FAIL=1;; result) RESET_ERROR='Error: API key expired';; idle) TEST_RESET_TIMEOUT=0;; esac
+  export RESET_FAIL=0 RESET_ERROR='' MODEL_AFTER='' TEST_RESET_TIMEOUT=5
+  case "$failure" in send) RESET_FAIL=1;; result) MODEL_AFTER='Error: API key expired';; idle) TEST_RESET_TIMEOUT=0;; esac
   if run_dispatch workerA "$BRIEF" > "$FIX/fail.out" 2>&1; then echo "reset failure passed: $failure" >&2; exit 1; fi
   [ ! -s "$PROMPT_CAPTURE" ]
 done
-unset RESET_FAIL RESET_ERROR TEST_RESET_TIMEOUT
+unset RESET_FAIL RESET_ERROR MODEL_AFTER TEST_RESET_TIMEOUT
 # OpenCode uses its documented new-session command; dry-run never calls herdr prompt.
 export TEST_AGENT=opencode
 set_statuses idle
@@ -66,4 +66,30 @@ for unknown in before after both; do
   [ "$(wc -l < "$FIX/model-unknown.err" | tr -d ' ')" -eq 1 ]
   grep -q 'model comparison unavailable:' "$FIX/model-unknown.err"
 done
+unset TEST_AGENT MODEL_BEFORE MODEL_AFTER
+
+# Prior conversation containing { error: null } or Error: does not cause false failure.
+export TEST_AGENT=opencode
+export MODEL_BEFORE=$(printf '  Promise.reject(null) catch { error: null }\n  Error: prior unrelated failure\n┃ Build auto · Model A OpenCode · max')
+export MODEL_AFTER="$MODEL_BEFORE"
+set_statuses idle; run_dispatch --continue workerA "$BRIEF" > "$FIX/prior-error.out" 2> "$FIX/prior-error.err"
+[ -s "$PROMPT_CAPTURE" ]; [ ! -s "$FIX/prior-error.err" ]
+
+# New error line after reset command causes failure.
+export MODEL_AFTER=$(printf '%s\n  Error: new reset failure' "$MODEL_BEFORE")
+set_statuses idle
+if run_dispatch --continue workerA "$BRIEF" > "$FIX/new-error.out" 2>&1; then echo 'new error passed unexpectedly' >&2; exit 1; fi
+[ ! -s "$PROMPT_CAPTURE" ]; grep -q 'context reset failed:.*Error: new reset failure' "$FIX/new-error.out"
+
+# Zero-overlap redraw with Error: in prior conversation body succeeds.
+export MODEL_BEFORE=$(printf 'line 1\n┃ Build auto · Model A OpenCode · max')
+export MODEL_AFTER=$(printf '  Error: x\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\n┃ Build auto · Model A OpenCode · max')
+set_statuses idle; run_dispatch --continue workerA "$BRIEF" > "$FIX/zero-overlap.out" 2> "$FIX/zero-overlap.err"
+[ -s "$PROMPT_CAPTURE" ]; [ ! -s "$FIX/zero-overlap.err" ]
+
+# Error: compaction after reset command line causes failure.
+export MODEL_AFTER=$(printf '  Error: x\n> /compact\n  Error: compaction\n┃ Build auto · Model A OpenCode · max')
+set_statuses idle
+if run_dispatch --continue workerA "$BRIEF" > "$FIX/cmd-err.out" 2>&1; then echo 'cmd-err passed' >&2; exit 1; fi
+[ ! -s "$PROMPT_CAPTURE" ]; grep -q 'context reset failed:.*Error: compaction' "$FIX/cmd-err.out"
 unset TEST_AGENT MODEL_BEFORE MODEL_AFTER
