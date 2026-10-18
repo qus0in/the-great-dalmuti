@@ -1,21 +1,14 @@
+import { createRuntime } from './main-runtime.js';
 import { loadConfig } from './infra/config/env.js';
 import { createSupabaseServerClient } from './infra/supabase-server-client.js';
 import { createSupabaseGameRepository } from './infra/game/supabase-game-repository.js';
 import { createSupabaseTokenVerifier } from './infra/auth/supabase-token-verifier.js';
 import { requireAuth } from './ui/http/require-auth.js';
 import { createReportRouterFor } from './main-reporting.js';
+import { createAdminRouterFor } from './main-admin-api.js';
 import { createGameRouter } from './ui/game/router.js';
 import { createApp } from './ui/server.js';
 
-async function createRuntime(deps) {
-  try {
-    const mod = await import('./app/game/runtime-controller.js');
-    return mod.createGameRuntime(deps);
-  } catch (err) {
-    if (err?.code === 'ERR_MODULE_NOT_FOUND') return undefined;
-    throw err;
-  }
-}
 const gameRouterFor = (deps, runtime) =>
   createGameRouter({
     repository: deps.repository,
@@ -33,24 +26,28 @@ function baseDeps(config) {
   const tokenVerifier = createSupabaseTokenVerifier({ client });
   const authMiddleware = requireAuth({ tokenVerifier });
   const reportRouter = createReportRouterFor(config, client, authMiddleware);
+  const adminRouter = createAdminRouterFor(config, client, authMiddleware);
   return {
     repository,
     clock: { now: () => new Date() },
     authMiddleware,
     reportRouter,
+    adminRouter,
   };
 }
 export function buildApp({ config, runtime } = {}) {
-  const { repository, clock, authMiddleware, reportRouter } = baseDeps(config);
+  const { repository, clock, authMiddleware, reportRouter, adminRouter } =
+    baseDeps(config);
   const gameRouter = gameRouterFor(
     { repository, clock, authMiddleware },
     runtime,
   );
-  return createApp({ config, gameRouter, reportRouter });
+  return createApp({ config, gameRouter, reportRouter, adminRouter });
 }
 
 export async function buildAppWithRuntime({ config }) {
-  const { repository, clock, authMiddleware, reportRouter } = baseDeps(config);
+  const { repository, clock, authMiddleware, reportRouter, adminRouter } =
+    baseDeps(config);
   const runtime = await createRuntime({
     gameRepository: repository,
     clock,
@@ -67,7 +64,10 @@ export async function buildAppWithRuntime({ config }) {
     { repository, clock, authMiddleware },
     runtime,
   );
-  return { app: createApp({ config, gameRouter, reportRouter }), runtime };
+  return {
+    app: createApp({ config, gameRouter, reportRouter, adminRouter }),
+    runtime,
+  };
 }
 
 export async function startApp(

@@ -27,6 +27,9 @@ function registerPublicRoutes(app, config) {
       next();
     }
   });
+  app.get('/admin', (_req, res) =>
+    res.sendFile(join(PUBLIC_DIR, 'admin.html')),
+  );
   app.use(express.static(PUBLIC_DIR, { extensions: ['html'] }));
   app.get('/api/config', (_req, res) => {
     const publicConfig = config?.publicConfig ?? {
@@ -38,8 +41,9 @@ function registerPublicRoutes(app, config) {
   });
 }
 
-function registerApiRoutes(app, gameRouter, reportRouter) {
+function registerApiRoutes(app, { gameRouter, reportRouter, adminRouter }) {
   if (reportRouter) app.use('/api/reports', reportRouter);
+  if (adminRouter) app.use('/api/admin', adminRouter);
   if (gameRouter) app.use(gameRouter);
   app.use(handleNotFound);
   app.use(errorMiddleware);
@@ -49,13 +53,14 @@ export function createApp({
   config,
   gameRouter,
   reportRouter,
+  adminRouter,
   requestLogging,
 } = {}) {
   const app = express();
   app.use(requestLogging ?? createRequestLogging());
   registerHealth(app);
   registerPublicRoutes(app, config);
-  registerApiRoutes(app, gameRouter, reportRouter);
+  registerApiRoutes(app, { gameRouter, reportRouter, adminRouter });
   return app;
 }
 
