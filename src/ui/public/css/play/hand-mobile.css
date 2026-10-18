@@ -64,10 +64,7 @@
     min-height: 160px;
     padding-top: var(--space-0-5);
     padding-bottom: var(--space-1);
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    justify-content: flex-start;
+    overflow: visible;
+    justify-content: center;
   }
 }

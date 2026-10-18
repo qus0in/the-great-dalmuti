@@ -75,3 +75,10 @@
 - [2026-10-17](2026-10-17-01-0-3-3-browser-e2e-and-module-placement.md) — 0.3.3 브라우저 E2E 로그인·모듈 배치 결정
 - [2026-10-17](2026-10-17-02-tutorial-mode.md) — 0.3.4 튜토리얼 모드 결정
 - [2026-10-17](2026-10-17-03-tutorial-common-strategy.md) — 힌트와 봇의 공통 달무티 전략 변경
+- [2026-10-17](2026-10-17-04-wiki-versions-scope.md) — 위키 이전 마이너 버전 및 0.3 작성 범위
+- [2026-10-17](2026-10-17-05-hall-footer-dist-frozen.md) — 대기실 프로토타입 안내 문구 제거 및 dist 동결 유지
+- [2026-10-17](2026-10-17-06-harness-resilience-and-effort-policy.md) — 하네스 유실 대비 및 워커 모델·effort 운영 정책
+- [2026-10-17](2026-10-17-07-audit-system-and-harness-review.md) — 탈맥락 규칙·배치·ADR·하네스 자기개선 검토 감사 요청
+- [2026-10-17](2026-10-17-08-scope-04-into-03.md) — 0.4 기능 0.3 포섭 결정
+- [2026-10-17](2026-10-17-09-milestone-030-description-expansion.md) — 0.3.0 마일스톤 설명 확장
+- [2026-10-17](2026-10-17-10-pd-handrow-layout.md) — 손패 일자 겹침 배열 적용

@@ -3,10 +3,22 @@
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd); cd "$ROOT"
 E=0; err(){ echo "ERR $*"; E=1; }
+warn(){ echo "WARN $*"; }
+AGENTS_WARN_BYTES=${AGENTS_WARN_BYTES:-16384}
+AGENTS_MAX_BYTES=${AGENTS_MAX_BYTES:-24576}
+[ ! -f .agents/project.conf ] || . ./.agents/project.conf
 [ "$(readlink CLAUDE.md)" = AGENTS.md ] || err "CLAUDE.md must symlink AGENTS.md"
 [ "$(readlink .claude/skills)" = ../.agents/skills ] || err ".claude/skills must symlink ../.agents/skills"
 for d in tmp docs .agents/skills; do [ -d "$d" ] || err "missing dir $d"; done
 grep -q '<!-- skills:begin -->' AGENTS.md && grep -q '<!-- skills:end -->' AGENTS.md || err "AGENTS.md index markers missing"
+if [ -f AGENTS.md ]; then
+  agents_bytes=$(wc -c < AGENTS.md | tr -d ' ')
+  if [ "$agents_bytes" -gt "$AGENTS_MAX_BYTES" ]; then
+    err "AGENTS.md size ${agents_bytes}B > ${AGENTS_MAX_BYTES}B (truncation limit)"
+  elif [ "$agents_bytes" -gt "$AGENTS_WARN_BYTES" ]; then
+    warn "AGENTS.md size ${agents_bytes}B > ${AGENTS_WARN_BYTES}B (approaching 24KB limit)"
+  fi
+fi
 for dir in .agents/skills/*/; do
   [ -d "$dir" ] || continue
   n=$(basename "$dir"); s="$dir/SKILL.md"
@@ -46,8 +58,9 @@ fi
 if git rev-parse --git-dir >/dev/null 2>&1; then
   t=$(git ls-files tmp | grep -v '\.gitkeep$' || true)
   [ -z "$t" ] || err "tracked files in tmp/: $t"
-  r=$(grep -rln --exclude-dir=prompt 'tmp/[A-Za-z0-9_-]' docs .agents/skills 2>/dev/null | grep -v '/codify/' || true)
-  [ -z "$r" ] || err "references to tmp/ paths: $r"
+fi
+if ! refs=$("$HERE/tmp-refs.sh" 2>&1); then
+  err "temporary references: $refs"
 fi
 if ! lo=$("$HERE/lines.sh" 2>&1); then
   while IFS= read -r l; do

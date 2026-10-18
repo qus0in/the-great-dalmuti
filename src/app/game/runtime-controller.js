@@ -24,10 +24,17 @@ function buildRuntime({
   });
   const progress = createProgress({ ...base, recordStats, expiry, rooms });
   return {
-    afterAction: (code, result = {}) =>
-      rooms.enqueue(code, () => progress.step(code, result)),
-    cancelRoom: rooms.cancelRoom,
+    afterAction: (code, result = {}) => {
+      substitutions.clearLastSubstitution?.(code);
+      return rooms.enqueue(code, () => progress.step(code, result));
+    },
+    cancelRoom: (code) => {
+      substitutions.clearLastSubstitution?.(code);
+      return rooms.cancelRoom(code);
+    },
     dispose: rooms.dispose,
+    getLastSubstitution: (code) =>
+      substitutions.getLastSubstitution?.(code) ?? null,
   };
 }
 

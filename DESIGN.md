@@ -2,7 +2,7 @@
 
 ## 1. Why: 배경 및 설계 철학
 
-`더 그레이트 달무티(The Great Dalmuti)`는 신분 계급의 불평등과 권력의 순환을 다루는 중세 테마 카드 게임입니다. 이 디자인 시스템은 게임의 핵심 테마인 <strong>중세 봉건 계급 구조</strong>를 현대적인 웹 인터페이스로 시각화하면서도, 순수 HTML·CSS만으로 가볍고 직관적인 사용자 경험을 전달하기 위해 설계되었습니다.
+`더 그레이트 달무티(The Great Dalmuti)`는 신분 계급의 불평등과 권력의 순환을 다루는 중세 테마 카드 게임입니다. 이 디자인 시스템은 게임의 핵심 테마인 <strong>중세 봉건 계급 구조</strong>를 현대적인 웹 인터페이스로 시각화하면서도, 순수 HTML·CSS만으로 가볍고 직관적인 사용자 경험을 전달하기 위해 설계되었습니다. 본 디자인 시스템은 0.2 정적 프로토타입(`dist/`)과 0.3 서비스 화면(`src/ui/public/`) 둘 다에 동일하게 적용됩니다.
 
 ### 핵심 설계 원칙
 1. **신분 격차의 시각적 계층화 (Feudal Hierarchy)**
@@ -27,7 +27,7 @@
 - **위협 (Threats)**: 외부 골드/그레이 등 오프 팔레트 색상 유입 위험을 `tokens.css` 내 100% 팔레트 파생 규칙과 strict check 스크립트로 원천 차단했습니다.
 
 ### 2) 순수 CSS 카드 렌더링 (Pure CSS vs Image/SVG Assets)
-- **강점 (Strengths)**: HTTP 에셋 로딩이 없어 렌더링 속도가 극대화되며, 확대/축소 시에도 벡터 수준의 선명도를 유지합니다. 선택(`is-selected`), 비활성(`is-disabled`), 부채꼴 패닝(`hand-fan`), 낼 수 있음(`is-playable`) 등 상태 변경을 클래스만으로 제어할 수 있습니다.
+- **강점 (Strengths)**: HTTP 에셋 로딩이 없어 렌더링 속도가 극대화되며, 확대/축소 시에도 벡터 수준의 선명도를 유지합니다. 선택(`is-selected`), 비활성(`is-disabled`), 일자 겹침 손패(`hand-fan`), 낼 수 있음(`is-playable`) 등 상태 변경을 클래스만으로 제어할 수 있습니다.
 - **약점 (Weaknesses)**: 실물 카드의 복잡한 인물 일러스트레이션을 완전하게 모사하는 데 한계가 있습니다.
 - **기회 (Opportunities)**: 원형 인장(Seal Badge), 상하 대칭 인덱스 숫자, 이중 테두리, 카드 뒷면의 다이아몬드 격자 패턴(`repeating-linear-gradient`)을 순수 CSS로 완성하여 미니멀하면서도 클래식한 보드게임 카드 미학을 창출했습니다.
 - **위협 (Threats)**: 복잡한 CSS 그라디언트의 렌더링 부하는 하드웨어 가속 트랜스폼(`transform: translate3d`) 및 절제된 모션 토큰으로 해결했습니다.
@@ -41,8 +41,8 @@
 ### 4) 8px 그리드 및 유동형 게임 룸 아레나 (Responsive Arena)
 - **강점 (Strengths)**: 8px 배수 간격 시스템(`--space-0-5`부터 `--space-12`)을 통해 대기실(Hall)과 플레이룸(Play) 간 시각적 리듬을 균일화합니다.
 - **약점 (Weaknesses)**: 4인 대전 원형 테이블 레이아웃을 좁은 모바일 화면(390px)에 일대일로 축소하기 어렵습니다.
-- **기회 (Opportunities)**: 데스크톱에서는 십자형 원형 배치(상/하/좌/우), 모바일에서는 상단 3인 가로 그리드 + 중앙 펠트 테이블 + 하단 손패 스택으로 반응형 전환하여 공간 효율을 극대화했습니다.
-- **위협 (Threats)**: 모바일 손패 카드 겹침 overflow를 음수 마진 토큰(`--space-hand-overlap-mobile`)과 가로 스크롤 트레이로 안전하게 수용했습니다.
+- **기회 (Opportunities)**: 데스크톱에서는 십자형 원형 배치(상/하/좌/우), 모바일에서는 상단 3인 가로 그리드 + 중앙 펠트 테이블 + 하단 일자 손패 행으로 반응형 전환하여 공간 효율을 극대화했습니다.
+- **위협 (Threats)**: 손패가 화면보다 넓어지면 카드 폭과 장수에 따라 겹침 폭을 조정하고, 390px에서도 20장 손패가 가로 스크롤 없이 표시되도록 합니다.
 
 ---
 
@@ -56,7 +56,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 #### What
 
-`dist/css/tokens.css`는 허용된 원천 팔레트와 폰트 선언을 보유합니다. `tokens/`, `base/`, `components/`, `play/`의 모듈은 페이지 HTML에서 직접 연결합니다. 두 페이지는 같은 기반 모듈을 공유하고, 마지막에 화면별 스타일을 연결합니다.
+`dist/css/tokens.css` 및 `src/ui/public/css/tokens.css`는 허용된 원천 팔레트와 폰트 선언을 보유합니다. `tokens/`, `base/`, `components/`, `hall/`, `play/`의 모듈 디렉터리는 페이지 HTML에서 직접 연결합니다. 대기실과 플레이룸은 공통 기반 모듈(`tokens/`, `base/`, `components/`)을 공유하고, 마지막에 화면별 모듈(`hall/` 또는 `play/`)을 연결합니다.
 
 #### How
 
@@ -81,7 +81,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 17. `css/components/button.css`
 18. `css/components/panel.css`
 
-그 뒤 대기실은 `css/hall.css`를 연결합니다. 플레이룸 모듈은 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
+그 뒤 대기실은 `css/hall/` 모듈(`page-shell.css`, `waiting-room.css`, `rank-ladder.css`, `rule-summary.css`, `entry-cta.css`, `entrance-stagger.css`, `hover-affordances.css`, `responsive.css`, `reduced-motion.css`)을 연결합니다. 플레이룸 모듈은 `css/play/` 아래의 `layout.css`, `hud.css`, `hud-mobile.css`, `banner.css`, `arena.css`, `arena-mobile.css`, `card-stack.css`, `table-felt-details.css`, `table-felt.css`, `hand.css`, `hand-fan-deal.css`, `hand-mobile.css`, `hand-fan.css`, `animations.css`, `responsive-tablet.css` 순서로 연결합니다. 파일 구성을 바꾸면 이 링크 순서도 함께 갱신합니다.
 
 #### 연결 방식 선택 (SWOT)
 
@@ -92,7 +92,7 @@ CSS 파일을 역할별 100줄 이하로 유지하고, 한 페이지가 필요�
 
 ### 3.1 색상 시스템 및 검증된 WCAG 명도 대비
 
-CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 ColorHunt 4색과 필수 뉴트럴 다크 잉크·화이트뿐이며, 나머지 색은 이 변수들을 `color-mix()`로 조합해 파생합니다. 다른 CSS 파일에는 색상 리터럴을 두지 않습니다.
+CSS 원천 색상은 `css/tokens.css`(`dist/css/tokens.css` 및 `src/ui/public/css/tokens.css`)에만 둡니다. 허용 원천은 ColorHunt 4색과 필수 뉴트럴 다크 잉크·화이트뿐이며, 나머지 색은 이 변수들을 `color-mix()`로 조합해 파생합니다. 다른 CSS 파일에는 색상 리터럴을 두지 않습니다.
 
 #### 1) 기본 팔레트 (ColorHunt 원천 4색 + 필수 뉴트럴)
 - `--color-cream`: `#FDF4D2` (기본 배경 양피지)
@@ -155,7 +155,7 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
   - `--space-8`: 64px
   - `--space-10`: 80px
   - `--space-12`: 96px
-  - 오버랩 처리: 음수 마진 오버랩 해크를 전면 제거하고 CSS Grid 열 트래킹(`grid-auto-columns: var(--space-6)`)과 `padding-right`를 결합하여 박스 모델 깨짐 없는 비음수 마진 겹침 및 가로 스크롤 스냅 구현
+  - 손패 오버랩: `.hand-tray` 너비와 `data-hand-count`에 맞춰 CSS Grid 열 간격을 조정하고, 회전·음수 마진·손패 가로 스크롤 없이 1~21장을 한 줄에 표시
 
 - **곡률 및 그림자**:
   - `--radius-1`: `8px`, `--radius-2`: `16px`, `--radius-full`: `9999px`
@@ -184,7 +184,7 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
   - `.is-selected`: `transform: translateY(-16px)` 상승 및 하이라이트 아웃라인
   - `.is-playable`: 현재 필드 트릭을 이길 수 있는 카드 상단 "낼 수 있음" 인디케이터
   - `.is-disabled`: 턴이 아니거나 낼 수 없는 카드 딤 처리 (`opacity: 0.45`)
-  - `.hand-fan`: 순수 CSS 클래스 기반 각도 회전 (`.hand-fan__card--1` ~ `15`)
+  - `.hand-fan`: 클래스 이름은 유지하며 회전 없이 가로로 살짝 겹칩니다. `data-hand-count`와 손패 영역 너비로 카드 간격을 계산해 1~21장을 담고, 선택·호버 시 세로로만 올려 인접 카드의 클릭 영역을 가리지 않습니다.
 
 #### 2) 플레이어 좌석 패널 (`.seat`)
 - **구성**: 아바타 서클, 신분 배지(`.badge`), 닉네임, 잔여 카드 스택(`.card-stack`), 매수 라벨(`.seat__count`)
@@ -208,10 +208,10 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
 
 ### 3.5 대기실(Hall, #11) 및 플레이룸(Play, #12) 화면 연계
 
-- **대기실 (dist/index.html & hall.css)**:
+- **대기실 (dist/index.html, src/ui/public/index.html & css/hall/ 모듈)**:
   - 방 만들기 폼, 공개 방 목록, 플레이어 신분 표시, 빠른 입장
   - 공통 파운데이션의 버튼, 패널, 배지 토큰을 100% 재사용
-- **플레이룸 (dist/play.html & play.css)**:
+- **플레이룸 (dist/play.html, src/ui/public/play.html & css/play/ 모듈)**:
   - 4인 대전 아레나 (상단 1위 대달무티 민우, 동쪽 2위 소달무티 지은, 서쪽 4위 대농노 철수, 하단 3위 소농노 본인)
   - 80장 수학적 카드 분배 정합성 준수 (남은 덱 0장, 필드 3장, 버린 카드 20장, 4인 손패 57장 = 총 80장)
   - 반응형 전환: 데스크톱 십자형 배치 → 모바일(390px) 3열 컴팩트 좌석 + 중앙 필드 + 하단 손패 트레이
@@ -228,7 +228,7 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
 - **Phone (360px ~ 599px)**:
   - 상단 3인 상대방 좌석을 컴팩트 3열 가로 그리드로 재배치
   - 중앙 테이블 펠트 및 트릭 카드를 0.72배 스케일로 축소
-  - 15장 손패 영역은 가로 스크롤 스냅(`.hand-tray`, `scroll-snap-type: x mandatory`)으로 수용
+  - 20장 손패(+어릿광대 포함 최대 21장)는 `.hand-tray` 너비와 실제 장수에 맞춘 일자 겹침으로 배치해 390px에서 가로 스크롤 없이 표시
   - 손패 헤더 및 조작 버튼은 뷰포트 하단에 고정(`position: sticky; bottom: 0;`)
 - **Tablet (600px ~ 1023px)**:
   - 세로(820x1180) 및 가로(1180x820) 환경 지원
@@ -257,14 +257,14 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
   - 컴포넌트 내부 여백은 고유의 `padding`으로 완결하며, 형제 요소 간 간격은 부모 flex/grid 컨테이너의 `gap` 토큰으로만 제어합니다.
   - 임의의 마진 중첩(margin collapse) 및 자식 요소의 비정형 마진을 완전히 배제합니다.
 - **비음수 마진 레이아웃 (Non-Negative-Margin Overlap)**:
-  - 부채꼴 손패(`.hand-fan`) 및 카드 덱 스택(`.card-stack`)에 존재하던 음수 마진 해크(`margin-left: -52px`)를 완전히 제거했습니다.
-  - CSS Grid 열 트래킹(`grid-auto-flow: column; grid-auto-columns: var(--space-6);`)과 우측 패딩 보정을 통해 박스 모델의 정합성을 유지하면서 자연스러운 겹침을 구현했습니다.
+  - 손패(`.hand-fan`)와 카드 덱 스택(`.card-stack`)은 음수 마진 없이 배치합니다.
+  - CSS Grid 열 간격을 `.hand-tray`의 container query 너비와 `data-hand-count`로 계산해 카드 수가 늘면 겹침 폭을 넓히고, 손패 행을 중앙에 맞춥니다.
 - **클리핑 없는 유동형 크기 및 카드 여백 계약 (No-Clipping Sizing & Overflow Policy)**:
   - 고정 높이(`height`) 대신 `min-height`를 활용하여 폰트 렌더링 환경에 따른 텍스트 잘림을 예방합니다.
   - 카드 컨테이너(`.hand-fan`, `.table-felt`, `.card-stack`)에 불필요한 `overflow: hidden` 및 `overflow: clip` 적용을 금지하고 `overflow: visible`을 유지합니다.
-  - 카드 호버 및 선택 시 발생하는 상승 효과(`translateY(-32px)`)와 부채꼴 회전 기울기(`rotate(14deg) translateY(12px)`)를 수용할 수 있도록 토큰 기반의 수직 안전 패딩(`padding-top: var(--space-6); padding-bottom: var(--space-4);`)을 컨테이너에 부여합니다.
-  - 모바일 가로 스크롤러(`.hand-tray`)는 `overflow-x: auto` 적용 시 CSS 엔진이 `overflow-y`를 `auto`로 강제하는 사양을 고려하여, 카드가 잘리거나 세로 스크롤바가 유발되지 않도록 상하 패딩을 지정하고 모바일 최적 카드 규격(90x130px)을 통해 844px 뷰포트 내에 온전히 수용합니다.
-  - 360px 모바일 최소 뷰포트에서도 의도된 손패 스크롤 트레이 외에 어떠한 가로 넘침이나 레이아웃 깨짐이 발생하지 않습니다.
+  - 카드 호버 및 선택 시 세로 상승 효과를 수용하도록 토큰 기반 수직 패딩(`padding-top: var(--space-6); padding-bottom: var(--space-4);`)을 둡니다. 손패 카드는 회전하거나 가로로 확대하지 않습니다.
+  - `.hand-tray`는 가로 스크롤을 사용하지 않고, 카드 수가 20장(+어릿광대 포함 최대 21장)일 때 390px 폭 안에 손패 전체가 들어오도록 겹침 간격을 조정합니다.
+  - 360px 모바일 최소 뷰포트에서도 손패와 다른 콘텐츠의 가로 넘침이나 레이아웃 깨짐이 발생하지 않습니다.
 
 #### 5) 메타 태그 및 카카오톡 우선 공유 미리보기 정책 (Meta & OG Policy)
 - **간결한 핵심 메타 태그**:
@@ -295,7 +295,7 @@ CSS 원천 색상은 `dist/css/tokens.css`에만 둡니다. 허용 원천은 Col
 - **How**:
   - 데스크톱(1440x900) 및 태블릿(820x1180, 1180x820)은 500px 클램프의 영향을 받지 않으므로 `shot.sh` 캡처 이미지를 직접 검수합니다.
   - 모바일 환경 검증 시에는 iframe 하네스 프로브를 통해 모든 block 요소의 `min-content <= 342px`(390px 뷰포트에서 좌우 패딩 48px 차감 기준) 및 `scrollWidth == innerWidth` 무오버플로우를 실측합니다.
-  - CSS 구현 수준에서는 `word-break: keep-all; overflow-wrap: anywhere;`와 `min-width: 0`을 엄격히 유지하고, 모바일 카드 규격(90x130px) 및 가로 스크롤 스냅 트레이를 제공하여 360px 최소 뷰포트에서도 수평 넘침이 발생하지 않도록 보장합니다.
+  - CSS 구현 수준에서는 `word-break: keep-all; overflow-wrap: anywhere;`와 `min-width: 0`을 엄격히 유지하고, 모바일 카드 규격(60x86px)과 장수에 따른 겹침 간격을 적용하여 360px 최소 뷰포트에서도 손패 가로 넘침이 발생하지 않도록 보장합니다.
 
 ### 3.7 부록 3: 타이포그래피 리듬 및 컴포넌트 간격 계약 (Addendum 3: Typography Rhythm & Component Spacing)
 

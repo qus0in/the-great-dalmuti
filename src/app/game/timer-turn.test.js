@@ -10,15 +10,13 @@ function fakeScheduler() {
   let id = 0;
   return {
     clock: {
-      setTimer(fn, ms) {
+      setTimer: (fn, ms) => {
         id += 1;
         jobs.set(id, fn);
         lastMs = ms;
         return id;
       },
-      clearTimer(handle) {
-        jobs.delete(handle);
-      },
+      clearTimer: (handle) => jobs.delete(handle),
     },
     lastMs: () => lastMs,
     fireAll() {
@@ -31,10 +29,8 @@ function fakeScheduler() {
 
 function timerWith(sched) {
   const expired = [];
-  const timer = createTurnTimer({
-    clock: sched.clock,
-    onExpire: (code, seat) => expired.push([code, seat]),
-  });
+  const onExpire = (code, seat) => expired.push([code, seat]);
+  const timer = createTurnTimer({ clock: sched.clock, onExpire });
   return { timer, expired };
 }
 
@@ -59,15 +55,24 @@ describe('Turn timer scheduling', () => {
 
     assert.deepEqual(expired, [['ABCD12', 2]]);
   });
+
+  it('Given turn started with version, When timer fires, Then onExpire receives version', () => {
+    const sched = fakeScheduler();
+    const expired = [];
+    const timer = createTurnTimer({
+      clock: sched.clock,
+      onExpire: (code, seat, version) => expired.push([code, seat, version]),
+    });
+    timer.start('ABCD12', 2, 5);
+    sched.fireAll();
+    assert.deepEqual(expired, [['ABCD12', 2, 5]]);
+  });
 });
 
 describe('Turn timer timeout value', () => {
   it('Given default and custom, When scheduled, Then each timeout applies', () => {
     const sched = fakeScheduler();
-    const defaultTimer = createTurnTimer({
-      clock: sched.clock,
-      onExpire() {},
-    });
+    const defaultTimer = createTurnTimer({ clock: sched.clock, onExpire() {} });
     const customTimer = createTurnTimer({
       clock: sched.clock,
       onExpire() {},

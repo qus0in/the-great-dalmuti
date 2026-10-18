@@ -36,23 +36,22 @@ function appendCardBody(doc, article, labels) {
   article.appendChild(createCorner(doc, 'card__corner--bottom-right', labels));
 }
 
-function resolveCardMeta(card, index, selected) {
+function resolveCardMeta(card, selected) {
   const rank = Number(card.rank);
   const isJester = Boolean(card.isJester) || rank === 13;
   const rankText = isJester ? '★' : String(rank);
   const nameText = card.name ?? rankLabel(rank);
   const rankClass = isJester ? 'card--jester' : `card--rank-${rank}`;
-  const fan = index > 0 ? ` hand-fan__card--${index}` : '';
   const sel = selected ? ' is-selected' : '';
   const baseLabel = `${rankText} ${nameText}`;
   const ariaLabel = selected ? `${baseLabel} (선택됨)` : baseLabel;
-  const className = `card ${rankClass}${fan}${sel}`;
+  const className = `card ${rankClass}${sel}`;
   return { rankText, nameText, className, ariaLabel };
 }
 
 export function createCardElement(doc, card, opts = {}) {
-  const { index = 0, selected = false } = opts;
-  const meta = resolveCardMeta(card, index, selected);
+  const { selected = false } = opts;
+  const meta = resolveCardMeta(card, selected);
   const article = doc.createElement('article');
   article.className = meta.className;
   article.dataset.play = 'card';
@@ -67,9 +66,10 @@ export function createCardElement(doc, card, opts = {}) {
 export function renderHandCards(doc, { hand = [], selected = [] }) {
   const container = doc.querySelector('[data-play="hand"]');
   if (!container) return;
+  container.dataset.handCount = String(hand.length);
   container.textContent = '';
-  hand.forEach((card, i) => {
-    const opts = { index: i + 1, selected: selected.includes(card.id) };
+  hand.forEach((card) => {
+    const opts = { selected: selected.includes(card.id) };
     container.appendChild(createCardElement(doc, card, opts));
   });
 }

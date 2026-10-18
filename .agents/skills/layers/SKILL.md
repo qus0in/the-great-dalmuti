@@ -8,6 +8,7 @@ C=.agents/skills/codify/scripts
 
 ## 1. Rule source
 - Layout: `src/{ui,app,domain,infra}/<feature>`.
+- Layer set, allowed import pairs and outside files live in `.agents/project.conf`; empty/missing conf = generic defaults (no layers recognized).
 - Allowed imports: ui -> app (and own); app -> domain (+ app ports); infra -> app/domain; domain -> nothing outside domain.
 - Domain must not import any bare package or any non-domain layer.
 - 100-line gate is reused via `C/lines.sh` (no local counter).

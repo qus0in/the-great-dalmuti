@@ -1,9 +1,4 @@
 /* Play Screen Specific Animations and Reduced Motion Rules */
-@keyframes trick-drop {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
 @keyframes deal-stagger {
   from {
     opacity: 0;
@@ -19,10 +14,6 @@
   50% {
     box-shadow: 0 0 16px var(--color-gold-glow), 0 0 0 1px var(--color-gold);
   }
-}
-
-.trick-drop {
-  animation: trick-drop var(--dur-slow) var(--ease-out) both;
 }
 
 .deal-stagger {

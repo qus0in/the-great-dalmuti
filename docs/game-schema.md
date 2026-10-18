@@ -14,13 +14,13 @@
 
 | 테이블명 | 한 줄 설명 | 주요 칼럼 | 공개 / 비공개 |
 |---|---|---|---|
-| `games` | 한 게임 세션(방)의 진행 주기 및 식별자 | `id`, `join_code`, `phase`, `version`, `host_seat` | 비공개 (공개 정보는 `game_public` 경유) |
+| `games` | 한 게임 세션(방)의 진행 주기 및 식별자 | `id`, `join_code`, `phase`, `version`, `host_seat`, `mode` (`normal`\|`tutorial`, 기본 `normal`) | 비공개 (공개 정보는 `game_public` 경유) |
 | `game_seats` | 판에 배치된 4개 좌석과 사용자/봇 매핑 | `game_id`, `seat`, `user_id`, `is_bot`, `finish_position` | 비공개 (요약은 `game_public` 경유) |
 | `game_hands` | 각 좌석이 보유한 비공개 손패 카드 목록 | `game_id`, `seat`, `cards` (JSONB 배열) | **절대 비공개** (서버만 접근) |
 | `game_tricks` | 한 판 내 순환 트릭(카드 내기 한 묶음) 이력 | `id`, `game_id`, `seq`, `leader_seat`, `passes`, `winner_seat` | 비공개 (현재 트릭 정보는 `game_public` 경유) |
 | `game_trick_plays` | 트릭 내에서 플레이어가 제출한 카드/패스 행동 | `id`, `trick_id`, `turn_no`, `seat`, `action`, `cards` | 비공개 (최근 행동은 `game_public` 경유) |
 | `game_results` | 게임 완료 시 사용자별 최종 순위 및 전적 이력 | `id`, `game_id`, `user_id`, `mode`, `rank`, `played_at` | **개인 공개** (본인 행만 조회 가능) |
-| `game_public` | 브라우저가 Realtime으로 구독하는 공개 전용 상태 | `game_id`, `phase`, `version`, `current_turn_seat`, `seat_summary`, `last_play` | **전체 공개** (로그인한 사용자 읽기 허용) |
+| `game_public` | 브라우저가 Realtime으로 구독하는 공개 전용 상태 | `game_id`, `phase`, `version`, `current_turn_seat`, `seat_summary`, `last_play`, `mode` (`normal`\|`tutorial`, 기본 `normal`) | **전체 공개** (로그인한 사용자 읽기 허용) |
 
 ---
 
@@ -77,6 +77,7 @@
 ### 5. 전적 집계 뷰 (`user_game_stats`)
 
 - **역할**: 계정(`user_id`)과 모드(`mode`: `single` / `multi`)별로 총 게임 수(`total_games`) 및 순위별 달성 횟수(`rank_1_count` ~ `rank_4_count`)를 집계합니다.
+- **튜토리얼 미기록**: 튜토리얼 게임(`mode = 'tutorial'`)은 전적에 기록되지 않습니다 (별도의 `game_results` 행을 생성하지 않음).
 - **보안**: `with (security_invoker = true)` 속성으로 정의되어 질의하는 사용자의 RLS 권한을 기반으로 동작하므로, 다른 사용자의 전적 집계는 조회할 수 없습니다.
 
 ---
@@ -87,7 +88,7 @@
 
 #### 방법 (a) Supabase 대시보드 SQL Editor 이용
 1. Supabase 프로젝트 관리 콘솔에 로그인한 뒤 좌측 메뉴에서 **SQL Editor**를 선택합니다.
-2. `supabase/migrations/20261016163800_game_schema.sql` 파일의 전체 내용을 복사하여 편집기에 붙여넣습니다.
+2. 기본 스키마는 `supabase/migrations/20261016163800_game_schema.sql`, 튜토리얼 모드 확장은 `supabase/migrations/20261017062000_tutorial_mode.sql` 파일의 내용을 차례로 편집기에 붙여넣습니다.
 3. **Run** 버튼을 클릭하여 스키마 생성 및 RLS 정책 활성화를 완료합니다.
 
 #### 방법 (b) Supabase CLI 이용 (`supabase db push`)

@@ -20,11 +20,11 @@ export function createTurnTimer({
     handle = null;
   }
 
-  function start(code, seat) {
+  function start(code, seat, version) {
     cancel();
     handle = clock.setTimer(() => {
       handle = null;
-      onExpire(code, seat);
+      onExpire(code, seat, version);
     }, timeoutMs);
   }
 

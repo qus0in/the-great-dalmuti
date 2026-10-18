@@ -1,34 +1,93 @@
-/* Fan layout and staggered dealing for the play hand */
+/* Flat, count-aware overlap for the playable hand */
 .hand-fan {
+  --hand-card-width: 140px;
+  --hand-card-height: 200px;
+  --hand-max-step: var(--space-6);
+  --hand-count-minus-one: 20;
+  --hand-step: min(
+    var(--hand-max-step),
+    max(0px, calc((100cqw - var(--hand-card-width)) / var(--hand-count-minus-one)))
+  );
+  --hand-extent: calc(
+    var(--hand-card-width) + var(--hand-step) * var(--hand-count-minus-one)
+  );
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: var(--space-6);
-  justify-content: center;
+  grid-auto-columns: var(--hand-step) !important;
+  justify-content: start;
   align-items: flex-end;
-  padding: var(--space-6) var(--space-12) var(--space-4) var(--space-3);
+  inline-size: min(100cqw, var(--hand-extent));
+  margin-inline: auto;
+  padding: var(--space-6) 0 var(--space-4);
   overflow: visible;
 }
 
+.hand-fan[data-hand-count="1"] { --hand-count-minus-one: 0; --hand-step: 0px; }
+.hand-fan[data-hand-count="2"] { --hand-count-minus-one: 1; }
+.hand-fan[data-hand-count="3"] { --hand-count-minus-one: 2; }
+.hand-fan[data-hand-count="4"] { --hand-count-minus-one: 3; }
+.hand-fan[data-hand-count="5"] { --hand-count-minus-one: 4; }
+.hand-fan[data-hand-count="6"] { --hand-count-minus-one: 5; }
+.hand-fan[data-hand-count="7"] { --hand-count-minus-one: 6; }
+.hand-fan[data-hand-count="8"] { --hand-count-minus-one: 7; }
+.hand-fan[data-hand-count="9"] { --hand-count-minus-one: 8; }
+.hand-fan[data-hand-count="10"] { --hand-count-minus-one: 9; }
+.hand-fan[data-hand-count="11"] { --hand-count-minus-one: 10; }
+.hand-fan[data-hand-count="12"] { --hand-count-minus-one: 11; }
+.hand-fan[data-hand-count="13"] { --hand-count-minus-one: 12; }
+.hand-fan[data-hand-count="14"] { --hand-count-minus-one: 13; }
+.hand-fan[data-hand-count="15"] { --hand-count-minus-one: 14; }
+.hand-fan[data-hand-count="16"] { --hand-count-minus-one: 15; }
+.hand-fan[data-hand-count="17"] { --hand-count-minus-one: 16; }
+.hand-fan[data-hand-count="18"] { --hand-count-minus-one: 17; }
+.hand-fan[data-hand-count="19"] { --hand-count-minus-one: 18; }
+.hand-fan[data-hand-count="20"] { --hand-count-minus-one: 19; }
+.hand-fan[data-hand-count="21"] { --hand-count-minus-one: 20; }
+
 .hand-fan .card {
-  transform-origin: bottom center;
-  transition: transform var(--dur-base) var(--ease-out),
+  width: var(--hand-card-width);
+  height: var(--hand-card-height);
+  transform-origin: bottom left;
+  transition:
+    transform var(--dur-base) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out),
     border-color var(--dur-base) var(--ease-out);
-  animation: deal-stagger 300ms var(--ease-out) both;
 }
 
-.hand-fan__card--1 { transform: rotate(-14deg) translateY(12px); animation-delay: 20ms; }
-.hand-fan__card--2 { transform: rotate(-12deg) translateY(9px); animation-delay: 40ms; }
-.hand-fan__card--3 { transform: rotate(-10deg) translateY(6px); animation-delay: 60ms; }
-.hand-fan__card--4 { transform: rotate(-8deg) translateY(4px); animation-delay: 80ms; }
-.hand-fan__card--5 { transform: rotate(-6deg) translateY(2px); animation-delay: 100ms; }
-.hand-fan__card--6 { transform: rotate(-4deg) translateY(1px); animation-delay: 120ms; }
-.hand-fan__card--7 { transform: rotate(-2deg) translateY(0); animation-delay: 140ms; }
-.hand-fan__card--8 { transform: rotate(0deg) translateY(0); animation-delay: 160ms; }
-.hand-fan__card--9 { transform: rotate(2deg) translateY(0); animation-delay: 180ms; }
-.hand-fan__card--10 { transform: rotate(4deg) translateY(1px); animation-delay: 200ms; }
-.hand-fan__card--11 { transform: rotate(6deg) translateY(2px); animation-delay: 220ms; }
-.hand-fan__card--12 { transform: rotate(8deg) translateY(4px); animation-delay: 240ms; }
-.hand-fan__card--13 { transform: rotate(10deg) translateY(6px); animation-delay: 260ms; }
-.hand-fan__card--14 { transform: rotate(12deg) translateY(9px); animation-delay: 280ms; }
-.hand-fan__card--15 { transform: rotate(14deg) translateY(12px); animation-delay: 300ms; }
+.hand-fan .card:nth-child(1) { z-index: 1; }
+.hand-fan .card:nth-child(2) { z-index: 2; }
+.hand-fan .card:nth-child(3) { z-index: 3; }
+.hand-fan .card:nth-child(4) { z-index: 4; }
+.hand-fan .card:nth-child(5) { z-index: 5; }
+.hand-fan .card:nth-child(6) { z-index: 6; }
+.hand-fan .card:nth-child(7) { z-index: 7; }
+.hand-fan .card:nth-child(8) { z-index: 8; }
+.hand-fan .card:nth-child(9) { z-index: 9; }
+.hand-fan .card:nth-child(10) { z-index: 10; }
+.hand-fan .card:nth-child(11) { z-index: 11; }
+.hand-fan .card:nth-child(12) { z-index: 12; }
+.hand-fan .card:nth-child(13) { z-index: 13; }
+.hand-fan .card:nth-child(14) { z-index: 14; }
+.hand-fan .card:nth-child(15) { z-index: 15; }
+.hand-fan .card:nth-child(16) { z-index: 16; }
+.hand-fan .card:nth-child(17) { z-index: 17; }
+.hand-fan .card:nth-child(18) { z-index: 18; }
+.hand-fan .card:nth-child(19) { z-index: 19; }
+.hand-fan .card:nth-child(20) { z-index: 20; }
+.hand-fan .card:nth-child(21) { z-index: 21; }
+
+@media (max-width: 1023px) and (min-width: 600px) {
+  .hand-fan {
+    --hand-card-width: 96px;
+    --hand-card-height: 137px;
+    --hand-max-step: var(--space-5);
+  }
+}
+
+@media (max-width: 599px) {
+  .hand-fan {
+    --hand-card-width: 60px;
+    --hand-card-height: 86px;
+    --hand-max-step: var(--space-4);
+  }
+}

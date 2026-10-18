@@ -9,7 +9,7 @@ Run full pass on user request (e.g. "하네스 업데이트"). Automatic light p
 
 ## Loop
 1. Harvest candidate signals (see scripts).
-2. Write ledger at `tmp/<task>/signals.md` (default `<task>` = `harness-<today>`); one row per signal: source path + quote, gap, proposed target (docs/skill/script/AGENTS).
+2. Write the row into the rolling single ledger `harness-ledger.md` under `tmp/` (`scripts/ledger.sh`; no per-day dirs); one row per signal: source path + quote, gap, proposed target (docs/skill/script/AGENTS), status `open|noted|done`.
 3. Classify each signal via skill `codify` (ephemeral -> tmp, repeatable -> script, general -> skill, cross-skill policy -> AGENTS.md, project-specific -> docs).
 4. Dispatch each classified signal as a unit to a worker. Orchestrator never edits; per skill `orchestrate` (shared scaffolding goes to the first unit's worker).
 5. Peer review: reviewer != author; fix; max 2 rounds.
@@ -30,7 +30,7 @@ Run full pass on user request (e.g. "하네스 업데이트"). Automatic light p
 Covers skills, AGENTS.md rules, docs/, scripts, and handoff records. Check all five every full pass.
 
 ## Scripts
-- Signals: `scripts/signals.sh [--since <git-rev|date>]` -> stdout candidate signals (blocking findings, failed gates, repeated how-lines, stale pointers).
-- Ledger: `scripts/ledger.sh [<task>]` -> scaffold `tmp/<task>/signals.md` (default `harness-<today>`).
+- Signals: `scripts/signals.sh [--since <git-rev|date>]` -> stdout candidate signals (blocking findings, failed gates, triage events, blocked callbacks, BLOCK verdicts, repeated how-lines, stale pointers; `--since` keeps only files with mtime or rev commit time >= the given value).
+- Ledger: `scripts/ledger.sh [--migrate]` -> ensure the rolling single ledger (`harness-ledger.md` under `tmp/`; prints its path); `--migrate` appends earlier per-day signal rows as `YYYYMMDD-Sn` IDs (source files kept).
 
 Signals are candidates only. Nothing is applied without classification, a dispatched unit, review, and a green gate.

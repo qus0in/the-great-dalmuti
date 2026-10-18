@@ -31,7 +31,8 @@ async function expireFirstHuman(app) {
   const [expired] = app.scheduler.pending();
   app.scheduler.fire(expired);
   await app.runtime.afterAction(CODE, {});
-  assert.equal(app.substitutions.isSubstituted(CODE, 0), true);
+  assert.equal(app.substitutions.isSubstituted(CODE, 0), false);
+  assert.deepEqual(app.substitutions.seatsIn(CODE), [0]);
   assert.equal(app.scheduler.pending().length, 1);
 }
 

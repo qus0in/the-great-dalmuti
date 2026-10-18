@@ -1,16 +1,21 @@
 #!/bin/sh
 # Usage: signals.sh [--since <git-rev|date>]
 # Harvest candidate harness signals to stdout (deterministic, read-only):
-#   1. blocking findings   tmp/*/review-*.md
-#   2. failed gate logs    tmp/*/verify-*.log
-#   3. repeated how-lines  briefs whose identical How step recurs >=2 (manual-step hint)
-#   4. stale pointers      task-scratch paths referenced from durable surfaces
+#   1. blocking findings    tmp/*/review-*.md
+#   2. failed gate logs     tmp/*/verify-*.log
+#   3. triage events        tmp/*/triage.log
+#   4. blocked callbacks    status=blocked|failed in tmp/*/callbacks.log, state.md
+#   5. BLOCK verdicts       VERDICT lines in tmp/*/review-*.md
+#   6. repeated how-lines   briefs whose identical How step recurs >=2 (manual-step hint)
+#   7. stale pointers       task-scratch paths referenced from durable surfaces
+# --since <git-rev|date> prints only files whose mtime (or rev commit time) is >= SINCE.
 # Exit 0 always (findings are candidates, not failures); exit 2 usage error.
 # Note: scans tmp/ by design; durable docs must not reference tmp/ paths.
 set -eu
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../.." && pwd)
+. "$HERE/signals-lib.sh"
 
 SINCE=""
 
@@ -26,57 +31,56 @@ while [ $# -gt 0 ]; do
 done
 
 cd "$ROOT"
-echo "== harness signals =="
 
+# Helpers (collectors live in signals-lib.sh).
 section() { printf '\n%s\n' "$1"; }
 hint() { printf '  - %s\n' "$1"; }
+emit() { if [ -s "$CAPT" ]; then sed -n '1,20p' "$CAPT"; else hint "none"; fi; }
 
-# 1. blocking findings from peer reviews
-section "[review]"
-if ls tmp/*/review-*.md >/dev/null 2>&1; then
-  for f in tmp/*/review-*.md; do
-    printf '  %s\n' "$f"
-    awk '/^### *[Bb]locking/ { inb=1; next }
-         /^#{2,3} /        { inb=0 }
-         inb && NF         { printf "    - %s\n", $0 }' "$f" | head -20
-  done
-else
-  hint "none"
-fi
+# --since epoch: git rev -> commit time; else date (BSD first, GNU fallback); 0 = no filter.
+# BSD date fills unspecified units with the current time, so parse with explicit zero time.
+since_epoch() {
+  s=$1
+  if [ -z "$s" ]; then echo 0; return 0; fi
+  c=$(git rev-parse --verify --quiet "${s}^{commit}" 2>/dev/null || true)
+  if [ -n "$c" ]; then echo "$(git log -1 --format=%ct "$c")"; return 0; fi
+  d=$(date -j -u -f '%Y-%m-%dT%H:%M:%S' "$s" '+%s' 2>/dev/null || true)
+  if [ -z "$d" ]; then d=$(date -j -u -f '%Y-%m-%d %H:%M:%S' "$s 00:00:00" '+%s' 2>/dev/null || true); fi
+  if [ -z "$d" ]; then d=$(date -u -d "$s" '+%s' 2>/dev/null || true); fi
+  if [ -n "$d" ]; then echo "$d"; return 0; fi
+  echo "ERR"; return 0
+}
 
-# 2. failed gate logs
-section "[gate-failed]"
-fail=0
-if ls tmp/*/verify-*.log >/dev/null 2>&1; then
-  for f in tmp/*/verify-*.log; do
-    grep -qx "ok" "$f" 2>/dev/null && continue
-    printf '%s: %s\n' "$f" "$(head -3 "$f" | tr '\n' ' ')"
-    fail=1
-  done
-fi
-[ "$fail" -eq 0 ] && hint "none"
-
-# 3. repeated How steps across briefs (manual-step hint)
-section "[repeated-step]"
-rep=""
-if ls tmp/*/brief-*.md >/dev/null 2>&1; then
-  rep=$(for f in tmp/*/brief-*.md; do
-          awk '/^# *[Hh]ow/{inh=1;next} /^#/{inh=0} inh && NF {print}' "$f"
-        done | sed 's/^ *//; s/ *$//' | sort | uniq -c | sort -rn \
-       | awk '$1>=2 && length($0)>40' | head -10)
-fi
-if [ -n "$rep" ]; then printf '%s\n' "$rep"; else hint "none"; fi
-
-# 4. task-scratch pointers referenced from durable surfaces
-# docs/prompt is verbatim history -> excluded, same as codify check.sh
-section "[stale-scratch-pointer]"
-pls=$(grep -rn -E 'tmp/[[:alnum:]][[:alnum:]/._-]*' \
-        --exclude-dir=prompt AGENTS.md docs .agents/skills 2>/dev/null || true)
-if [ -n "$pls" ]; then printf '%s\n' "$pls" | head -15; else hint "none"; fi
+# File passed the mtime filter? (files with unknown mtime are included)
+is_new() {
+  [ "$SINCE_EPOCH" -gt 0 ] || return 0
+  m=$(stat -f %m "$1" 2>/dev/null || true)
+  if [ -z "$m" ]; then m=$(stat -c %Y "$1" 2>/dev/null || true); fi
+  if [ -z "$m" ]; then return 0; fi
+  [ "$m" -ge "$SINCE_EPOCH" ]
+}
 
 if [ -n "$SINCE" ]; then
-  section "[since]"
-  hint "$SINCE (informational; scans are not revision-filtered)"
+  SINCE_EPOCH=$(since_epoch "$SINCE")
+  if [ "$SINCE_EPOCH" = "ERR" ]; then usage; fi
+else
+  SINCE_EPOCH=0
 fi
+
+CAPT=$(mktemp) || exit 1
+trap 'rm -f "$CAPT"' EXIT INT TERM
+
+echo "== harness signals =="
+if [ "$SINCE_EPOCH" -gt 0 ]; then
+  hint "signal window: files with mtime >= $SINCE (epoch $SINCE_EPOCH)"
+fi
+
+collect_review
+collect_gate
+collect_triage
+collect_cb
+collect_verdict
+collect_repeated
+collect_ptr
 
 exit 0

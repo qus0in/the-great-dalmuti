@@ -25,6 +25,10 @@
     padding-top: var(--space-4);
   }
 
+  .hall {
+    padding-bottom: var(--space-4);
+  }
+
   /* Narrow ladder: 2 tiles per row at 360–599; per-tile count lives in the
      description paragraph above, so the meta chip is dropped to fit. */
   .hall__rank {

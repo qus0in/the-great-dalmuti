@@ -1,6 +1,6 @@
 ---
 name: ui-prototype
-description: Building or reviewing HTML/CSS prototype screens in dist/. Use when implementing or reviewing hall/play pages, their styles, or design-token compliance.
+description: Building or reviewing HTML/CSS prototype screens in dist/ or 0.3 src/ui/public. Use when implementing or reviewing screens, styles, or design-token compliance.
 ---
 # ui-prototype
 Paths relative to repo root. DESIGN.md is the source of truth for file structure, tokens, and constraints. Targets: `dist/` (0.2 prototype, frozen rules) and `src/ui/public/` (0.3 browser screens).
@@ -25,6 +25,6 @@ Paths relative to repo root. DESIGN.md is the source of truth for file structure
 
 ## Scripts
 - `scripts/check.sh [target-dir]` — contract lint (default: dist/; supports src/ui/public/); prints `ok` and exits 0 when clean, lists `file:line` and exits 1 on violations, exits 2 on usage. Also prints `warn` review hints (clipping containers, negative Hangul tracking, buttons w/o min-height, 0.3 inline modules); warnings never fail.
-- `scripts/shot.sh [out-dir] [pages...]` — headless Chrome screenshots each page (default dist/*.html) at 390x844, 360x780, 820x1180, 1180x820, 1440x900 (default out-dir a fresh mktemp -d outside the repo); widths below 500px render through a centered exact-size iframe harness (Chrome clamps layout width) and are center-cropped; prints PNG paths; look at the PNGs and fix visual problems before review/report.
+- `scripts/shot.sh [out-dir] [pages...]` — headless Chrome screenshots each page (default dist/*.html) at 390x844, 360x780, 820x1180, 1180x820, 1440x900 (default out-dir a fresh mktemp -d outside the repo); widths below 500px render through a centered exact-size iframe harness (Chrome clamps layout width) and are center-cropped; serves src/ui/public pages over temporary localhost HTTP with automatic port/cleanup; dist keeps file URLs; prints PNG paths; look at the PNGs and fix visual problems before review/report.
 - `scripts/a11y.sh [--min N] [pages...]` — serve each page's directory over http, run Lighthouse accessibility mobile + desktop per page; prints `<page> <form-factor> <score>` with failing audits; exits 1 below min (default 100).
 - Checkpoint: `orchestrate/scripts/verify.sh <task> ui` runs `check.sh` on `src/ui/public` once per checkpoint and logs under `tmp/<task>/` (reuse valid passed evidence by policy; never failures).

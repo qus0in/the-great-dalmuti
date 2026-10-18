@@ -1,6 +1,7 @@
 import { it } from 'node:test';
 import assert from 'node:assert/strict';
 import * as dom from './public/js/play-dom.js';
+import { renderHandCards } from './public/js/play-dom-cards.js';
 
 function createNode(tag = 'div') {
   const attrs = {};
@@ -69,4 +70,28 @@ it('Given lone jester lastPlay, When renderPlay runs repeatedly, Then card--jest
   dom.renderPlay(doc, { mySeat: 0, publicState });
   assert.equal(trick.children.length, 1);
   assert.equal(trick.children[0], firstWrap);
+});
+
+it('Given a hand, When renderHandCards runs, Then it records the count and refreshes cards', () => {
+  const container = createNode('div');
+  Object.defineProperty(container, 'textContent', {
+    get: () => '',
+    set: () => {
+      container.children.length = 0;
+    },
+  });
+  const doc = { querySelector: () => container, createElement: createNode };
+  const hand = Array.from({ length: 20 }, (_, i) => ({ id: `c${i}`, rank: 5 }));
+
+  renderHandCards(doc, { hand });
+  assert.equal(container.dataset.handCount, '20');
+  assert.equal(container.children.length, 20);
+
+  renderHandCards(doc, { hand: hand.slice(0, 2), selected: ['c1'] });
+  assert.equal(container.dataset.handCount, '2');
+  assert.equal(container.children.length, 2);
+  assert.equal(
+    container.children[1].className,
+    'card card--rank-5 is-selected',
+  );
 });
