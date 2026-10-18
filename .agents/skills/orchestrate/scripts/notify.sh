@@ -1,9 +1,9 @@
 #!/bin/sh
 # Usage: notify.sh [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] [--dry-run] <target-pane> <report-path> [msg]
 # Write durable callback record to tmp/<task>/callbacks.log and state.md, then prompt target pane via herdr.
-# Exit 0 on delivery or when queued (target blocked); 1 if log unwritable; 2 on bad args.
+# Exit 0 on delivery; 1 on delivery failure or log unwritable; 2 on bad args.
 set -u
-HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(git rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/../../../.." && pwd))
 die() { rc=$1; shift; echo "notify.sh: $*" >&2; exit "$rc"; }
 usage() { die 2 "usage: $0 [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] [--dry-run] <target-pane> <report-path> [msg]"; }
 
@@ -49,28 +49,50 @@ if [ -z "$UNIT" ]; then
 fi
 [ -n "$UNIT" ] || UNIT="$TASK"
 
-mkdir -p "$LOG_DIR" 2>/dev/null || die 1 "cannot create log directory: $LOG_DIR"
-LOG_FILE="$LOG_DIR/callbacks.log"; STATE_FILE="$LOG_DIR/state.md"
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-
-RECORD="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT${MSG:+ msg=\"$MSG\"}"
-printf '%s\n' "$RECORD" >> "$LOG_FILE" 2>/dev/null || die 1 "cannot write callback log: $LOG_FILE"
-STATE_RECORD="$TS callback $STATUS $SELF $UNIT report=$REPORT${MSG:+ msg=\"$MSG\"}"
-printf '%s\n' "$STATE_RECORD" >> "$STATE_FILE" 2>/dev/null || die 1 "cannot write state log: $STATE_FILE"
-
-BODY="[callback] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT"
+TOKEN="cb-${TS}-${UNIT}-$$"
+BODY="[callback] token=$TOKEN worker=$SELF unit=$UNIT status=$STATUS report=$REPORT"
 [ -z "$MSG" ] || BODY="$BODY msg=\"$MSG\""
-[ "$DRY_RUN" -eq 0 ] || { echo "[dry-run] target=$TARGET: $BODY"; exit 0; }
+RECORD_YES="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT delivered=yes${MSG:+ msg=\"$MSG\"}"
+RECORD_NO="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT delivered=no${MSG:+ msg=\"$MSG\"}"
+STATE_YES="$TS callback $STATUS $SELF $UNIT report=$REPORT delivered=yes${MSG:+ msg=\"$MSG\"}"
+STATE_NO="$TS callback $STATUS $SELF $UNIT report=$REPORT delivered=no${MSG:+ msg=\"$MSG\"}"
 
-NOTIFY_BACKOFFS=${NOTIFY_BACKOFFS:-"5 15 30"}
+LOG_FILE="$LOG_DIR/callbacks.log"; STATE_FILE="$LOG_DIR/state.md"
+if [ "$DRY_RUN" -eq 1 ]; then
+  echo "[dry-run] prompt $TARGET: $BODY"
+  echo "[dry-run] record: $RECORD_YES"
+  exit 0
+fi
+
+mkdir -p "$LOG_DIR" 2>/dev/null || die 1 "cannot create log directory: $LOG_DIR"
+
+NOTIFY_BACKOFFS=${NOTIFY_BACKOFFS-"5 15 30"}
+NOTIFY_VERIFY_TRIES=${NOTIFY_VERIFY_TRIES-"3"}
+NOTIFY_VERIFY_SLEEP=${NOTIFY_VERIFY_SLEEP-"0.3"}
 sent=0
 for delay in 0 $NOTIFY_BACKOFFS; do
   [ "$delay" -eq 0 ] || sleep "$delay"
   if command -v herdr >/dev/null 2>&1 && herdr agent prompt "$TARGET" "$BODY" >/dev/null 2>&1; then
-    sent=1; break
+    vtries=0
+    while [ "$vtries" -lt "$NOTIFY_VERIFY_TRIES" ]; do
+      if herdr pane read "$TARGET" --source visible 2>/dev/null | grep -Fq "$TOKEN"; then
+        sent=1; break 2
+      fi
+      [ "$NOTIFY_VERIFY_SLEEP" = "0" ] || sleep "$NOTIFY_VERIFY_SLEEP"
+      vtries=$((vtries + 1))
+    done
   fi
 done
 
-if [ "$sent" -eq 1 ]; then echo "notified $TARGET: $BODY"
-else echo "queued (target blocked): logged to $LOG_FILE"; fi
-exit 0
+if [ "$sent" -eq 1 ]; then
+  printf '%s\n' "$RECORD_YES" >> "$LOG_FILE" 2>/dev/null || die 1 "cannot write callback log: $LOG_FILE"
+  printf '%s\n' "$STATE_YES" >> "$STATE_FILE" 2>/dev/null || die 1 "cannot write state log: $STATE_FILE"
+  echo "notified $TARGET: $BODY"
+  exit 0
+fi
+
+printf '%s\n' "$RECORD_NO" >> "$LOG_FILE" 2>/dev/null || die 1 "cannot write callback log: $LOG_FILE"
+printf '%s\n' "$STATE_NO" >> "$STATE_FILE" 2>/dev/null || die 1 "cannot write state log: $STATE_FILE"
+echo "delivery failed to $TARGET: logged delivered=no to $LOG_FILE"
+exit 1
