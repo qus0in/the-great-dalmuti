@@ -13,3 +13,17 @@ Re-tier from observed results (failed briefs, review findings). Durable findings
 - reviewer should differ in model family from author when possible.
 - free/preview models: avoid stateful logic (shell state, domain state machines) — assign core stateful-logic units to higher tiers (observed: timebox failures on CLI-semantics/stateful-shell fix and domain state machine); fake/stub/dry-run tests are not sufficient evidence (reviewers must verify the real path's inputs and behavior).
 - Self-corrupting tool calls: emitting malformed raw tool-call tokens, editing files under a read-only brief, or fabricating source text (e.g. proposal "Before" text absent from the live issue) is class (3) self error — stop it (triage); do not assign reviews or authoring units until re-tiered from clean results.
+## Context commands before dispatch
+
+New unit uses the fresh command; `--continue` or `--replace` uses compact. Require 3 consecutive idle/done checks after reset; fail before sending the brief on reset errors/timeouts. Unknown kinds warn once and skip reset.
+
+| Agent | Fresh | Continue | Evidence |
+| --- | --- | --- | --- |
+| codex | `/compact` | `/compact` | [Official commands](https://learn.chatgpt.com/docs/developer-commands?surface=cli); observed CLI v0.163.0 |
+| opencode | `/new` | `/compact` | [Official TUI](https://opencode.ai/docs/tui/); observed v2.0.32 `/new` and empty-session `/compact` returning idle; API-backed compaction not verified |
+| claude | `/clear` | `/compact` | [Official commands](https://code.claude.com/docs/en/commands); no live pane tested |
+| agy / other | unverified | unverified | Warn and skip; never guess commands |
+
+Post-reset wait defaults to 60 seconds (`DISPATCH_RESET_TIMEOUT`), with the existing 5-second check interval (`DISPATCH_WAIT_INTERVAL`). Visible reset errors, running compaction, or pending OpenCode command input abort dispatch. Codex `/clear` reset the observed model/effort from Luna max to Sol medium; use `/compact` for both fresh and continued units.
+
+Before reset and after the 3 idle checks, compare model/effort with the same footer extraction as `workers.sh --model`; changed values abort before the brief with both values on stderr. If either value is unknown (`?`), warn once and proceed. The shared parser currently recognizes OpenCode/AGY footers; Codex/Claude comparisons therefore warn as unknown.
