@@ -5,40 +5,35 @@ import { createGameApi } from './game-api.js';
 import { createPlayState, passTurn, submitSelected } from './play-state.js';
 import { bindPlay, renderPlay, showMessage } from './play-dom.js';
 import { subscribeGame } from './realtime.js';
-import { createTokenGetter, rankingText, withRecorder } from './play-flow.js';
+import {
+  announceRound,
+  createStartedRoom,
+  createTokenGetter,
+  errorText,
+  withRecorder,
+} from './play-flow.js';
+import { createSeatPrivacy } from './play-seat-privacy.js';
 
 const state = createPlayState();
+const seatPrivacy = createSeatPrivacy();
 let api = null;
+let client = null;
 let mySeat = 0;
 let lastCommand = null;
 
-function createInitialRoom() {
-  return api.createRoom(
-    /(?:^|[?&])mode=tutorial(?:&|$)/.test(window.location.search)
-      ? { mode: 'tutorial' }
-      : undefined,
-  );
+function render() {
+  const view = state.get();
+  renderPlay(document, {
+    ...view,
+    ...seatPrivacy.context(view.publicState, mySeat, client),
+  });
 }
 
-function render() {
-  renderPlay(document, { ...state.get(), mySeat });
-}
+const updateSeatPrivacy = () =>
+  seatPrivacy.update(client, state.get().publicState);
 
 function message(text) {
   showMessage(document, text ?? '');
-}
-
-function errorText(err) {
-  return err.title || err.detail || err.message;
-}
-
-// 라운드 종료 순위는 기록한 마지막 명령 응답으로 안내한다
-function announce() {
-  const { publicState } = state.get();
-  const text = rankingText(lastCommand);
-  if (text) message(text);
-  else if (publicState && publicState.phase === 'finished')
-    message('라운드 종료');
 }
 
 // 명령 성공 뒤 재렌더, 실패는 메시지로 알리고 선택을 유지한다
@@ -49,8 +44,9 @@ async function run(command) {
   } catch (err) {
     message(errorText(err));
   }
+  await updateSeatPrivacy();
   render();
-  announce();
+  announceRound(state.get().publicState, lastCommand, message);
 }
 
 // Realtime 알림이 오면 방 상태를 다시 읽어 화면을 맞춘다
@@ -59,8 +55,9 @@ async function sync() {
   try {
     const room = await api.getRoom(code);
     state.setRoom({ code, ...room });
+    await updateSeatPrivacy();
     render();
-    announce();
+    announceRound(state.get().publicState, lastCommand, message);
   } catch (err) {
     message(errorText(err));
   }
@@ -70,7 +67,7 @@ async function sync() {
 async function init() {
   const user = await currentUser();
   if (!user) return;
-  const client = await getClient();
+  client = await getClient();
   const getToken = createTokenGetter(client);
   api = withRecorder(
     createGameApi(createHttpClient({ axios, getToken })),
@@ -78,13 +75,14 @@ async function init() {
       lastCommand = result;
     },
   );
-  const created = await createInitialRoom();
-  const { joinCode } = created.game;
-  const mine = created.seats.find((seat) => seat.userId === user.id);
-  mySeat = mine ? mine.seat : 0;
-  await api.startGame(joinCode);
-  const room = await api.getRoom(joinCode);
+  const { joinCode, room, seat } = await createStartedRoom(
+    api,
+    user,
+    window.location.search,
+  );
+  mySeat = seat;
   state.setRoom({ code: joinCode, ...room });
+  await updateSeatPrivacy();
   render();
   bindPlay(document, {
     onToggle: (cardId) => {
