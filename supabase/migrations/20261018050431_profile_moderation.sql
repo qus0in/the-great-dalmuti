@@ -64,7 +64,6 @@ $$;
 revoke all on function public.is_chat_blocked(uuid) from public, anon;
 grant execute on function public.is_chat_blocked(uuid) to authenticated;
 -- Decision 26: both hidden states block the owner's Storage writes until an admin lifts the block.
-alter table storage.objects enable row level security;
 drop policy if exists "Users manage only their unhidden avatar" on storage.objects;
 create policy "Users manage only their unhidden avatar" on storage.objects for all to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = (select auth.uid()::text)
