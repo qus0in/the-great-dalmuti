@@ -3,72 +3,55 @@
 workers_parse_footer() {
   printf '%s\n' "$2" | awk -v kind="$1" '
       function trim(s) { sub(/^[ \t]+/, "", s); sub(/[ \t]+$/, "", s); return s }
-      function parse_footer(agent_kind, raw_text) {
-        n = split(raw_text, lines, "\n")
-        cand_count = 0; conflict = 0
-        first_model = ""; first_effort = ""
-        for (i = 1; i <= n; i++) {
-          l = lines[i]
-          m = ""; eff = ""
-          if (agent_kind == "opencode") {
-            # Anchored to OpenCode UI box border: starts with optional spaces, vertical bar ┃ or |, spaces, Build auto ·
-            if (l ~ /^[ \t]*[┃|][ \t]+Build auto[ \t]*·/) {
-              line = l
-              sub(/^[ \t]*[┃|][ \t]+Build auto[ \t]*·[ \t]*/, "", line)
-              # line must end with OpenCode[ <provider>][ · <effort>]
-              if (line ~ /OpenCode([ \t]+[^· \t]+)?([ \t]*·[ \t]*[a-zA-Z0-9_-]+)?[ \t]*$/) {
-                model = line
-                sub(/[ \t]*OpenCode.*$/, "", model)
-                model = trim(model)
-                effort = "none"
-                if (line ~ /OpenCode[^·]*·/) {
-                  e = line
-                  sub(/^.*OpenCode[^·]*·[ \t]*/, "", e)
-                  e = trim(e)
-                  sub(/[ \t].*$/, "", e)
-                  if (e ~ /^[a-zA-Z0-9_-]+$/) effort = e
-                }
-                if (model != "") {
-                  m = model; eff = effort
-                }
-              }
-            }
-          } else if (agent_kind == "agy") {
-            # Anchored to AGY status line: begins with known prefix ("esc to cancel" or "? for shortcuts")
-            # and ends with accept-edits · <model> · <effort>
-            if (l ~ /^[ \t]*(\? for shortcuts|esc to cancel)[ \t]+.*accept-edits[ \t]*·/) {
-              line = l
-              sub(/^.*accept-edits[ \t]*·[ \t]*/, "", line)
-              if (line ~ /^[ \t]*[^·]+[ \t]*·[ \t]*[a-zA-Z0-9_-]+[ \t]*$/) {
-                model = line; sub(/[ \t]*·[ \t]*[^·]*$/, "", model)
-                e = line; sub(/^.*·[ \t]*/, "", e)
-                model = trim(model); e = trim(e)
-                if (model != "" && e != "") {
-                  m = model; eff = e
-                }
-              }
-            }
-          }
-          if (m != "") {
-            if (cand_count == 0) {
-              first_model = m; first_effort = eff
-            } else {
-              if (m != first_model || eff != first_effort) {
-                conflict = 1
-              }
-            }
-            cand_count++
-          }
+      function known(s) { return s ~ /^(minimal|low|medium|high|xhigh|max)$/ }
+      function join(a, n,   i, s) { s = a[1]; for (i = 2; i <= n; i++) s = s " " a[i]; return s }
+      # Codex: "<model> <effort>[ fast] · <path> · <title>"; effort must be a known value.
+      function codex(l,   line, head, p, n, i, j) {
+        if (l !~ /^[ \t]+[^·]+·/) return ""
+        line = trim(l); head = line; sub(/[ \t]*·.*$/, "", head)
+        n = split(head, p, /[ \t]+/)
+        for (i = 2; i <= n; i++) {
+          if (!known(p[i])) continue
+          for (j = i + 1; j <= n; j++) if (p[j] != "fast") return ""
+          return join(p, i - 1) "\t" p[i]
         }
-        if (cand_count > 0 && conflict == 0) return first_model "\t" first_effort
-        return "?\t?"
+        return ""
+      }
+      # OpenCode: box border then "Build[ auto] · <model> · <effort>".
+      # The old "... OpenCode · effort" form parses the same way.
+      function opencode(l,   line, p, n) {
+        if (l !~ /^[ \t]*[┃|][ \t]+Build( auto)?[ \t]*·/) return ""
+        line = l; sub(/^[ \t]*[┃|][ \t]+Build( auto)?[ \t]*·[ \t]*/, "", line)
+        n = split(trim(line), p, /[ \t]*·[ \t]*/)
+        if (n >= 2 && p[n] != "") return join(p, n - 1) "\t" p[n]
+        return (p[1] != "") ? p[1] "\tnone" : ""
+      }
+      # AGY: status line ending with "accept-edits · <model> · <effort>".
+      function agy(l,   line, model, e) {
+        if (l !~ /^[ \t]*(\? for shortcuts|esc to cancel)[ \t]+.*accept-edits[ \t]*·/) return ""
+        line = l; sub(/^.*accept-edits[ \t]*·[ \t]*/, "", line)
+        if (line !~ /^[ \t]*[^·]+[ \t]*·[ \t]*[a-zA-Z0-9_-]+[ \t]*$/) return ""
+        model = line; sub(/[ \t]*·[ \t]*[^·]*$/, "", model)
+        e = line; sub(/^.*·[ \t]*/, "", e)
+        return (trim(model) != "") ? trim(model) "\t" trim(e) : ""
       }
       {
-        if (NR == 1) all_text = $0
-        else all_text = all_text "\n" $0
+        if (NR == 1) text = $0
+        else text = text "\n" $0
       }
       END {
-        print parse_footer(kind, all_text)
+        n = split(text, lines, "\n"); count = 0; conflict = 0
+        for (i = 1; i <= n; i++) {
+          if (kind == "codex") got = codex(lines[i])
+          else if (kind == "opencode") got = opencode(lines[i])
+          else if (kind == "agy") got = agy(lines[i])
+          else got = ""
+          if (got == "") continue
+          if (count == 0) first = got
+          else if (got != first) conflict = 1
+          count++
+        }
+        print (count > 0 && conflict == 0) ? first : "?\t?"
       }
   '
 }

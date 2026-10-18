@@ -76,4 +76,5 @@ set_statuses working
 run_dispatch --replace old workerA "$BRIEF" > "$FIX/replace.out"
 grep -q '^prompt:/compact$' "$FIX/events"
 . "$SCRIPTS/test-dispatch-model.sh"
+. "$SCRIPTS/test-model-footer.sh"
 echo "dispatch tests: ok (clear/compact, post-reset idle, failures, unknown, dry-run parity)"
