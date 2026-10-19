@@ -10,9 +10,14 @@
   gap: var(--space-3);
   font-size: var(--font-size-base);
   line-height: var(--leading-snug);
+  margin: 0;
 }
 
 .play-action-banner[hidden] {
+  display: none;
+}
+
+.play-action-banner:empty {
   display: none;
 }
 
