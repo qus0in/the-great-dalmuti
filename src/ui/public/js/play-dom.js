@@ -1,4 +1,5 @@
 import * as cards from './play-dom-cards.js';
+import { bannerText } from './play-dom-banner.js';
 import { renderHint } from './play-dom-hint.js';
 import { renderSubstitution } from './play-dom-notice.js';
 import { mapSeatToSlot, renderSeats } from './play-dom-seats.js';
@@ -52,11 +53,7 @@ function renderMeta(doc, pub, count) {
 function renderChrome(doc, pub, { mySeat, count }) {
   const phase = pub ? pub.phase : 'waiting';
   set(doc, 'round', PHASES[phase] || '진행 중');
-  const last = pub ? pub.lastPlay : null;
-  const banner = last
-    ? `좌석 ${last.seat}: ${cards.rankLabel(last.rank)} ${last.count}장`
-    : '새 트릭 시작';
-  set(doc, 'banner', banner);
+  set(doc, 'banner', bannerText(pub, mySeat));
   renderMeta(doc, pub, count);
   set(doc, 'submit', count > 0 ? `카드 내기 (${count}장 선택)` : '카드 내기');
   const myTurn = pub?.phase === 'playing' && pub.currentTurnSeat === mySeat;

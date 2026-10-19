@@ -1,4 +1,4 @@
-import { loadEndedContext } from './round-support.js';
+import { loadEndedContext, mergeSummaryPositions } from './round-support.js';
 import { persistAdvance, runAdvanceStep } from './round-finish.js';
 
 const DEFAULT_CLOCK = { now: () => new Date() };
@@ -13,8 +13,13 @@ export async function advanceAfterTrick(
   const done = !ctx.state || ctx.state.status === 'in-progress';
   if (ctx.game.phase !== 'playing' || done) return { advanced: false };
   const step = await runAdvanceStep({ ...ctx, gameRepository });
+  const seatSummary = mergeSummaryPositions(
+    ctx.publicState.seatSummary,
+    step.seats,
+  );
   const persisted = await persistAdvance({
     ...ctx,
+    publicState: { ...ctx.publicState, seatSummary },
     gameRepository,
     roundEnded: step.roundEnded,
     turnSeat: step.turnSeat,
