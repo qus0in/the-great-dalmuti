@@ -48,6 +48,29 @@ export function onAuthClick(selector, fn) {
   document.querySelector(selector)?.addEventListener('click', fn);
 }
 
+// 복귀 세션 대기 감시 (10초 안에 세션 없으면 로그인으로)
+export function createSessionGuard({
+  timeoutMs = 10000,
+  setTimer = setTimeout,
+  redirect,
+  reload,
+} = {}) {
+  let done = false;
+  return {
+    onSession(session) {
+      if (session?.user) {
+        done = true;
+        reload();
+      }
+    },
+    start() {
+      setTimer(() => {
+        if (!done) redirect();
+      }, timeoutMs);
+    },
+  };
+}
+
 // 확인 전 가림 해제 (표시 확정 때만 호출)
 export function revealAuthBody() {
   document.body.removeAttribute('data-auth-guard');

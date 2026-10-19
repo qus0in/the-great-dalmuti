@@ -83,7 +83,6 @@ export function renderWaitingRoom(doc, view, options) {
     '.play-arena',
     '.play-hand-area',
     '[data-play="banner"]',
-    '[data-play="substitution"]',
   ]) {
     const item = doc.querySelector(selector);
     if (item) item.hidden = waiting;
