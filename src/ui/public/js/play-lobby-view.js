@@ -1,4 +1,5 @@
 import { renderAvatar } from './avatar.js';
+import { copyInviteLink } from './play-lobby-copy.js';
 function el(doc, tag, cls) {
   const node = doc.createElement(tag);
   node.className = cls;
@@ -7,22 +8,6 @@ function el(doc, tag, cls) {
 function clear(node) {
   if (typeof node.replaceChildren === 'function') node.replaceChildren();
   else while (node.firstChild) node.removeChild(node.firstChild);
-}
-async function copyText(doc, linkNode, link) {
-  const view = doc.defaultView ?? globalThis;
-  try {
-    await view.navigator.clipboard.writeText(link);
-    return true;
-  } catch {
-    if (typeof linkNode.select === 'function') linkNode.select();
-    else if (doc.createRange && doc.getSelection) {
-      const range = doc.createRange();
-      range.selectNodeContents(linkNode);
-      doc.getSelection().removeAllRanges();
-      doc.getSelection().addRange(range);
-    } else if (typeof linkNode.focus === 'function') linkNode.focus();
-    return false;
-  }
 }
 function seatItem(doc, seat) {
   const item = el(doc, 'li', 'lobby__seat');
@@ -46,13 +31,20 @@ function inviteRow(doc, state, handlers) {
   copy.setAttribute('type', 'button');
   copy.setAttribute('data-play', 'lobby-copy');
   copy.textContent = '링크 복사';
+  const status = el(doc, 'p', 'lobby__copy-status');
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  status.setAttribute('data-play', 'lobby-copy-status');
+  status.textContent = '';
   copy.addEventListener('click', () => {
-    copyText(doc, link, state.link ?? '');
+    copyInviteLink(doc, link, state.link ?? '').then((text) => {
+      status.textContent = text;
+    });
     if (typeof handlers.onCopy === 'function')
       handlers.onCopy(state.link ?? '');
   });
   row.append(link, copy);
-  return { row, copy };
+  return { row, copy, status };
 }
 function actionArea(doc, state, handlers) {
   const area = el(doc, 'div', 'lobby__actions');
@@ -91,8 +83,13 @@ export function renderLobby(doc, state = {}, handlers = {}) {
   seats.setAttribute('data-play', 'lobby-seats');
   for (const seat of state.seats ?? []) seats.appendChild(seatItem(doc, seat));
   const action = actionArea(doc, state, handlers);
-  root.append(title, codeRow, invite.row, seats, action.area);
-  return { root, copyBtn: invite.copy, startBtn: action.start };
+  root.append(title, codeRow, invite.row, invite.status, seats, action.area);
+  return {
+    root,
+    copyBtn: invite.copy,
+    copyStatus: invite.status,
+    startBtn: action.start,
+  };
 }
 export function hideLobby(doc) {
   const root = doc.querySelector('[data-play="lobby"]');

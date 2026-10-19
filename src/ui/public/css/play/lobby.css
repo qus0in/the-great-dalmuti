@@ -42,6 +42,17 @@
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
+.lobby__copy-status {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.lobby__copy-status:empty {
+  display: none;
+}
 .lobby__seats {
   display: flex;
   flex-direction: column;
