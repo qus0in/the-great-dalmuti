@@ -39,10 +39,22 @@
   }
 
   .play-hand-header__selection-hint {
-    display: none;
     font-size: var(--font-size-xs);
     line-height: var(--leading-snug);
     padding: var(--space-0-5) var(--space-1);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  [data-play="selection-hint"] {
+    display: none;
+  }
+
+  [data-play="hint"]:not([hidden]) {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .play-hand-controls {

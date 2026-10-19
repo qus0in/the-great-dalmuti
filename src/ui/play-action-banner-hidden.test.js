@@ -18,6 +18,17 @@ it('banner.css에 .play-action-banner[hidden] display none 규칙이 선언되�
   );
 });
 
+it('banner.css에 .play-action-banner:empty display none 규칙이 선언되어 있다', () => {
+  const css = readFileSync(
+    join(ROOT, 'src', 'ui', 'public', 'css', 'play', 'banner.css'),
+    'utf8',
+  );
+  assert.match(
+    css,
+    /\.play-action-banner:empty\s*\{[^}]*display:\s*none\s*;?[^}]*\}/,
+  );
+});
+
 it('play.html의 substitution 배너는 기본으로 hidden 속성을 가진다', () => {
   const html = readFileSync(
     join(ROOT, 'src', 'ui', 'public', 'play.html'),
