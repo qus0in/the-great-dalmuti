@@ -10,7 +10,7 @@ Re-tier from observed results (failed briefs, review findings). Durable findings
 - Provider fragility: free/preview endpoints can vanish mid-task (retry loops). If a worker emits provider/endpoint errors for ~5 min, reassign its unit; do not wait indefinitely.
 - Quota/context budget: do not use tight-quota routes for long units or reruns; when a worker's context usage is high (>=80%), do not assign large units — hand off via `resume.sh` to another worker.
 - high/max reasoning effort: review, debugging. low effort: mechanical work.
-- Set worker effort: `scripts/set-effort.sh [--dry-run] <pane> <level>` (agy: low/medium/high; unverified kinds unsupported).
+- Set worker effort: `scripts/set-effort.sh [--dry-run] <pane> <level>` (agy: low/medium/high via `/model <id>-<level>` arg, slider fallback; unverified kinds unsupported).
 - reviewer should differ in model family from author when possible.
 - free/preview models: avoid stateful logic (shell state, domain state machines) — assign core stateful-logic units to higher tiers (observed: timebox failures on CLI-semantics/stateful-shell fix and domain state machine); fake/stub/dry-run tests are not sufficient evidence (reviewers must verify the real path's inputs and behavior).
 - Self-corrupting tool calls: emitting malformed raw tool-call tokens, editing files under a read-only brief, or fabricating source text (e.g. proposal "Before" text absent from the live issue) is class (3) self error — stop it (triage); do not assign reviews or authoring units until re-tiered from clean results.
