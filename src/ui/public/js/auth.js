@@ -1,4 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
+import * as gate from './auth-gate.js';
 
 let client = null;
 
@@ -38,61 +39,58 @@ export async function currentUser() {
   return data.session?.user ?? null;
 }
 
-// 표시 전환 (data-auth 속성으로만 찾는다)
-export function syncAuthUI(user) {
-  const name = user?.user_metadata?.full_name ?? user?.email ?? '';
-  for (const el of document.querySelectorAll('[data-auth="signed-in"]')) {
-    el.hidden = !user;
-  }
-  for (const el of document.querySelectorAll('[data-auth="signed-out"]')) {
-    el.hidden = Boolean(user);
-  }
-  for (const el of document.querySelectorAll('[data-auth="user-name"]')) {
-    el.textContent = name;
-  }
+// 복귀 주소 세션 대기 (가림 유지, 세션 생기면 다시 확인)
+async function waitForSession() {
+  const sb = await getClient();
+  sb.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) window.location.reload();
+  });
 }
 
-// 버튼 연결 (없으면 무시)
-function onClick(selector, fn) {
-  document.querySelector(selector)?.addEventListener('click', fn);
+// hall·play·admin 표시 (세션 확인 뒤)
+async function showApp(user) {
+  gate.revealAuthBody();
+  gate.syncAuthUI(user);
+  gate.onAuthClick('[data-auth="logout"]', signOut);
+  const sb = await getClient();
+  sb.auth.onAuthStateChange((_event, session) => {
+    const next = session?.user ?? null;
+    if (!next) {
+      window.location.replace('/login');
+    } else {
+      gate.syncAuthUI(next);
+    }
+  });
 }
 
-// 로그인 화면: 세션이 있으면 대기실로, 없으면 버튼 연결
-function guardLogin(user) {
-  if (user) window.location.replace('/');
-  else onClick('[data-auth="login"]', signInWithGoogle);
-}
-
-// hall·play: 세션이 없으면 로그인 화면으로, 있으면 표시·연결
-async function guardApp(user) {
-  if (!user) window.location.replace('/login');
-  else {
-    syncAuthUI(user);
-    onClick('[data-auth="logout"]', signOut);
-    const sb = await getClient();
-    sb.auth.onAuthStateChange((_event, session) => {
-      const next = session?.user ?? null;
-      if (!next) {
-        window.location.replace('/login');
-      } else {
-        syncAuthUI(next);
-      }
-    });
-  }
-}
-
-// 페이지 표식(data-page)으로 가드·이동을 처리한다
+// 페이지 표식(data-page)으로 가림·이동을 처리한다
 async function init() {
   const { page } = document.body.dataset;
   if (!page) return;
+  const { search, hash } = window.location;
+  const isOAuth = gate.isOAuthReturn(search, hash);
   let user;
   try {
     user = await currentUser();
   } catch {
     user = null;
   }
-  if (page === 'login') return guardLogin(user);
-  await guardApp(user);
+  const next = gate.decideAuthGate({ page, user, isOAuth });
+  if (next === 'to-login' || next === 'to-home') {
+    const target = next === 'to-home' ? '/' : '/login';
+    window.location.replace(target);
+    return;
+  }
+  if (next === 'wait') {
+    await waitForSession();
+    return;
+  }
+  if (page === 'login') {
+    gate.revealAuthBody();
+    gate.onAuthClick('[data-auth="login"]', signInWithGoogle);
+    return;
+  }
+  await showApp(user);
 }
 
 init();
