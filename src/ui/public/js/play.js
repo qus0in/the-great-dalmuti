@@ -14,7 +14,7 @@ import { createSeatPrivacy } from './play-seat-privacy.js';
 import { startWaitingRoom } from './play-lobby.js';
 import { renderRoomView } from './play-view.js';
 import { createRoomReportContext } from './play-report.js';
-
+import { isPending, startPending, stopPending } from './play-pending.js';
 const state = createPlayState();
 const seatPrivacy = createSeatPrivacy();
 let api = null,
@@ -32,7 +32,6 @@ function render() {
     onStart: startLobby,
   });
 }
-
 const updateSeatPrivacy = () =>
   seatPrivacy.update(client, state.get().publicState);
 const message = (text) => showMessage(document, text ?? '');
@@ -42,17 +41,21 @@ const startLobby = () =>
     .then(render)
     .catch((err) => message(errorText(err)));
 async function run(command) {
+  if (isPending(document)) return;
+  startPending(document, command === submitSelected ? 'submit' : 'pass');
   lastCommand = null;
   try {
     await command(api, state);
   } catch (err) {
     message(errorText(err));
   }
+  stopPending(document);
   await updateSeatPrivacy();
   render();
   announceRound(state.get().publicState, lastCommand, message);
 }
 async function sync() {
+  if (isPending(document)) return;
   const { code } = state.get();
   try {
     const room = await api.getRoom(code);

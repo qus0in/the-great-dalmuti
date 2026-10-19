@@ -59,10 +59,13 @@ function updateSeatSlot(doc, item, flags) {
   const el = doc.querySelector(`[data-play="seat"][data-seat="${flags.slot}"]`);
   if (!el) return;
   el.className = seatClassName(flags.slot, flags);
-  mountAvatar(
-    el.querySelector('.seat__avatar'),
-    renderAvatar(doc, resolveSeatAvatar(item, flags.ctx)),
-  );
+  const box = el.querySelector('.seat__avatar');
+  const props = resolveSeatAvatar(item, flags.ctx);
+  const { key } = props;
+  if (!box?.dataset || box.dataset.avatarKey !== key) {
+    mountAvatar(box, renderAvatar(doc, props));
+    if (box?.dataset) box.dataset.avatarKey = key;
+  }
   setText(el, '.seat__name, .play-hand-header__title', item.userName || '');
   setText(el, '.seat__count', `${item.cardCount || 0}장`);
   updateSeatRank(el, item);
