@@ -12,6 +12,7 @@ export const NOTICES = {
 export const ACCEPT = 'image/png,image/jpeg,image/webp';
 export const MAX_BYTES = 1024 * 1024;
 export const kindOf = (d) => (d === 'suspect' || d === 'violation' ? d : null);
+const fallback = () => ({});
 export const checkFile = (f) =>
   ACCEPT.indexOf(f.type) === -1
     ? NOTICES.format
@@ -69,8 +70,8 @@ export function createProfileCard(deps) {
     setNotice(card.root, '');
   }
   async function loadHiddenState() {
-    const res = await card.sb.rpc('my_hidden_profile_kind').catch(() => ({}));
-    card.hiddenKind = kindOf(res?.data);
+    const r = await card.sb.rpc('my_hidden_profile_kind').then(null, fallback);
+    card.hiddenKind = kindOf(r?.data);
     applyHiddenState(card.root, card.hiddenKind);
     drawAvatar(card);
     await card.appeal?.sync();
