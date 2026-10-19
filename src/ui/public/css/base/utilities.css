@@ -65,3 +65,8 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* 인증 확인 전 가림 (auth.js가 표시 확정 뒤 해제, 깜빡임 방지) */
+body[data-auth-guard='pending'] {
+  visibility: hidden;
+}
