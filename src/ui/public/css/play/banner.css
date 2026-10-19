@@ -12,6 +12,10 @@
   line-height: var(--leading-snug);
 }
 
+.play-action-banner[hidden] {
+  display: none;
+}
+
 .play-action-banner__lead {
   font-weight: 700;
   color: var(--color-accent-sky);

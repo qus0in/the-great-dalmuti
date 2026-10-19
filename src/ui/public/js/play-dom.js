@@ -3,6 +3,7 @@ import { bannerText } from './play-dom-banner.js';
 import { renderHint } from './play-dom-hint.js';
 import { renderSubstitution } from './play-dom-notice.js';
 import { mapSeatToSlot, renderSeats } from './play-dom-seats.js';
+import { isPending } from './play-pending.js';
 export { mapSeatToSlot, renderSeats };
 const PHASES = {
   waiting: '대기 중',
@@ -85,6 +86,7 @@ export function bindPlay(doc, { onToggle, onSubmit, onPass } = {}) {
     cleanups.push(() => el.removeEventListener(type, fn));
   };
   const toggle = (e) => {
+    if (isPending(doc)) return;
     const c = e?.target?.closest && e.target.closest('[data-play="card"]');
     if (c?.dataset?.cardId && onToggle) onToggle(c.dataset.cardId);
   };

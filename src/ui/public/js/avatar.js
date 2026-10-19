@@ -1,9 +1,7 @@
 export const SILHOUETTE_SRC = '/images/avatar-silhouette.svg';
 export const BOT_SRC = '/images/avatar-bot.svg';
 
-export function avatarPath(userId) {
-  return `${userId}/avatar`;
-}
+export const avatarPath = (userId) => `${userId}/avatar`;
 
 function appendVersion(url, version) {
   if (version === undefined || version === null) return url;
@@ -79,13 +77,16 @@ export function resolveSeatAvatar(item, ctx) {
   const isBot = Boolean(item.isBot);
   const userId = item.userId || null;
   const hidden = Boolean(userId && ctx?.hiddenIds?.has(userId));
+  const name = item.userName || '';
+  const url = seatUrl(item, ctx);
   return {
     userId,
-    name: item.userName || '',
+    name,
     isBot,
     hidden,
-    url: seatUrl(item, ctx),
+    url,
     size: 'sm',
+    key: `${resolveAvatarSrc({ isBot, hidden, url })}|${name}|sm`,
   };
 }
 
