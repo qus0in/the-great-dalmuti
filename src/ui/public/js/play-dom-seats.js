@@ -4,6 +4,7 @@ import { syncSeatButton } from './report-entry.js';
 const SEAT_TITLES = ',1위 대달무티,2위 소달무티,3위 소농노,4위 대농노'.split(
   ',',
 );
+export const seatTitle = (pos) => SEAT_TITLES[pos] || '';
 const RANK_SEL = '[data-play="seat-rank"], .seat__name-row .badge';
 const STATUS_SEL =
   '[data-play="seat-status"], .seat__status, .badge--turn, .badge--pass';
@@ -24,9 +25,7 @@ function setText(root, sel, txt) {
 function updateSeatRank(root, item) {
   const el = root.querySelector(RANK_SEL);
   if (!el) return;
-  const txt = item.rank
-    ? String(item.rank)
-    : SEAT_TITLES[item.finishPosition] || '';
+  const txt = item.rank ? String(item.rank) : seatTitle(item.finishPosition);
   el.hidden = !txt;
   el.textContent = txt;
 }

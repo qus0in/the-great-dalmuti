@@ -50,6 +50,15 @@ export function applyFinishPositions(seats, order) {
   }));
 }
 
+// 좌석 기록의 아웃 순서를 공개 요약에 옮긴다 (없는 좌석은 null)
+export function mergeSummaryPositions(summary, seats) {
+  const pos = new Map(seats.map((s) => [s.seat, s.finishPosition ?? null]));
+  return (summary || []).map((s) => ({
+    ...s,
+    finishPosition: pos.get(s.seat) ?? null,
+  }));
+}
+
 // 방·손패·최신 트릭·복원 상태를 한 번에 읽는다 (선행 검사 포함)
 export async function loadEndedContext(gameRepository, code) {
   const agg = await gameRepository.findGameByCode(code);

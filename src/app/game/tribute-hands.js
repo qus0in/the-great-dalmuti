@@ -74,6 +74,7 @@ export function buildNextTributeEntities({ agg, nextHands, nowIso }) {
       isBot: s.isBot,
       cardCount: (nextHands[s.seat] ?? nextHands[resolveSeatRank(s)] ?? [])
         .length,
+      finishPosition: s.finishPosition ?? null,
     })),
     tribute: { greaterCount: 2, lesserCount: 1 },
     updatedAt: nowIso,

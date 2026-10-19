@@ -29,6 +29,7 @@
  * @property {string} userName
  * @property {boolean} isBot
  * @property {number} cardCount
+ * @property {number|null} [finishPosition]
  */
 
 /**

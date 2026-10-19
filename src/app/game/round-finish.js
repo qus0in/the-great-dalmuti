@@ -60,10 +60,10 @@ export async function runAdvanceStep({
       latest,
       state,
     });
-    return { roundEnded: true, rankings, turnSeat: null };
+    return { roundEnded: true, rankings, turnSeat: null, seats: nextSeats };
   }
   const turnSeat = await openNextTrick({ gameRepository, game, latest, state });
-  return { roundEnded: false, rankings: null, turnSeat };
+  return { roundEnded: false, rankings: null, turnSeat, seats: nextSeats };
 }
 
 // 게임/공개 상태 갱신 (version 낙관적 잠금) — 라운드 종료 시 phase finished
