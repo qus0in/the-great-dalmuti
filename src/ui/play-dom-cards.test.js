@@ -10,8 +10,6 @@ function createNode(tag = 'div') {
     tag,
     className: '',
     textContent: '',
-    hidden: false,
-    disabled: false,
     dataset: {},
     attrs,
     children,
@@ -22,7 +20,6 @@ function createNode(tag = 'div') {
       children.push(c);
       return c;
     },
-    querySelector: () => null,
   };
 }
 
@@ -61,6 +58,7 @@ it('Given lone jester lastPlay, When renderPlay runs repeatedly, Then card--jest
   const trick = doc.nodes['[data-play="trick"]'];
   assert.equal(target.textContent, '1장 조합 (★ 어릿광대)');
   assert.equal(trick.children.length, 1);
+  assert.equal(trick.dataset.trickCount, '1');
 
   const firstWrap = trick.children[0];
   const card = firstWrap.children[0];
@@ -70,6 +68,11 @@ it('Given lone jester lastPlay, When renderPlay runs repeatedly, Then card--jest
   dom.renderPlay(doc, { mySeat: 0, publicState });
   assert.equal(trick.children.length, 1);
   assert.equal(trick.children[0], firstWrap);
+  const next = { ...publicState, lastPlay: { seat: 3, rank: 12, count: 12 } };
+  dom.renderPlay(doc, { mySeat: 0, publicState: next });
+  assert.equal(trick.dataset.trickCount, '12');
+  assert.equal(trick.children.length, 12);
+  assert.equal(trick.children[0].children[0].className, 'card card--rank-12');
 });
 
 it('Given a hand, When renderHandCards runs, Then it records the count and refreshes cards', () => {
