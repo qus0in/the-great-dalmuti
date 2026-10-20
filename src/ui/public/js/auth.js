@@ -39,12 +39,16 @@ export async function currentUser() {
   return data.session?.user ?? null;
 }
 
-// 복귀 주소 세션 대기 (가림 유지, 세션 생기면 다시 확인)
+// 복귀 주소 세션 대기 (10초 안에 세션 없으면 로그인으로)
 async function waitForSession() {
   const sb = await getClient();
-  sb.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) window.location.reload();
+  const guard = gate.createSessionGuard({
+    timeoutMs: 10000,
+    redirect: () => window.location.replace('/login'),
+    reload: () => window.location.reload(),
   });
+  sb.auth.onAuthStateChange((_event, session) => guard.onSession(session));
+  guard.start();
 }
 
 // hall·play·admin 표시 (세션 확인 뒤)

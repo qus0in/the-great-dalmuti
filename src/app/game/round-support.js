@@ -34,17 +34,26 @@ export function rebuildEndedState(trick, hands) {
 
 // 아웃 순서대로 빈 finish_position을 채운다 (기존 기록은 유지)
 export function applyFinishPositions(seats, order) {
+  // 다음 판: 이전 판 순위가 그대로 남아 있으면 비우고 1부터 매긴다
+  let base = seats;
+  if (
+    seats.length > 0 &&
+    seats.every((s) => s.finishPosition !== null) &&
+    order.some((id) => seats[Number(id)]?.finishPosition !== null)
+  ) {
+    base = seats.map((seat) => ({ ...seat, finishPosition: null }));
+  }
   const positions = new Map();
-  let next = seats.filter((s) => s.finishPosition !== null).length + 1;
+  let next = base.filter((s) => s.finishPosition !== null).length + 1;
   for (const id of order) {
     const index = Number(id);
-    const seat = seats[index];
+    const seat = base[index];
     if (seat && seat.finishPosition === null && !positions.has(index)) {
       positions.set(index, next);
       next += 1;
     }
   }
-  return seats.map((seat, index) => ({
+  return base.map((seat, index) => ({
     ...seat,
     finishPosition: positions.get(index) ?? seat.finishPosition,
   }));
