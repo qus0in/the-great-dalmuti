@@ -28,3 +28,10 @@ New unit uses the fresh command; `--continue` or `--replace` uses compact. Requi
 Post-reset wait defaults to 60 seconds (`DISPATCH_RESET_TIMEOUT`), with the existing 5-second check interval (`DISPATCH_WAIT_INTERVAL`). Visible reset errors, running compaction, or pending OpenCode command input abort dispatch. Codex `/clear` reset the observed model/effort from Luna max to Sol medium; use `/compact` for both fresh and continued units. AGY model retention after `/clear` has indirect evidence only (official `/model` persistence, global `settings.json` model, no model setter in the clear path); direct TUI observation is unverified, and the global value may differ from the pane's current model, so keep the post-reset model comparison.
 
 Before reset and after the 3 idle checks, compare model/effort with the same footer extraction as `workers.sh --model`; changed values abort before the brief with both values on stderr. If either value is unknown (`?`), warn once and proceed. The shared parser currently recognizes AGY, OpenCode (current `Build`/`Build auto` box footer and the existing `… OpenCode` form), and Codex footers; Claude is not recognized yet, so Claude comparisons warn as unknown.
+
+## Observed handoff calibrations
+| date | model | provider path | effort | grade |
+| --- | --- | --- | --- | --- |
+| 2026-10-20 | DeepSeek V4.1 Flash 1017 | Ollama Cloud | max | t1 — handoff-capable (situation table exact incl. missed-callback evidence; grounded brief; judgment with causal line plus failure class; zero forbidden actions) |
+| 2026-10-20 | MiMo-V2.6-Pro | OpenCode Go | none | t2 — worker/review only (missed callback-loss evidence; resolved items refiled as pending; one forbidden read of another trial report, self-disclosed) |
+| 2026-10-16 | MiMo-V2.6-Flash | free path | unknown | not handoff-eligible — malformed tool tokens under a read-only brief; small drafts only until a clean re-tier (see self-corruption rule above) |
