@@ -76,6 +76,7 @@ set_statuses working
 run_dispatch --replace old workerA "$BRIEF" > "$FIX/replace.out"
 grep -q '^prompt:/compact$' "$FIX/events"
 . "$SCRIPTS/test-dispatch-model.sh"
+. "$SCRIPTS/test-dispatch-reset-model.sh"
 . "$SCRIPTS/test-model-footer.sh"
 # Label-column regression: worker_model must return non-empty model effort (old 5-col).
 export MODEL_BEFORE='  GPT-6-Luna max · ~/Workspace/the-great-dalmuti · Write review report'
