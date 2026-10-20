@@ -90,3 +90,5 @@
 - [2026-10-18](2026-10-18-06-patch-036-supabase-email-test-account.md) — 0.3.6 Supabase 사진 업로드 E2E 임시 계정 및 이메일 로그인 운영 결정
 - [2026-10-20](2026-10-20-01-0-4-env-credentials.md) — 0.4 API 자격 증명과 env 로딩 결정
 - [2026-10-20](2026-10-20-02-0-3-wrapup.md) — 0.3.x 마무리 집중·0.4 이월
+- [2026-10-20](2026-10-20-03-retro-and-handoff-issue.md) — 워커 회고 요청·이슈 등록
+- [2026-10-20](2026-10-20-04-codex-finish-harness-commit-close-workspace.md) — codex 임무 마무리·하네스 갱신 커밋·워크스페이스 종료

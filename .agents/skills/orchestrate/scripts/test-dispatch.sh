@@ -57,6 +57,8 @@ grep -Fq "checkpoint.sh" "$FIX/real-prompt"
 grep -Fq -e "--status blocked|failed" "$FIX/real-prompt"
 grep -Fq -e "notify.sh --status blocked" "$FIX/real-prompt"
 grep -Fq -e "notify.sh --status failed" "$FIX/real-prompt"
+grep -Fq -e "no commit, push, stash, checkout, or reset" "$FIX/real-prompt"
+grep -Fq -e "outside your acceptance criteria" "$FIX/real-prompt"
 set_statuses idle working idle done done
 run_dispatch --wait-idle 5 workerA "$BRIEF" --dry-run > "$FIX/wait.out"
 [ "$(cat "$FIX/count")" -eq 5 ] || { echo "wait-idle did not require 3 consecutive idle/done states" >&2; exit 1; }

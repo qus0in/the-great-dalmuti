@@ -14,6 +14,7 @@ README.md (root) is user-authored: never stage edits to it unless the user asked
 Scripts (POSIX sh; --dry-run prints quoted mutations, runs read-only queries only, never mutates; unknown flag exits 2 first; guards enforced in dry-run too):
 - protect.sh [--dry-run]: apply main protection (idempotent).
 - ship.sh "<title>" ["<body>"] [--body-file FILE] [--merge] [--dry-run]: require dev + clean tree; push dev; lookup failure aborts (never creates duplicate); reuse/create PR (URL printed only when run); body carries `Closes #N` for every issue the PR delivers; --merge reads origin repo policy once, prefers allowed merge/squash/rebase (invalid/none aborts), ff's main, returns to dev and ff's with runtime merge-commit fallback preserving history (dry-run prints ff attempt + fallback note), pushes dev.
+- ship.sh: push 전 `git fetch origin main`(dry-run에서도 실행) 후 `git diff --quiet origin/main HEAD`가 조용하면 push·gh 없이 `nothing to ship: dev tree equals origin/main`을 stderr에 쓰고 exit 0.
 - ship.sh guards (on dev + clean tree) are absolute: never hide an untracked file via `.git/info/exclude`/stash to pass them; commit the file verbatim (user-authored) or ask, then rerun.
 - ship 후 main 머지 커밋이 dev 조상인지 확인; PR이 CONFLICTING이면 pull_request CI가 뜨지 않음 → sync 먼저.
 - sync.sh [--dry-run]: fetch; ff dev to origin/main with runtime fallback to merge commit (dry-run prints ff attempt + note, never invents fallback); no force push or push.
