@@ -19,6 +19,14 @@
   - `SUPABASE_JWKS_URL`
   - `NODE_ENV=production`
   - `PORT`는 Render가 자동 주입하므로 수동 입력하지 않습니다.
+- **0.4 AI 환경 변수** ([ADR-0018 C절](adr/0018-0.4-ai-integration.md), `.env.sample` 키 기준):
+  - `GROQ_API_KEY`
+  - `GEMINI_API_KEY`
+  - `NVIDIA_API_KEY`
+  - `CLOUDFLARE_API_TOKEN`
+  - `CLOUDFLARE_ACCOUNT_ID`
+  - `.env`는 커밋하지 않으며, Render에서는 위 5개 키를 dashboard `Environment` 탭에 등록합니다.
+  - 로컬은 Node 자체 기능 `--env-file-if-exists=.env`로 로드합니다(`npm start`/`npm run dev`에 이미 적용, Node 22.9+).
 - **리전/플랜**: Region `oregon`, Plan `free` (이후 사용할 AI API의 리전 제약을 피하기 위함).
 - **헬스 경로**: `/healthz` ([Health checks](https://render.com/docs/health-checks)).
 - **Supabase Auth redirect URL**: Render 도메인으로 설정 ([Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)).

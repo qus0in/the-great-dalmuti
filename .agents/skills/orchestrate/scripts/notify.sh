@@ -1,20 +1,20 @@
 #!/bin/sh
-# Usage: notify.sh [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] [--dry-run] <target-pane> <report-path> [msg]
-# Write durable callback record to tmp/<task>/callbacks.log and state.md, then prompt target via herdr.
-# Sync attempt is quick (one prompt + verify); on failure record delivered=pending and detach
-# redeliver.sh --resend in background (worker never blocks on retry). Final outcome (yes/no) is
-# appended by the background retry. Exit 0 on logged delivery or pending; 1 on log unwritable; 2 on bad args.
+# Usage: notify.sh [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] [--dry-run] [--with-summary] <target-pane> <report-path> [msg]
+# Write durable callback record to tmp/<task>/callbacks.log and state.md, then prompt target.
+# Sync attempt is quick (prompt+verify); on failure record delivered=pending and detach
+# redeliver.sh --resend in background. Exit 0 on logged delivery or pending; 1 unwritable; 2 bad args.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(git rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/../../../.." && pwd))
 die() { rc=$1; shift; echo "notify.sh: $*" >&2; exit "$rc"; }
 usage() { die 2 "usage: $0 [--status done|blocked|failed] [--unit UNIT] [--self-pane PANE] [--dry-run] <target-pane> <report-path> [msg]"; }
-STATUS=; UNIT=; SELF=; DRY_RUN=0
+STATUS=; UNIT=; SELF=; DRY_RUN=0; WITH_SUMMARY=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --status) [ $# -ge 2 ] || usage; STATUS=$2; shift 2;;
     --unit) [ $# -ge 2 ] || usage; UNIT=$2; shift 2;;
     --self-pane) [ $# -ge 2 ] || usage; SELF=$2; shift 2;;
     --dry-run) DRY_RUN=1; shift;;
+    --with-summary) WITH_SUMMARY=1; shift;;
     --) shift; break;;
     --*) usage;;
     *) break;;
@@ -44,11 +44,13 @@ if [ -z "$UNIT" ]; then
     [ -n "$cand" ] && UNIT="$cand";;
   esac
 fi
-[ -n "$UNIT" ] || UNIT="$TASK"
-TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+[ -n "$UNIT" ] || UNIT="$TASK"; TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 TOKEN="cb-${TS}-${UNIT}-$$"
 BODY="[callback] token=$TOKEN worker=$SELF unit=$UNIT status=$STATUS report=$REPORT"
 [ -z "$MSG" ] || BODY="$BODY msg=\"$MSG\""
+if [ "$WITH_SUMMARY" -eq 1 ]; then SUMF=$REPORT; [ -f "$SUMF" ] || SUMF="$ROOT/$SUMF"
+  SUM=$("$HERE/summary.sh" "$SUMF") || die 1 "summary failed: $SUMF"
+  BODY=$(printf '%s\n[summary]\n%s' "$BODY" "$SUM"); MSG=$(printf '%s [summary] %s' "$MSG" "$SUM" | tr '\n' '|'); fi
 RYES="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT target=$TARGET token=$TOKEN delivered=yes${MSG:+ msg=\"$MSG\"}"
 RPEND="[$TS] worker=$SELF unit=$UNIT status=$STATUS report=$REPORT target=$TARGET token=$TOKEN delivered=pending${MSG:+ msg=\"$MSG\"}"
 SYES="$TS callback $STATUS $SELF $UNIT report=$REPORT target=$TARGET token=$TOKEN delivered=yes${MSG:+ msg=\"$MSG\"}"

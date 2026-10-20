@@ -42,10 +42,8 @@ function resolveCardMeta(card, selected) {
   const rankText = isJester ? '★' : String(rank);
   const nameText = card.name ?? rankLabel(rank);
   const rankClass = isJester ? 'card--jester' : `card--rank-${rank}`;
-  const sel = selected ? ' is-selected' : '';
-  const baseLabel = `${rankText} ${nameText}`;
-  const ariaLabel = selected ? `${baseLabel} (선택됨)` : baseLabel;
-  const className = `card ${rankClass}${sel}`;
+  const className = `card ${rankClass}${selected ? ' is-selected' : ''}`;
+  const ariaLabel = `${rankText} ${nameText}${selected ? ' (선택됨)' : ''}`;
   return { rankText, nameText, className, ariaLabel };
 }
 
@@ -89,6 +87,7 @@ export function renderTrickCards(doc, lastPlay) {
   const key = `${rank}:${count}`;
   if (!trickEl || trickEl._trickKey === key) return;
   trickEl._trickKey = key;
+  trickEl.dataset.trickCount = String(count);
   trickEl.textContent = '';
   for (let i = 1; i <= count; i += 1) {
     const wrap = doc.createElement('div');

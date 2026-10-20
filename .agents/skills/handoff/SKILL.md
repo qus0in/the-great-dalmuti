@@ -21,6 +21,8 @@ Backend rule: delegation transport is strictly Herdr worker panes. Never use pla
    - Run `scripts/snapshot.sh <task> [--repo PATH]... [--dry-run] [--workspace ID --self-pane ID]`.
    - Writes or updates the `<!-- handoff:begin -->` ... `<!-- handoff:end -->` block in `tmp/<task>/handoff.md` from live evidence (`context.sh`, `workers.sh`, git status, briefs).
    - Preserves existing human/agent notes outside markers. Use `--dry-run` to preview stdout.
+3. Suitability trial:
+   - Run the read-only trial per `references/handoff-eval.md`; record model plus provider path plus effort plus date plus grade in orchestrate `references/models.md`.
 
 ## Scripts
 - Snapshot: `scripts/snapshot.sh <task> [--repo PATH]... [--dry-run] [--workspace ID --self-pane ID]` -> update handoff record.

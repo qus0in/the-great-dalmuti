@@ -23,6 +23,7 @@ Paths relative to repo root. DESIGN.md is the source of truth for file structure
 - Head essentials: concise meta, Kakao-first OG + Twitter tags, absolute https og:image 1200x630 (minimal error pages exempt from og meta); only images are the icon set (favicon.ico, favicon.svg, apple-touch-icon.png, icon-192.png, icon-512.png, icon-512-maskable.png) + og.png; head must include manifest link; manifest display "browser" (no install prompt).
 - Workers run headless/lighthouse verification, never the orchestrator; only for UI behavior/layout/accessibility changes (mechanical changes reuse valid evidence).
 - Hidden states: reset.css must enforce `[hidden] { display: none !important; }`; dynamic visibility criteria require browser render evidence, never fake-DOM attribute checks alone.
+- User-reported defect fixes: reproduce against the real page and real modules (live service when possible); harness-only PNGs never constitute acceptance.
 
 ## Scripts
 - `scripts/check.sh [target-dir]` — contract lint (default: dist/; supports src/ui/public/); prints `ok` and exits 0 when clean, lists `file:line` and exits 1 on violations, exits 2 on usage. Also prints `warn` review hints (clipping containers, negative Hangul tracking, buttons w/o min-height, 0.3 inline modules); warnings never fail.

@@ -1,0 +1,96 @@
+/* Trick fan: count-aware overlap keeps N-card tricks inside the felt */
+.table-felt {
+  container-type: inline-size;
+}
+
+.play-arena__table, .table-felt__trick { min-width: 0; }
+
+.table-felt__trick {
+  --trick-card-width: 112px;
+  --trick-card-height: 160px;
+  --trick-max-step: calc(var(--trick-card-width) + var(--space-2));
+  --trick-min-step: var(--space-3);
+  --trick-count-minus-one: 13;
+  --trick-step: min(
+    var(--trick-max-step),
+    max(
+      var(--trick-min-step),
+      calc((100cqw - var(--trick-card-width)) / var(--trick-count-minus-one))
+    )
+  );
+  --trick-extent: calc(
+    var(--trick-card-width) + var(--trick-step) * var(--trick-count-minus-one)
+  );
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--trick-step);
+  gap: 0;
+  justify-content: start;
+  align-items: center;
+  inline-size: min(100cqw, var(--trick-extent));
+  margin-inline: auto;
+  min-width: 0;
+  overflow: visible;
+}
+
+.table-felt__trick[data-trick-count="1"] { --trick-count-minus-one: 0; }
+.table-felt__trick[data-trick-count="1"] { --trick-step: 0px; }
+.table-felt__trick[data-trick-count="2"] { --trick-count-minus-one: 1; }
+.table-felt__trick[data-trick-count="3"] { --trick-count-minus-one: 2; }
+.table-felt__trick[data-trick-count="4"] { --trick-count-minus-one: 3; }
+.table-felt__trick[data-trick-count="5"] { --trick-count-minus-one: 4; }
+.table-felt__trick[data-trick-count="6"] { --trick-count-minus-one: 5; }
+.table-felt__trick[data-trick-count="7"] { --trick-count-minus-one: 6; }
+.table-felt__trick[data-trick-count="8"] { --trick-count-minus-one: 7; }
+.table-felt__trick[data-trick-count="9"] { --trick-count-minus-one: 8; }
+.table-felt__trick[data-trick-count="10"] { --trick-count-minus-one: 9; }
+.table-felt__trick[data-trick-count="11"] { --trick-count-minus-one: 10; }
+.table-felt__trick[data-trick-count="12"] { --trick-count-minus-one: 11; }
+.table-felt__trick[data-trick-count="13"] { --trick-count-minus-one: 12; }
+.table-felt__trick[data-trick-count="14"] { --trick-count-minus-one: 13; }
+
+.table-felt__card-wrap {
+  width: var(--trick-card-width);
+  height: var(--trick-card-height);
+  transform: none !important;
+}
+
+.table-felt__card-wrap .card {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 599px) {
+  .table-felt__trick {
+    --trick-card-width: 60px;
+    --trick-card-height: 86px;
+    --trick-min-step: var(--space-2);
+  }
+
+  .table-felt__card-wrap .card .card__crest {
+    min-inline-size: 28px;
+    min-block-size: 28px;
+    width: auto;
+    height: 28px;
+    padding-inline: var(--space-0-5);
+    border-width: 1px;
+  }
+
+  .table-felt__card-wrap .card .card__crest-inner {
+    font-size: var(--font-size-md);
+  }
+
+  .table-felt__card-wrap .card .card__rank {
+    font-size: var(--font-size-sm);
+  }
+
+  .table-felt__card-wrap .card .card__title {
+    font-size: 10px;
+    line-height: 1.1;
+    margin-top: 0;
+  }
+
+  .table-felt__card-wrap .card .card__name-subtle {
+    display: none;
+  }
+}

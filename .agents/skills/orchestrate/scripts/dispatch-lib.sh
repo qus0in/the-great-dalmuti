@@ -48,11 +48,11 @@ guard_reports() {
   done
 }
 
-# Look up a worker's current "<model> <effort>" via workers.sh --model; empty on failure.
+# Look up a worker's current "<model> <effort>" via workers.sh --no-label --model; empty on failure.
 # Forwards explicit context flags when dispatch was called with --workspace/--self-pane.
 worker_model() {
   tgt=$1
-  set -- "$HERE/workers.sh" --model
+  set -- "$HERE/workers.sh" --no-label --model
   [ "${WS_SET:-0}" = 1 ] && set -- "$@" --workspace "$WS"
   [ "${SELF_SET:-0}" = 1 ] && set -- "$@" --self-pane "$SELF"
   "$@" 2>/dev/null | awk -v t="$tgt" '

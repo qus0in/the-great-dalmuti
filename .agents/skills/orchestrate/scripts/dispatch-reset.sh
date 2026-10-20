@@ -1,6 +1,8 @@
 #!/bin/sh
-# Context reset helpers; sourced by dispatch.sh. Commands verified in references/models.md.
+# Context reset helpers; sourced by dispatch.sh. Commands verified in
+# references/models.md; agy model restore lives in model-restore-agy.sh.
 . "$HERE/model-footer.sh"
+. "$HERE/model-restore-agy.sh"
 reset_model() {
   workers_parse_footer "$reset_agent" "$(printf '%s\n' "$1" | tail -n 25)"
 }
@@ -62,7 +64,12 @@ reset_target_context() {
   reset_model_after=$(reset_model "$reset_after")
   case "$reset_model_before:$reset_model_after" in
     *'?'*) printf 'dispatch.sh: model comparison unavailable: %s before=%s after=%s\n' "$TARGET" "$reset_model_before" "$reset_model_after" >&2;;
-    *) [ "$reset_model_before" = "$reset_model_after" ] || die 1 "model changed: $TARGET before=$reset_model_before after=$reset_model_after";;
+    *) [ "$reset_model_before" = "$reset_model_after" ] || {
+         case "$reset_agent" in
+           agy) reset_restore_model "$reset_model_before" && reset_after=$RESTORE_AFTER;;
+           *) die 1 "model changed: $TARGET before=$reset_model_before after=$reset_model_after";;
+         esac
+       };;
   esac
   if printf '%s\n' "$reset_after" | grep -Eqi 'Compacting context|Compacting conversation|Compressing session|Summarizing session'; then
     die 1 "context reset still running: $TARGET"

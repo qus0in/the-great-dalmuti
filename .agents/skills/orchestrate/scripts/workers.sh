@@ -1,29 +1,33 @@
 #!/bin/sh
-# Usage: workers.sh [--idle] [--model] [--workspace ID --self-pane ID]
-# Output (default): <target> <agent> <status>
-# Output (--model): <target> <agent> <status> <model> <effort>
-# Note: <model> may be multi-word; <effort> is the final token ('none', '?', or effort name).
+# Usage: workers.sh [--idle] [--no-label] [--model] [--workspace ID --self-pane ID]
+# Output (default): <label> <target> <agent> <status>
+# Output (--no-label): <target> <agent> <status> (old format, backward compatible)
+# Output (--model): <label> <target> <agent> <status> <model> <effort>
+# Note: <label> is the worker's tab label ('-' if none); <model> may be multi-word;
+# <effort> is the final token ('none', '?', or effort name).
 # List agents in this workspace excluding the current pane.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd)
 . "$HERE/model-footer.sh"
-IDLE=0; MODEL=0
+IDLE=0; MODEL=0; NOLABEL=0
 WS=; SELF=; WS_SET=0; SELF_SET=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --idle)
       IDLE=1; shift;;
+    --no-label)
+      NOLABEL=1; shift;;
     --model)
       MODEL=1; shift;;
     --workspace)
-      [ $# -ge 2 ] || { echo "usage: $0 [--idle] [--model] [--workspace ID --self-pane ID]" >&2; exit 2; }
+      [ $# -ge 2 ] || { echo "usage: $0 [--idle] [--no-label] [--model] [--workspace ID --self-pane ID]" >&2; exit 2; }
       WS=$2; WS_SET=1; shift 2;;
     --self-pane)
-      [ $# -ge 2 ] || { echo "usage: $0 [--idle] [--model] [--workspace ID --self-pane ID]" >&2; exit 2; }
+      [ $# -ge 2 ] || { echo "usage: $0 [--idle] [--no-label] [--model] [--workspace ID --self-pane ID]" >&2; exit 2; }
       SELF=$2; SELF_SET=1; shift 2;;
     *)
-      echo "usage: $0 [--idle] [--model] [--workspace ID --self-pane ID]" >&2; exit 2;;
+      echo "usage: $0 [--idle] [--no-label] [--model] [--workspace ID --self-pane ID]" >&2; exit 2;;
   esac
 done
 
@@ -60,8 +64,25 @@ entries=$(printf '%s\n' "$json" | jq -r --arg ws "$WS" --arg me "$ME" --argjson 
   | [ (if ((.name // "") != "") then .name else .pane_id end), .agent, .agent_status, .pane_id ] | @tsv
 ') || { echo "workers.sh: jq entry extraction failed" >&2; exit 1; }
 
+# Label column: best-effort join of live tab labels (o, r, w1-w3) to worker panes via tab_id.
+LMAP=
+if [ "$NOLABEL" -eq 0 ]; then
+  ENVU() { env -u HERDR_WORKSPACE_ID -u HERDR_TAB_ID -u HERDR_PANE_ID "$@"; }
+  tj=$(ENVU herdr tab list 2>/dev/null) && TC=1 || TC=0
+  pj=$(ENVU herdr pane list 2>/dev/null) && PC=1 || PC=0
+  [ "$TC$PC" = "11" ] || echo "workers.sh: label sources unavailable; printing '-' labels" >&2
+  LMAP=$(printf '%s\n' "$tj" "$pj" | jq -rsc --arg ws "$WS" '
+    [ .[0].result.tabs[]? | select(.workspace_id == $ws and (.label // "") != "") ] as $lt
+    | [ .[1].result.panes[]? | select(.workspace_id == $ws) ] | .[]
+    | (.tab_id) as $t | ($lt | map(select(.tab_id == $t)) | (.[0].label // "")) as $l
+    | select($l != "") | [ $l, .pane_id ] | @tsv
+  ' 2>/dev/null) || LMAP=
+  LM() { printf '%s\n' "$LMAP" | awk -F'\t' -v p="$1" '$2 == p { r = $1 } END { print (r == "" ? "-" : r) }'; }
+fi
+
 printf '%s\n' "$entries" | while IFS="$(printf '\t')" read -r target agent status pane; do
   [ -n "$target" ] || continue
+  case "$NOLABEL" in 1) lab=;; *) lab=$(LM "$pane");; esac
   if [ "$MODEL" -eq 1 ]; then
     raw=$(herdr pane read "$pane" --source visible 2>/dev/null | tail -n 25) || raw=""
     parsed=$(workers_parse_footer "$agent" "$raw")
@@ -69,8 +90,8 @@ printf '%s\n' "$entries" | while IFS="$(printf '\t')" read -r target agent statu
     effort=$(printf '%s\n' "$parsed" | cut -f2)
     [ -n "$model" ] || model='?'
     [ -n "$effort" ] || effort='?'
-    printf '%s %s %s %s %s\n' "$target" "$agent" "$status" "$model" "$effort"
-  else
-    printf '%s %s %s\n' "$target" "$agent" "$status"
-  fi
+    if [ "$NOLABEL" -eq 1 ]; then printf '%s %s %s %s %s\n' "$target" "$agent" "$status" "$model" "$effort"
+    else printf '%s %s %s %s %s %s\n' "$lab" "$target" "$agent" "$status" "$model" "$effort"; fi
+  elif [ "$NOLABEL" -eq 1 ]; then printf '%s %s %s\n' "$target" "$agent" "$status"
+  else printf '%s %s %s %s\n' "$lab" "$target" "$agent" "$status"; fi
 done
