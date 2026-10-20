@@ -9,6 +9,11 @@ ship_parse_args "$@"
 cur=$(git branch --show-current 2>/dev/null) || cur=
 [ "$cur" = "dev" ] || { echo "not on dev (current: ${cur:-none})" >&2; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "working tree dirty" >&2; exit 1; }
+git fetch origin main || exit 1
+if git diff --quiet origin/main HEAD; then
+  echo "nothing to ship: dev tree equals origin/main" >&2
+  exit 0
+fi
 if git rev-parse --verify --quiet refs/remotes/origin/main >/dev/null 2>&1; then
   if ! git merge-base --is-ancestor refs/remotes/origin/main HEAD 2>/dev/null; then
     echo "warning: origin/main is not an ancestor of dev; PR may conflict (run sync.sh first)" >&2

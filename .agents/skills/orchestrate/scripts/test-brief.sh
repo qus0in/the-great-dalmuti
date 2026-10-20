@@ -14,6 +14,9 @@ for pat in "brief-pF-debt.md" "report-pF-debt.md" "snapshot-debt.tar.gz" "cmp" "
   grep -Fq "$pat" "$F" || { echo "review brief misses: $pat" >&2; exit 1; }
 done
 if grep -q '{{' "$F"; then echo "unresolved placeholder in review brief" >&2; exit 1; fi
+for pat in "status: done" "verdict: accept|block" "완료 꼬리" "재사용"; do
+  grep -Fq "$pat" "$F" || { echo "review brief misses contract: $pat" >&2; exit 1; }
+done
 
 # 2. existing brief -> refuse (exit 1)
 rc=0; "$B" review "$TASK" pD $REVIEW_ARGS > /dev/null 2>&1 || rc=$?
