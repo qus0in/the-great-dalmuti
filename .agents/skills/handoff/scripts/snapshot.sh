@@ -64,7 +64,7 @@ SELF_AGENT=$(printf '%s\n' "$PJ" | jq -r '.result.pane.agent // empty')
 SELF_SESSION=$(printf '%s\n' "$PJ" | jq -r '.result.pane.agent_session.value // empty')
 UTC_TS=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
 
-WORKERS=$("$ROOT/.agents/skills/orchestrate/scripts/workers.sh" --model --workspace "$WS" --self-pane "$SELF") || die 1 "workers.sh failed"
+WORKERS=$("$ROOT/.agents/skills/orchestrate/scripts/workers.sh" --no-label --model --workspace "$WS" --self-pane "$SELF") || die 1 "workers.sh failed"
 
 BLOCK_FILE=$(mktemp) || die 1 "mktemp failed"
 trap 'rm -f "$REPOS_FILE" "$BLOCK_FILE"' EXIT INT TERM

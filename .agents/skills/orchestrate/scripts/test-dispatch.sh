@@ -77,4 +77,15 @@ run_dispatch --replace old workerA "$BRIEF" > "$FIX/replace.out"
 grep -q '^prompt:/compact$' "$FIX/events"
 . "$SCRIPTS/test-dispatch-model.sh"
 . "$SCRIPTS/test-model-footer.sh"
+# Label-column regression: worker_model must return non-empty model effort (old 5-col).
+export MODEL_BEFORE='  GPT-6-Luna max · ~/Workspace/the-great-dalmuti · Write review report'
+export MODEL_AFTER='  GPT-6-Luna max · ~/Workspace/the-great-dalmuti · Write review report'
+. "$SCRIPTS/dispatch-lib.sh"
+HERE=$SCRIPTS WS=testws SELF=self WS_SET=1 SELF_SET=1
+wm=$(worker_model worker-pane) || wm=
+[ -n "$(printf %s "$wm" | tr -d '[:space:]')" ] || { echo "worker_model empty (label regression)" >&2; exit 1; }
+case "$wm" in *"GPT-6-Luna max"*) :;; *) echo "worker_model mismatch: $wm" >&2; exit 1;; esac
+grep -Fq -- '--no-label --model' "$ROOT/.agents/skills/handoff/scripts/takeover.sh" || { echo "takeover.sh lost --no-label" >&2; exit 1; }
+grep -Fq -- '--no-label --model' "$ROOT/.agents/skills/handoff/scripts/snapshot.sh" || { echo "snapshot.sh lost --no-label" >&2; exit 1; }
+unset MODEL_BEFORE MODEL_AFTER
 echo "dispatch tests: ok (clear/compact, post-reset idle, failures, unknown, dry-run parity)"

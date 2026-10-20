@@ -66,7 +66,7 @@ esac
 [ -f "$HANDOFF_FILE" ] || die 2 "handoff record missing: tmp/$TASK/handoff.md"
 grep -Eqi 'backend[:=][[:space:]]*herdr' "$HANDOFF_FILE" || die 1 "backend is not Herdr in tmp/$TASK/handoff.md"
 
-LIVE_WORKERS=$("$ROOT/.agents/skills/orchestrate/scripts/workers.sh" --model --workspace "$WS" --self-pane "$SELF") || die 1 "workers.sh failed"
+LIVE_WORKERS=$("$ROOT/.agents/skills/orchestrate/scripts/workers.sh" --no-label --model --workspace "$WS" --self-pane "$SELF") || die 1 "workers.sh failed"
 
 takeover_report
 

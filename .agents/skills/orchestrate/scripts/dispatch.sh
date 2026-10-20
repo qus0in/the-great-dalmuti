@@ -36,6 +36,10 @@ done
 case "$WAIT_IDLE" in ''|*[!0-9]*) usage;; esac
 [ "$REPLACE_SET" -eq 0 ] || [ -n "$REPLACE_UNIT" ] || usage
 [ "$REPLACE_SET" -eq 0 ] || CONTINUE_UNIT=1
+case "$TARGET" in o|r|w[0-9]|w[0-9][0-9])
+  RS=${ROLES_SH:-$HERE/roles.sh}
+  if [ -x "$RS" ]; then RP=$("$RS" resolve "$TARGET" 2>/dev/null) || RP=; [ -z "$RP" ] || TARGET=$RP; fi
+esac
 IDLE_CONFIRMATIONS=${DISPATCH_IDLE_CONFIRMATIONS:-3}
 case "$IDLE_CONFIRMATIONS" in ''|*[!0-9]*) usage;; esac
 [ "$IDLE_CONFIRMATIONS" -gt 0 ] || usage
@@ -78,6 +82,7 @@ if [ "$THEN_SET" -eq 1 ]; then
 else
   msg="${REPLACE_PREFIX}Read $BRIEF, follow AGENTS.md, write report to $REPORT_ARG. $FOOTER When done: run '$CALLBACK'; when blocked: run '$BLOCKED_CALLBACK'; when failed: run '$FAILED_CALLBACK' (records to tmp/<task>/callbacks.log)."
 fi
+[ -z "${DISPATCH_TAIL:-}" ] || msg="$msg ${DISPATCH_TAIL}"
 if [ "$DRY_RUN" -eq 1 ]; then
   printf '[dry-run] target=%s\n%s\n' "$TARGET" "$msg"
 else
